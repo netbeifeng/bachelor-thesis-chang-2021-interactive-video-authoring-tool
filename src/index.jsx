@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'modern-css-reset';
+import '../node_modules/modern-css-reset/dist/reset.min.css';
 import './index.scss';
 import App from './App';
 import HelmetHead from './components/helmet/helmet';
