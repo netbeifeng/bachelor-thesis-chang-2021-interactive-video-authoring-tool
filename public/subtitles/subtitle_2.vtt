@@ -1,0 +1,341 @@
+WEBVTT
+
+1
+00:00:00.438 --> 00:00:01.538
+XXXXXXXX22222222222
+
+2
+00:00:01.538 --> 00:00:05.456
+XXXXXXXX22222222222
+
+3
+00:00:05.456 --> 00:00:09.286
+XXXXXXXX22222222222
+
+4
+00:00:09.286 --> 00:00:11.799
+was XXXXXXXX22222222222 so ein Bild XXXXXXXX22222222222 ist 
+
+5
+00:00:11.799 --> 00:00:16.527
+Bild ist in Speicher Struktur gesprochen und zweidimensionales Array
+
+6
+00:00:16.527 --> 00:00:19.062
+ wo Helligkeitswerte drin stehen
+
+7
+00:00:19.062 --> 00:00:21.551
+  in der regel als unsigned int
+
+8
+00:00:21.551 --> 00:00:27.414
+und das heißt also als eine positive Zahl oder nähmlich negative Zahlen und Null ist expilzit erlaubt
+
+9
+00:00:27.414 --> 00:00:34.995
+die sozusagen zwischen Null und dem größten darzustellen in Integer werden in der gewählten bit Auflösung Ebene
+
+10
+00:00:34.995 --> 00:00:43.980
+An die Helligkeit haben darstellen wobei 0 sozusagen Schwarz ist und der größtmögliche wert also unterm Standard 255
+
+11
+00:00:43.980 --> 00:00:47.874
+wäre dann sozusagen gleich also maximal Weiss 
+
+12
+00:00:47.874 --> 00:00:54.905
+und tanja mathematisch gesehen ist sozusagen die Helligkeit an einer position
+
+13
+00:00:54.905 --> 00:01:02.946
+in diesem 2D-Array eine Funktion des Index Pärchens das seine Position definiert
+
+14
+00:01:02.946 --> 00:01:09.610
+na also sozusagen was ist sozusagen dieser dieser Wert hier das ist eine Funktion die hängt davon ab
+
+15
+00:01:09.610 --> 00:01:11.422
+  wo ich mich in dem Bild befinde
+
+16
+00:01:11.422 --> 00:01:15.577
+ähm gegeben durch den Zeilen und spalten index
+
+17
+00:01:15.577 --> 00:01:17.940
+  ähm hier und hier
+
+18
+00:01:17.940 --> 00:01:23.909
+und haben daher die Funktion die schmeißt halt im Prinzip den
+
+19
+00:01:23.909 --> 00:01:27.534
+den Helligkeitswert irgendwie raus nun
+
+20
+00:01:27.534 --> 00:01:35.986
+das heißt ich hab eine einen einen einen row und einen column Parameter deswegen R und C
+
+21
+00:01:35.986 --> 00:01:44.444
+und äh ja der variiert halt indiziert ab null wie das in so einem Array eigentlich ist
+
+22
+00:01:44.444 --> 00:01:52.606
+also von Null anfangen also von null bis Anzahl der Zeilen im Rahmen unserer Spalten minus eins
+
+23
+00:01:52.606 --> 00:01:55.156
+und von Null bis Anzahl der Zeilen minus ein
+
+24
+00:01:55.156 --> 00:02:00.930
+habe ich Element index indem ich sozusagen nach links und nach unten zählen kann 
+
+25
+00:02:00.930 --> 00:02:02.411
+weil dass ich mich auch sowas 
+
+26
+00:02:02.411 --> 00:02:07.558
+anders als in der Computergrafik 1 ist der Ursprung des Koordinatensystems
+
+27
+00:02:07.558 --> 00:02:09.403
+hier oben links also das 
+
+28
+00:02:09.403 --> 00:02:11.530
+wäre im Prinzip ist ja auch gleich
+
+29
+00:02:11.530 --> 00:02:13.975
+mit die antwort auf die frage da im Chat steht was
+
+30
+00:02:13.975 --> 00:02:15.721
+denn eigentlich die Achsen da wären
+
+31
+00:02:15.721 --> 00:02:21.704
+unter dieser Achsen sind also in einem sogenannten linkhändigen koordinatensystem 
+
+32
+00:02:21.704 --> 00:02:26.344
+angeordnet das heißt ich habe eine X-Achse und eine Y-Achse so
+
+33
+00:02:26.344 --> 00:02:32.196
+dass X-Ebene nach rechts und Y sozusagen am ursprung deshalb Ebene linksoben
+
+34
+00:02:32.196 --> 00:02:34.830
+vom Ursprung ausgehend nach unten geht 
+
+35
+00:02:34.830 --> 00:02:41.026
+und damit hätte ich sozusagen die entsprechenden
+
+36
+00:02:41.026 --> 00:02:46.705
+die entsprechenden indizes zugeordnet einer position 
+
+37
+00:02:46.705 --> 00:02:51.117
+im Prinzip wäre das egal ähm ja wie man das macht
+
+38
+00:02:51.117 --> 00:02:57.067
+aber es hat sicher ebenso eingebügt das es in seinem Bild Koordinatensystem der Ursprung halt 
+
+39
+00:02:57.067 --> 00:03:00.189
+ links oben ist also fragen sie mich nach einem logischen Grund
+
+40
+00:03:00.189 --> 00:03:02.145
+man hat sich einfach irgendwo geeinigt 
+
+41
+00:03:02.145 --> 00:03:07.333
+was steht also ist es eine dynamische Funktionsicht
+
+42
+00:03:07.333 --> 00:03:08.849
+je nach dem wo ich mich befinde 
+
+43
+00:03:08.849 --> 00:03:14.038
+ der Wert der hängt im prinzip davon nur davon ab wo ich mich befinde kleister
+
+44
+00:03:14.038 --> 00:03:15.861
+irgendwie aktiviert worden 
+
+45
+00:03:15.861 --> 00:03:21.173
+aber wenn ich mich jetzt frage sozusagen was ist die Informationen die diese144 trägt
+
+46
+00:03:21.173 --> 00:03:27.570
+na ja diese Informationen die sozusagen Helligkeitsinformation und Positionsinformation
+
+47
+00:03:27.570 --> 00:03:30.988
+wenn man so will und die 144 die
+
+48
+00:03:30.988 --> 00:03:33.172
+kommt Teil zustande weil 
+
+49
+00:03:33.172 --> 00:03:35.511
+sich ähm diese Funktion tatsächlich
+
+50
+00:03:35.511 --> 00:03:38.051
+gerade an irgendeiner Position befindet
+
+51
+00:03:38.051 --> 00:03:44.191
+wenn sie sich sozusagen das Bild als ihr kontinuierliche Funktion vorstellen 
+
+52
+00:03:44.191 --> 00:03:48.772
+wird diese Funktion sozusagen an diskreten Positionen abgetastet
+
+53
+00:03:48.772 --> 00:03:51.884
+also wenn sie sich eine Zeile Vorstände komme gleich drauf
+
+54
+00:03:51.884 --> 00:03:55.572
+dann haben sie sozusagen ihr hier so eine sequenz 
+
+55
+00:03:55.572 --> 00:03:59.051
+von Werten die abgetastet werden
+
+56
+00:03:59.051 --> 00:04:02.793
+  und die Springen hat sozusagen immer mit seinem Integer Abstand
+
+57
+00:04:02.793 --> 00:04:07.182
+mit anderen Worten es gibt keinen Wert an der Position
+
+58
+00:04:07.182 --> 00:04:11.273
+irgendwas also was ihm nicht gibt ist Null Komma 
+
+59
+00:04:11.273 --> 00:04:13.157
+Null Komma fünf oder so was
+
+60
+00:04:13.157 --> 00:04:16.783
+also einem halben Pixel da gibts halt ein keinen keinen Wert
+
+61
+00:04:16.783 --> 00:04:24.938
+das heißt also eine Funktion deren Werte nur an konnte Integer Sprungstelle sozusagen definiert sind
+
+62
+00:04:24.938 --> 00:04:30.150
+und genau da könnte man sich jetzt sozusagen das Ganze als Abtastung vorstellen
+
+63
+00:04:30.150 --> 00:04:33.645
+ in wirklichkeit wäre dieses projizierte Bild was offen sein so
+
+64
+00:04:33.645 --> 00:04:38.642
+ ankommt die kontinuierlichen Funktion die sie an jeder Stelle auswerten könnten
+
+65
+00:04:38.642 --> 00:04:43.695
+und in dieser sichtweise das Ebene diskrete Pixel sind
+
+66
+00:04:43.695 --> 00:04:45.611
+es mathematisch dadurch beschrieben
+
+67
+00:04:45.611 --> 00:04:50.744
+dass ich nur sozusagen an ganzzahligen Scannen Positionen wenn Sie so wollen
+
+68
+00:04:50.744 --> 00:04:52.482
+diesen Wert irgendwie abgespeichert 
+
+69
+00:04:52.482 --> 00:04:57.406
+das heißt also das ist diese Funktion ist auf dem natürlichen Zahlen definiert 
+
+70
+00:04:57.406 --> 00:05:02.529
+obwohl das Bild so gesehen eigentlich zweidimensionale reelle Funktion wäre 
+
+71
+00:05:02.529 --> 00:05:08.065
+die Anführungszeichen an jeder Stelle in Helligkeitswerte liefert 
+
+72
+00:05:08.065 --> 00:05:11.720
+aber in dem Moment wo ich auch so eine diskrete Darstellung gehe hab ich nur 
+
+73
+00:05:11.720 --> 00:05:16.103
+an ganzen Pixel Werten eben in Funktion gespeichert
+
+74
+00:05:16.103 --> 00:05:19.382
+ach so das ist eignetlich auch der Grund warum man das als Funktion aufschreibt
+
+75
+00:05:19.382 --> 00:05:22.429
+natürlich ist die Intuitive an sich das wie man sich das merkt 
+
+76
+00:05:22.429 --> 00:05:25.947
+falls sonst 2D-Array mit irgendwelchen Zahlen Werten drin
+
+77
+00:05:25.947 --> 00:05:28.541
+und natürlich muss ich wissen an welcher Position ich
+
+78
+00:05:28.541 --> 00:05:30.850
+gerade bin das ist die Implementiersicht 
+
+79
+00:05:30.850 --> 00:05:32.738
+und diese mathematischen Sicht
+
+80
+00:05:32.738 --> 00:05:34.401
+die spiegel zum bisschen wieder 
+
+81
+00:05:34.401 --> 00:05:37.387
+was man eigentlich hier den Schritt von was kontinuierlichem auf
+
+82
+00:05:37.387 --> 00:05:38.448
+was diskretes macht 
+
+83
+00:05:38.448 --> 00:05:41.802
+wir haben nicht an jeder Stelle ihnen einen Helligkeitswert
+
+84
+00:05:41.802 --> 00:05:48.792
+sondern eben Art nur pixel Abstand zweiseren sie sowohl.
+
+85
+00:05:48.792 --> 00:05:51.897
+Ende Teil 1

@@ -1,0 +1,49 @@
+$bgColor: #232526;
+$subBgColor: #414345;
+
+html {
+  background: $bgColor;  /* fallback for old browsers */
+  background: linear-gradient(to right, $subBgColor, $bgColor); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  caret-color: transparent;
+}
+
+div.signature {
+  z-index: -9;
+  position: absolute;
+  left: 18%;
+  bottom: 3%;
+  width: 40%;
+  font-family: 'Blox2';
+  font-size: 160px;
+  font-weight: 300;
+  // background: linear-gradient(to right, #EC6F00, #E87019);
+  color: transparent;
+  backdrop-filter: blur(5px); 
+  text-shadow: 0 0 12px #EC6F00;
+  background-clip: text;
+}
+
+@font-face {
+  font-family: "Blox2";
+  src: url("./assests/fonts/Blox2.ttf");
+}
+
+@font-face {
+  font-family: "UnitLight";
+  src: url("https://f4.hs-hannover.de/typo3conf/ext/ui_sitepackage/Resources/Public/assets/fonts/Unit-Light.f07d2d7.ttf");
+}
+
+@font-face {
+  font-family: "UnitMedium";
+  src: url("https://f4.hs-hannover.de/typo3conf/ext/ui_sitepackage/Resources/Public/assets/fonts/Unit-Medium.c3bdb62.ttf");
+}
+
+@font-face {
+  font-family: "UnitSlabLight";
+  src: url("https://f4.hs-hannover.de/typo3conf/ext/ui_sitepackage/Resources/Public/assets/fonts/UnitSlabWebW06-Light.04f9544.ttf");
+}
+
+@font-face {
+  font-family: "UnitSlabBoldIta";
+  src: url("https://f4.hs-hannover.de/typo3conf/ext/ui_sitepackage/Resources/Public/assets/fonts/UnitSlabWebPro-BoldIta%20W01%20Rg.998512d.ttf");
+}

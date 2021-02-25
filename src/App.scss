@@ -1,0 +1,19 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+#head_container {
+  height: 5%;
+  margin-top: 25px;
+
+  h1 {
+    color: white;
+    font-family: "UnitMedium";
+    font-size: 36px !important;
+    text-align: center;
+  }
+}
+
