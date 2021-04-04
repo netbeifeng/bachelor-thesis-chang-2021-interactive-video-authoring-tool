@@ -182,22 +182,22 @@ class AnimationFactory {
         let options = [];
         let width = 520;
         let height = 290;
+        let getRandomArrayElements = (arr, count) => {
+            var shuffled = arr.slice(0),
+                i = arr.length,
+                min = i - count,
+                temp,
+                index;
+            while (i-- > min) {
+                index = Math.floor((i + 1) * Math.random());
+                temp = shuffled[index];
+                shuffled[index] = shuffled[i];
+                shuffled[i] = temp;
+            }
+            return shuffled.slice(min);
+        };
 
         if (question.includes("f(r,c)=?")) {
-            let getRandomArrayElements = (arr, count) => {
-                var shuffled = arr.slice(0),
-                    i = arr.length,
-                    min = i - count,
-                    temp,
-                    index;
-                while (i-- > min) {
-                    index = Math.floor((i + 1) * Math.random());
-                    temp = shuffled[index];
-                    shuffled[index] = shuffled[i];
-                    shuffled[i] = temp;
-                }
-                return shuffled.slice(min);
-            };
             options = getRandomArrayElements(GlobalVar.grayMatrix, 3);
             let answer_index = Math.floor(Math.random() * 3);
             let answer_key = options[answer_index];
@@ -218,6 +218,7 @@ class AnimationFactory {
             options.push(getArrayElementByRowCol(GlobalVar.grayMatrix, 2, 3));
             options.push({ color: { gray: 0 } });
             options.push({ color: { gray: 'Kein Sinn' }, answer: true });
+            options = getRandomArrayElements(options, 4);
             width += 100;
             height += 100;
         }
@@ -240,7 +241,7 @@ class AnimationFactory {
         text_question.y = 10;
         container.addChild(text_question);
 
-        let generateOptions = (tag, options, offsetX, offsetY, extra?) => {
+        let generateOptions = (tag, options, optionIndex, offsetX, offsetY, extra?) => {
             let extra_width = 0;
             let extra_height = 0
             if (extra) {
@@ -248,18 +249,19 @@ class AnimationFactory {
                 extra_height = 100;
             }
 
-            let option_index = Math.floor(Math.random() * options.length);
+            // let option_index = Math.floor(Math.random() * options.length);
+            // console.log(tag ,option_index ,options[option_index], options);
 
-            let counter = 0;
-            while (options[option_index].pushed && counter < options.length) {
-                option_index = Math.floor(Math.random() * options.length);
-                counter++;
-                // console.log(counter);
-                // console.log(options ,options[option_index]);
-            }
+            // let counter = 0;
+            // while (options[option_index].pushed && counter < options.length * 5) {
+            //     option_index = Math.floor(Math.random() * options.length);
+            //     counter++;
+            //     // console.log(counter);
+            //     console.log(tag, option_index ,options[option_index], options);
+            // }
             // console.log(tag, options[option_index]);
 
-            options[option_index].pushed = true;
+            // options[option_index].pushed = true;
             let option_rect = new PIXI.Graphics();
             option_rect.interactive = true;
             option_rect.buttonMode = true;
@@ -274,7 +276,7 @@ class AnimationFactory {
             let tag_text = new PIXI.Text(tag, { fill: 0x0, fontSize: 42, fontFamily: "UnitMedium" });
             tag_text.x = 12;
             tag_text.y = 4;
-            let option_text = new PIXI.Text(options[option_index].color.gray, { fill: 0x0, fontSize: 36, fontFamily: "UnitLight" });
+            let option_text = new PIXI.Text(options[optionIndex].color.gray, { fill: 0x0, fontSize: 36, fontFamily: "UnitLight" });
             option_text.x = 55;
             option_text.y = 9;
             option_rect.addListener('pointerover', () => {
@@ -307,7 +309,7 @@ class AnimationFactory {
                 let t_check = PIXI.Texture.from('imgs/check_mark.png');
                 let symbol = undefined;
                 let text = undefined;
-                if (options[option_index].answer) {
+                if (options[optionIndex].answer) {
                     option_rect.clear();
                     option_rect.beginFill(0x228b22, 1)
                         .drawRoundedRect(0, 0, 120 + extra_width, 55, 15)
@@ -370,14 +372,17 @@ class AnimationFactory {
         }
 
         if (question.includes("f(r,c)=?")) {
-            container.addChild(generateOptions('A.', options, 0, 0));
-            container.addChild(generateOptions('B.', options, 150, 0));
-            container.addChild(generateOptions('C.', options, 300, 0));
+            container.addChild(generateOptions('A.', options,0, 0, 0));
+            container.addChild(generateOptions('B.', options,1, 150, 0));
+            container.addChild(generateOptions('C.', options,2, 300, 0));
+            console.log('end Teil 1');
+
         } else if (question.includes("f(1.5,2.5)=sinnvoll?")) {
-            container.addChild(generateOptions('A.', options, 0, 0, true));
-            container.addChild(generateOptions('B.', options, 250, 0, true));
-            container.addChild(generateOptions('C.', options, 0, 90, true));
-            container.addChild(generateOptions('D.', options, 250, 90, true));
+            container.addChild(generateOptions('A.', options,0, 0, 0, true));
+            container.addChild(generateOptions('B.', options,1, 250, 0, true));
+            container.addChild(generateOptions('C.', options,2, 0, 90, true));
+            container.addChild(generateOptions('D.', options,3, 250, 90, true));
+            console.log('end Teil 2');
         }
         return container;
     }

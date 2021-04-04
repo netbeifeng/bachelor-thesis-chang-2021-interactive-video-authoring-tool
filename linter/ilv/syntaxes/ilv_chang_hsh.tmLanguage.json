@@ -1,0 +1,99 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "ilv",
+	"patterns": [
+		{
+			"include": "#Comment"
+		},
+		{
+			"include": "#MainKey"
+		},
+		{
+			"include": "#String"
+		},
+		{
+			"include": "#Path"
+		},
+		{
+			"include": "#SubKey"
+		},
+		{
+			"include": "#Operator"
+		},
+		{
+			"include": "#Number"
+		},
+		{
+			"include": "#Braces"
+		}
+
+	],
+	"repository": {
+		"SubKey": {
+			"patterns": [{
+				"name": "keyword.declaration.ilv_chang_hsh",
+				"match": "\\$|width|height|startTime|duration|position|questionContent|content|correctAnswer|wrongAnswers|tip|id|page|name"
+			}]
+		},
+		"MainKey": {
+			"patterns": [{
+				"name": "keyword.control.ilv_chang_hsh",
+				"match": "date|title|subtitle|audio|author|semester|chapter|course|\\^|custom|slide|text|quiz"
+			}]
+		},
+		"String": {
+			"name": "string.quoted.double.ilv_chang_hsh",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.ilv_chang_hsh",
+					"match": "\\\\."
+				}
+			]
+		},
+		"Operator": {
+			"patterns": [{
+				"name": "entity.other.attribute-name",
+				"match": "\\=|\\;|\\,"
+			}]
+		},
+		"Number": {
+			"patterns": [{
+				"name": "constant.numeric",
+				"match": "(-)?(?:((?:\\b\\d+(?:\\.\\d*)?|\\.\\d+)(?:\\b|e-?\\d+\\b)%?)|(\\$[0-9a-fA-F]+\\b))"
+			}]
+		},
+		"Comment": {
+			"name": "comment.block",
+			"begin": "/\\*",
+			"end": "\\*/",
+			"patterns": [
+				{
+					"name": "comment.block",
+					"match": "\\\\."
+				}
+			]
+		},
+		"Braces": {
+			"patterns": [
+				{
+					"name": "meta.tag",
+					"match": "\\[|\\]|\\(|\\)|\\{|\\}"
+				}
+			]
+		},
+		"Path": {
+			"name": "entity.name.function",
+			"begin": "<\"",
+			"end": "\">",
+			"patterns": [
+				{
+					"name": "entity.name.function",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.ilv"
+}

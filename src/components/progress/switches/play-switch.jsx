@@ -1,4 +1,7 @@
 import React, { Component, createRef, useRef } from 'react';
+import EventEnum from '../../../enities/Event/EventEnum';
+import HowlerPauseEvent from '../../../enities/Event/HowlerPauseEvent';
+import HowlerResumeEvent from '../../../enities/Event/HowlerResumeEvent';
 import ee from '../../../utilities/event-emitter';
 
 class PlaySwitch extends Component {
@@ -20,7 +23,7 @@ class PlaySwitch extends Component {
         // console.log(this.state.disabled);
         if (this.state.disabled) {
             return (
-                <div id="player_switch" ref={this.player_switch} style={{ backgroundColor: "rgba(46, 46, 46, 0.9)", cursor: "not-allowed" }}>
+                <div id="player_switch" ref={this.player_switch} style={{ backgroundColor: "rgba(46, 46, 46, 0.8)", cursor: "not-allowed" }}>
                     <i id='play' className="fas fa-ban"></i>
                     <span id="player_switch_status" > Play </span>
                 </div>
@@ -28,7 +31,7 @@ class PlaySwitch extends Component {
         } else {
             if (!this.state.playing) {
                 return (
-                    <div id="player_switch" ref={this.player_switch} style={{ backgroundColor: "rgba(228, 135, 15, 0.9)" }}>
+                    <div id="player_switch" ref={this.player_switch} style={{ backgroundColor: "rgba(228, 135, 15, 0.8)" }}>
                         <i id='play' className="fas fa-play"></i>
                         <span id="player_switch_status" > Play </span>
                     </div>
@@ -61,11 +64,13 @@ class PlaySwitch extends Component {
             if(!this.state.disabled) {
                 if (this.state.playing) {
                     howler.pause();
-                    ee.emit("howler_pause", {});
+                    // ee.emit("howler_pause", {});
+                    ee.emit(EventEnum.HowlerPauseEvent, new HowlerPauseEvent(Date.now(), this));
                     this.setState({ playing: false });
                 } else {
                     howler.play();
-                    ee.emit("howler_replay", {});
+                    // ee.emit("howler_replay", {});
+                    ee.emit(EventEnum.HowlerResumeEvent, new HowlerResumeEvent(Date.now(), this));
                     this.setState({ playing: true });
                 }
             }
@@ -83,7 +88,7 @@ class PlaySwitch extends Component {
             if(!this.state.disabled) {
                 if (this.state.playing) {
                     howler.pause();
-                    ee.emit("howler_pause", {});
+                    ee.emit(EventEnum.HowlerPauseEvent, new HowlerPauseEvent(Date.now(), this));
                     this.setState({ playing: false });
                 } else {
                     howler.play();
@@ -91,22 +96,22 @@ class PlaySwitch extends Component {
                     //     this.state.firstPlay = false;
                     //     ee.emit("scene_change", { scene: 1 });
                     // } else {
-                    ee.emit("howler_replay", {});
+                    ee.emit(EventEnum.HowlerResumeEvent, new HowlerResumeEvent(Date.now(), this));
                     // }
                     this.setState({ playing: true });
                 }
             }
         };
 
-        ee.on("stage_init", () => {
+        ee.on(EventEnum.PIXIStageInitEvent, () => {
             this.setState({
                 playing: false,
                 disabled: true
             })
         });
 
-        ee.on("scene_change_var", (e) => {
-            if(e.scene >= 1) {
+        ee.on(EventEnum.PIXISceneChangeVarEvent, (e) => {
+            if(e.getScene() >= 1) {
                 this.setState({
                     playing: true,
                     disabled: false

@@ -12,7 +12,7 @@ ReactDOM.render(
     {/* <React.StrictMode> */}
     <App />
     <div className={'signature'}>
-      Chang Luo
+      BA
     </div>
     {/* </React.StrictMode> */}
   </div>,

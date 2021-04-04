@@ -17,3 +17,28 @@
   }
 }
 
+#content_navigation {
+  display: block;
+  position: absolute;
+  bottom: 23%;
+  font-size: 26px;
+  right: 2%;
+  background-color: white;
+  width: 14%;
+  padding: 5px 10px;
+  height: fit-content;
+  border-radius: 15px;
+  font-family: 'Consolas';
+  user-select: none;
+
+  .content_item {
+    font-size: 20px;
+    cursor: pointer;
+    &:hover {
+      color: #DD3A04;
+      border-bottom: 3px #DD3A04 solid;
+    }
+  }
+  box-shadow: 5px 10px 18px #888;
+
+}

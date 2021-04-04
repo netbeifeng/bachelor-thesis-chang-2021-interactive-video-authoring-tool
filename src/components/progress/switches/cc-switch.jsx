@@ -1,4 +1,6 @@
 import React, { Component, createRef, useRef } from 'react';
+import ClosedCaptionEvent from '../../../enities/Event/ClosedCaptionEvent';
+import EventEnum from '../../../enities/Event/EventEnum';
 import ee from '../../../utilities/event-emitter';
 
 class ClosedCaptionSwitch extends Component {
@@ -14,14 +16,14 @@ class ClosedCaptionSwitch extends Component {
     render() {
         if (this.state.ccEnabled) {
             return (
-                <div id="cc_switch" ref={this.cc_switch} style={{ backgroundColor: 'rgba(34, 139, 34, 0.9)' }}>
+                <div id="cc_switch" ref={this.cc_switch} style={{ backgroundColor: 'rgba(34, 139, 34, 0.7)' }}>
                     <i className="far fa-closed-captioning"></i>
                     <span id="cc_switch_status"> On </span>
                 </div>
             )
         } else {
             return (
-                <div id="cc_switch" ref={this.cc_switch} style={{ backgroundColor: 'rgba(178, 34, 34, 0.9)' }}>
+                <div id="cc_switch" ref={this.cc_switch} style={{ backgroundColor: 'rgba(178, 34, 34, 0.7)' }}>
                     <i className="far fa-closed-captioning"></i>
                     <span id="cc_switch_status"> Off </span>
                 </div>
@@ -33,17 +35,21 @@ class ClosedCaptionSwitch extends Component {
         // this.changeState(element);
         let howler = this.props.howler;
         if (this.state.ccEnabled) {
-            this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
+            // { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex }
         } else {
-            this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+            // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
         }
 
         this.cc_switch.current.onclick = () => {
             // this.changeState(element);
             if (this.state.ccEnabled) {
-                this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+                // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
             } else {
-                this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+                // this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
             }
             this.setState({
                 ccEnabled: !this.state.ccEnabled
@@ -51,20 +57,24 @@ class ClosedCaptionSwitch extends Component {
         };
     }
 
-    componentDidUpdate(nextProps) { 
+    componentDidUpdate(nextProps) {
         let howler = nextProps.howler;
         // console.log(howler);
         if (this.state.ccEnabled) {
-            this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: nextProps.playIndex });
+            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
+            // { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex }
         } else {
-            this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: nextProps.playIndex });
+            // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
         }
         this.cc_switch.current.onclick = () => {
             // this.changeState(element);
             if (this.state.ccEnabled) {
-                this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: nextProps.playIndex });
+                // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
             } else {
-                this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: nextProps.playIndex });
+                // this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
             }
             this.setState({
                 ccEnabled: !this.state.ccEnabled

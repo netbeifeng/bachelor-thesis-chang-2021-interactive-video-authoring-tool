@@ -3,8 +3,14 @@ import logo from './logo.svg';
 import './App.scss';
 import Player from './components/player/player';
 import Progress from './components/progress/progress';
+import Converter from './utilities/converter/Converter';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.converter = new Converter();
+  }
+
   render() {
     return (
 
@@ -15,24 +21,11 @@ class App extends Component {
         <Player />
         <Progress />
       </div>
-
-      // <div className="App">
-      //   <header className="App-header">
-      //     <img src={logo} className="App-logo" alt="logo" />
-      //     <p>
-      //       Edit <code>src/2224.js</code> and222 save to reload.
-      //     </p>
-      //     <a
-      //       className="App-link"
-      //       href="https://reactjs.org"
-      //       target="_blank"
-      //       rel="noopener noreferrer"
-      //     >
-      //       Lear2222 n React
-      //     </a>
-      //   </header>
-      // </div>
     );
+  }
+
+  componentDidMount() {
+    document.getElementsByClassName('main')[0].appendChild(this.converter.getContentNaviHTML());
   }
 }
 

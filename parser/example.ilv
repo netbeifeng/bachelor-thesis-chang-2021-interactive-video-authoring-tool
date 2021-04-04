@@ -1,0 +1,102 @@
+{
+    ^ title = "Digitale Grauwertbilder"
+    ^ course = "Computergrafik 2"
+    ^ chapter = "Kapitel 3: Bildrepräsentation und Punktoperationen"
+    ^ date = "2019-07-19 16:41:10"
+    ^ author = "Max Muster"
+    ^ semester = "SoSe 2021"
+
+    ^ audio <"scene_1.mp3">
+    /*ssff*/
+    ^ subtitle <"subtitle_1.vtt">
+
+    ^ slide = {
+        $page= 1
+        $name = "Part One"
+        $last = (0-60)
+        $startTime = 0
+        $duration = 60
+
+        ^video <"video1.mp4"> = {
+            $startTime = 0
+            $duration = 60  
+            $position = (200,400)
+            $height = 500
+            $width = 900
+        }
+
+        ^video <"https://www.youtube.com/watch?v=jzTEx90xbAM"> = {
+            $startTime = 0
+            $duration = 60  
+            $position = (200,700)
+            $height = 500
+            $width = 900
+        }
+
+        ^ text = {
+            $startTime = 0
+            $duration = 60
+            $position = (90,220)
+            $fontSize = 36
+            $content = "**Intuitiv**: 2D-Array mit ~~Helligkeitswerten~~ als (unsigned) Integer [google](https://www.google.de)"
+        }
+
+        ^ custom <"grau.html"> = {
+            $name = "GrauMatrix"
+            $position = (500,400)
+            $duration = 30
+            $startTime = 30 
+        }
+
+        /*ssff*/
+        ^ quiz = {
+            $name ="First"
+            $position = (100,100)
+            $height = 200
+            $width = 500/*ssff*/
+            $duration = 40
+            $startTime = 10
+            $questionContent = "What is this?"
+            $correctAnswer = "This is an apple."
+            $wrongAnswers = [
+                "This is a banna.",
+                "This is an orange."
+            ]
+            $tip = "Because ..."
+        }
+    }
+
+    ^ slide = {
+        $page= 2
+        $name = "Part Two"
+        $last =(248-340)
+
+
+        ^image <"image.png"> = {
+            $width = 100
+            $height = 100
+            $startTime = 0
+            $duration = 60
+            $position = (300,400)
+        }
+    }
+
+    ^ slide = {
+        $page= 3
+        $name = "Part Three"
+        $last = (100-600)
+        ^image <"https://upload.wikimedia.org/wikipedia/commons/7/77/Hsh_logo.png"> = {
+            $width= 100
+            $height = 200
+            $startTime = 0
+            $duration = 60
+            $position = (100,200)
+        }
+    }
+
+    ^ slide = {
+        $page= 4
+        $name = "Part Four"
+        $last =(50-100)
+    }
+}

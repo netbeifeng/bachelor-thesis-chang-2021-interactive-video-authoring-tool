@@ -20,8 +20,7 @@ class SceneContainer extends Component {
     }
 
     componentDidMount() {
-        let scene_container = this.scene_container.current;
-
+        // let scene_container = this.scene_container.current;
     }
 }
 

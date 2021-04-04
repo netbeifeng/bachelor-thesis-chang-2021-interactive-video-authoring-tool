@@ -1,7 +1,7 @@
 import React, { Component, useRef } from 'react';
 import { Container, Stage, Text, Graphics, useApp } from '@inlet/react-pixi';
-import RoundedRect from './RoundedRect';
-import GrayMatrixCell from './GrayMatrixCell';
+import RoundedRect from './pixi-component/RoundedRect';
+import GrayMatrixCell from './pixi-component/GrayMatrixCell';
 import { Sprite, AnimatedSprite } from '@inlet/react-pixi';
 import logo from '../../../assests/public_imgs/logo.png';
 import sub_logo from '../../../assests/public_imgs/sub_logo.png';
@@ -10,6 +10,11 @@ import * as PIXI from 'pixi.js';
 
 import scene_1 from '../../../assests/demo_1/powerpoint_1.png';
 import scene_2 from '../../../assests/demo_2/powerpoint_2.png';
+import scene_2_0 from '../../../assests/demo_2/scene_2_0.png';
+import scene_2_1 from '../../../assests/demo_2/scene_2_1.png';
+import scene_2_2 from '../../../assests/demo_2/scene_2_2.png';
+import scene_2_3 from '../../../assests/demo_2/scene_2_3.png';
+import scene_2_4 from '../../../assests/demo_2/scene_2_4.png';
 
 import reset from '../../../assests/public_imgs/reset.png';
 import back from '../../../assests/public_imgs/back.png';
@@ -20,10 +25,15 @@ import AnimationFactory from '../../../enities/Animation/AnimationFactory';
 import GlobalVar from '../../../utilities/GlobalVar';
 
 import pixi_loading_map from '../../../assests/public_imgs/pixi-loading/map.json';
-import Circle from './Circle';
+import Circle from './pixi-component/Circle';
+import EventEnum from '../../../enities/Event/EventEnum';
+import PIXIStageInitEvent from '../../../enities/Event/PIXIStageInitEvent';
+import HowlerPlayEvent from '../../../enities/Event/HowlerPlayEvent';
+import PIXISceneChangeEvent from '../../../enities/Event/PIXISceneChangeEvent';
 
 class Scene extends Component {
-    sceneList = [scene_1, scene_2];
+    scenes_list = [scene_1, scene_2];
+    scene2_list = [scene_2_0, scene_2_1, scene_2_2, scene_2_3, scene_2_4];
     pixi_loading = [];
     constructor(props) {
         super(props);
@@ -31,6 +41,10 @@ class Scene extends Component {
         // PIXI.Texture.from('imgs/pixi-loading/frame_11.png');
         for (let item of pixi_loading_map) {
             this.pixi_loading.push(PIXI.Texture.from(`imgs/pixi-loading/${item.name}`));
+        }
+
+        this.backToMenu = () => {
+            this.ee.emit(EventEnum.PIXISceneChangeEvent, new PIXISceneChangeEvent(Date.now(), this, 0, true));
         }
 
         this.grayMatrixArray = [];
@@ -98,7 +112,7 @@ class Scene extends Component {
                             <Text x={55} y={40} text="Digitale Grauwertbilder" style={{ fontFamily: 'UnitMedium', fontSize: 36, fill: 0x0 }} />
                         </RoundedRect>
                         <RoundedRect scene={2} type={0} x={100} y={460} width={465} height={120} round={20} fill={0xdc3c05} lineWidth={2} lineColor={0xffffff} lineAplha={1} interactive={true}>
-                            <Text x={55} y={40} text="Konve" style={{ fontFamily: 'UnitMedium', fontSize: 36, fill: 0x0 }} />
+                            <Text x={55} y={40} text="Konvexität Test" style={{ fontFamily: 'UnitMedium', fontSize: 36, fill: 0x0 }} />
                         </RoundedRect>
                         <RoundedRect scene={3} type={0} x={100} y={660} width={465} height={120} round={20} fill={0xdc3c05} lineWidth={2} lineColor={0xffffff} lineAplha={1} interactive={true}>
                             <Text x={55} y={40} text="Lorem ipsum dolor 2" style={{ fontFamily: 'UnitMedium', fontSize: 36, fill: 0x0 }} />
@@ -118,10 +132,8 @@ class Scene extends Component {
 
                 return (
                     <Container>
-                        <Sprite image={this.sceneList[this.state.scene - 1]} x={0} y={0} width={1920} height={1080} />
-                        <Sprite image={back} position={[1800, 50]} width={40} height={40} interactive={true} buttonMode={true} pointerdown={() => {
-                            this.ee.emit('scene_change', { scene: 0, proactiveBack: true })
-                        }} />
+                        <Sprite image={this.scenes_list[this.state.scene - 1]} x={0} y={0} width={1920} height={1080} />
+                        <Sprite image={back} position={[1800, 50]} width={40} height={40} interactive={true} buttonMode={true} pointerdown={this.backToMenu} />
                         <Container ref={this.container}>
                             <Text x={90} y={260} text={"2D-Array:"} style={{ fontFamily: 'UnitMedium', fontSize: 26, fill: 0xdc3c05 }} />
                             <Sprite x={780} y={265} width={30} height={30} image={reset} interactive={true} buttonMode={true} pointerdown={() => {
@@ -172,14 +184,16 @@ class Scene extends Component {
 
             case 2: {
                 return (
-                <Container>
-                    <Container ref={this.container}>
-                    <Sprite image={this.sceneList[this.state.scene - 1]} x={0} y={0} width={1920} height={1080} />
-                        <Sprite image={back} position={[1800, 50]} width={40} height={40} interactive={true} buttonMode={true} pointerdown={() => {
-                            this.ee.emit('scene_change', { scene: 0, proactiveBack: true })
-                        }} />
-                    </Container>
-                </Container>);
+                    <Container>
+                        <Sprite image={this.scenes_list[this.state.scene - 1]} x={0} y={0} width={1920} height={1080} />
+                        <Sprite image={back} position={[1800, 50]} width={40} height={40} interactive={true} buttonMode={true} pointerdown={this.backToMenu} />
+
+
+                        <Container ref={this.container}>
+                            <Sprite image={this.scene2_list[0]} x={50} y={50} width={882} height={82} />
+                            <Sprite image={this.scene2_list[1]} x={100} y={200} width={1528} height={382} />
+                        </Container>
+                    </Container>);
             }
 
             default: {
@@ -192,42 +206,44 @@ class Scene extends Component {
 
     componentDidMount() {
 
-        ee.on('howler_pause', () => {
+        ee.on(EventEnum.HowlerPauseEvent, () => {
             this.timeline.pause();
         });
 
-        ee.on('howler_replay', () => {
+        ee.on(EventEnum.HowlerResumeEvent, () => {
             this.timeline.resume();
         });
 
-        ee.on('howler_seek', (e) => {
-            let seek = Math.round(e.seek);
+        ee.on(EventEnum.HowlerSeekEvent, (e) => {
+            let seek = Math.round(e.getSeek());
             this.timeline.seek(seek);
         });
 
-        ee.on('scene_change', (e) => {
-            if(e.proactiveBack) {
+        ee.on(EventEnum.PIXISceneChangeEvent, (e) => {
+            console.log(e);
+            if (e.getProactiveBack()) {
                 this.container.current.parent.removeChildren();
                 this.timeline.kill();
-                ee.emit('stage_init', {});
+                ee.emit(EventEnum.PIXIStageInitEvent, new PIXIStageInitEvent(Date.now(), this));
             }
 
             this.setState({
-                scene: e.scene
+                scene: e.getScene()
             })
         })
 
-        ee.on('scene_change_var', (e) => {
+        ee.on(EventEnum.PIXISceneChangeVarEvent, (e) => {
+            let scene = e.getScene();
             this.setState({
-                scene: e.scene
+                scene: scene
             })
-            if (e.scene == 1) {
+            if (scene == 1) {
                 GlobalVar.demo1_container = this.container.current;
             }
-            this.animationFactory = new AnimationFactory(e.scene, this.container.current);
+            this.animationFactory = new AnimationFactory(scene, this.container.current);
             this.timeline = this.animationFactory.getTimeline();
-            e.howler.play();
-            ee.emit("howler_play", { track: e.scene });
+            e.getHowler().play();
+            ee.emit(EventEnum.HowlerPlayEvent, new HowlerPlayEvent(Date.now(), this, scene));
         })
     }
 

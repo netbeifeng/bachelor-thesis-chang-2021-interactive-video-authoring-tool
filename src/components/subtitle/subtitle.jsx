@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import ee from '../../utilities/event-emitter';
 import CaptionLoader from '../../enities/Caption/CaptionLoader';
-import './subtitle.scss';
+import './Subtitle.scss';
+import EventEnum from '../../enities/Event/EventEnum';
 
 
 class Subtitle extends Component {
@@ -28,8 +29,10 @@ class Subtitle extends Component {
     // console.log(this.state.display);
     if (this.state.display) {
       style.opacity = 1;
+      style.zIndex = '3';
     } else {
       style.opacity = 0;
+      style.zIndex = '-1';
     }
 
     return (
@@ -38,28 +41,31 @@ class Subtitle extends Component {
   }
 
   componentDidMount() {
-    this.ee.addListener("cc", (obj) => {
+    this.ee.on(EventEnum.ClosedCaptionEvent, (e) => {
       // console.log(obj);
-      if (obj.playIndex >= 1 && obj.playIndex != this.state.playIndex) {
-        this.cp.initiate(obj.playIndex);
+      let playIndex = e.getPlayIndex();
+      let value = e.getValue();
+      let howler = e.getHowler();
+      if (playIndex >= 1 && playIndex != this.state.playIndex) {
+        this.cp.initiate(playIndex);
 
         this.setState({
           captions: this.cp.getCaptions(),
-          display: obj.value,
-          playIndex: obj.playIndex,
-          howler: obj.howler
+          display: value,
+          playIndex: playIndex,
+          howler: howler
         })
       } else {
         this.setState({
-          display: obj.value,
-          howler: obj.howler
+          display: value,
+          howler: howler
         })
       }
     })
 
     setInterval(() => {
       // if(this.state.howler.playing()) {
-      if (this.state.howler.state() == 'loaded') {
+      if (this.state.howler && this.state.howler.state() == 'loaded') {
         // console.log(this.state.howler);
         let seek = this.state.howler.seek();
         if (this.state.captions.length > 0) {
@@ -79,9 +85,8 @@ class Subtitle extends Component {
       // }
     }, 500);
 
-    this.ee.on("stage_init", () => {
+    this.ee.on(EventEnum.PIXIStageInitEvent, () => {
       this.setState({
-        captions: [],
         currentString: " * (Bitte wählen Sie eine Ausschnitt) * ",
         seek: 0,
         howler: undefined,
