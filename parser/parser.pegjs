@@ -13,11 +13,12 @@ Property =
 / "^" _ key:Key _ "=" _ value:Value _ End {  return { key: key, value: value}; } 
 / c:COMMENT {return {key: 'comment' , value: c.join('').split(',').join('')}; }
 
-Key = (QuestionKey / SubKey / MainKey) {return text();}
-NormakKey = "title" / "course" / "date" / "audio" / "author" / "slide" / "subtitle" / "semester" / "chapter" { return text(); }
+Key = ( SubKey / MainKey) {return text();}
+NormakKey = "title" / "course" / "date" / "audio" / "font" / "author" / "slide" / "subtitle" / "semester" / "chapter" { return text(); }
 MainKey = NormakKey / "custom" / "quiz" / "text" / "animation" / "image" / "video" / "animation" { return text(); }
-SubKey = "position" / "height" / "width" / "duration" / "startTime" / "page" / "name" / "id" / "content" / "fontSize" / "fontColor" / "last" { return text(); }
-TextKey = "page" { return text(); }
+SubKey = QuestionKey / TextKey / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" { return text(); }
+
+TextKey = "page" / "content" / "fontSize" / "fontColor" / "fontFamily" { return text(); }
 QuestionKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" { return text(); }
 
 Value = value:(BasicDataType / Coordinate / Interval / Array) { return value;}

@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
+import Converter from '../../utilities/converter/Converter';
 class HelmetHead extends Component {
+  constructor(props) {
+    super(props);
+    this.converter = new Converter(true);
+    // this.Helmet = React.createRef("Helmet");
+  }
+
   render() {
     return (
         <Helmet>
@@ -10,6 +17,13 @@ class HelmetHead extends Component {
             <meta charSet="utf-8" />
         </Helmet>
     );
+  }
+
+  componentDidMount() {
+    // console.log(this.Helmet)
+    document.querySelector('head').prepend(this.converter.getFontsHTML());
+    // (this.converter.getFontsHTML());
+
   }
 }
 

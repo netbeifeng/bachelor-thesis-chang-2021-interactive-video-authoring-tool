@@ -1,5 +1,6 @@
 import Animation from "./Animation";
 import Custom from "./Custom";
+import Font from "./Font";
 import Image from "./Image";
 import Quiz from "./Quiz";
 import Slide from "./Slide";
@@ -24,6 +25,7 @@ class ILV {
     customes: Array<Custom>;
     videos: Array<Video>;
     images: Array<Image>;
+    fonts: Array<Font>;
 
     constructor(title: string, course: string, chapter: string, author: string, semester: string, audio: string, subtitle: string) {
         this.title = title;
@@ -41,6 +43,7 @@ class ILV {
         this.customes = new Array<Custom>();
         this.videos = new Array<Video>();
         this.images = new Array<Image>();
+        this.fonts = new Array<Font>();
     }
 
     getSlides(): Array<Slide> {
@@ -67,12 +70,16 @@ class ILV {
         return this.customes;
     }
 
-    pushCustom(custom: Custom) {
+    pushCustom(custom: Custom): void {
         this.customes.push(custom);
     }
 
     getVideos(): Array<Video> {
         return this.videos;
+    }
+
+    pushVideo(video: Video): void {
+        this.videos.push(video);
     }
 
     getImages(): Array<Image> {
@@ -85,6 +92,14 @@ class ILV {
 
     getQuizzes(): Array<Quiz> {
         return this.quizzes;
+    }
+
+    getFonts(): Array<Font> {
+        return this.fonts;
+    }
+
+    pushFont(font: Font): void {
+        this.fonts.push(font);
     }
 }
 

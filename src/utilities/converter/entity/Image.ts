@@ -12,13 +12,7 @@ class Image extends Element {
         super(startTime, duration, positionX, positionY);
         this.iid = iid;
         this.path = path;
-
-        if(isOnline) {
-            this.isOnline = true;
-        } else {
-            this.isOnline = false;
-        }
-
+        this.isOnline = isOnline;
         this.width = width;
         this.height = height;
     }

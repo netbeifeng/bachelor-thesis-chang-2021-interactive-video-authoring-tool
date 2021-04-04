@@ -2,7 +2,7 @@ import React, { Component, useRef } from 'react';
 import BackgroundLayer from './html-component/BackgroundLayer';
 import InteractionLayer from './html-component/InteractionLayer';
 import './HTMLStage.scss';
-
+import '../../../assests/fontCSS/font.scss';
 class HTMLStage extends Component {
 
     constructor(props) {

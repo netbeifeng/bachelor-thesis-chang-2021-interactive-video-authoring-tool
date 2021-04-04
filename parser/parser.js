@@ -17,6 +17,7 @@ var result = PEGUtil.parse(parser, fs.readFileSync(_dirname + "example.ilv", "ut
 })
 
 var outputJSON = {
+    fonts: [],
     videos: [],
     animations: [],
     images: [],
@@ -36,9 +37,7 @@ const findValueByKey = (key, json) => {
 }
 
 const getLast = (obj) => {
-    // console.log(obj);
     if (findValueByKey('startTime', obj) == undefined || findValueByKey('duration', obj) == undefined) {
-        // console.log(findValueByKey('last', obj));
         return {
             startTime: findValueByKey('last', obj).startTime,
             duration: findValueByKey('last', obj).endTime - findValueByKey('last', obj).startTime
@@ -67,6 +66,34 @@ const fetchSlides = (json) => {
             if (json[i].key == 'audio' || json[i].key == 'subtitle') {
                 fs.createReadStream(_dirname + json[i].path).pipe(fs.createWriteStream(`public/assests/${json[i].key}/${json[i].path}`));
                 outputJSON[json[i].key] = json[i].value != null ? json[i].value : json[i].path;
+            } else if (json[i].key == 'font') {
+                if (json[i].path.includes('http')) {
+                    outputJSON.fonts.push({
+                        fid: outputJSON.fonts.length + 1,
+                        type: "WebFont",
+                        isOnline: true,
+                        path: json[i].path
+                    });
+                } else {
+                    fs.writeFile('./src/assests/fontCSS/font.scss', `@font-face{
+                        font-family: 'CustomFont${outputJSON.fonts.length + 1}'; 
+                        src: url('../fonts/${json[i].path}');
+                    }`, 'utf8', function (error) {
+                        if (error) {
+                            console.log(error);
+                            return false;
+                        }
+                    })
+                    fs.createReadStream(_dirname + json[i].path).pipe(fs.createWriteStream(`./src/assests/${json[i].key}s/${json[i].path}`));
+
+                    outputJSON.fonts.push({
+                        fid: outputJSON.fonts.length + 1,
+                        type: "LocalFont",
+                        isOnline: false,
+                        path: json[i].path
+                    });
+          
+                }
             } else if (json[i].key != 'comment') {
                 outputJSON[json[i].key] = json[i].value != null ? json[i].value : json[i].path;
             }
@@ -110,18 +137,18 @@ const parseSlideJSON = (json) => {
             text.position = findValueByKey('position', item.aug);
             text.fontSize = findValueByKey('fontSize', item.aug) == undefined ? 26 : findValueByKey('fontSize', item.aug);
             text.fontColor = findValueByKey('fontColor', item.aug) == undefined ? '#000000' : findValueByKey('fontColor', item.aug);
+            text.fontFamily = findValueByKey('fontFamily', item.aug) == undefined ? 'Arial, Helvetica, sans-serif' : findValueByKey('fontFamily', item.aug);
             outputJSON.texts.push(text);
         } else if (item.key == 'video') {
             let video = {};
             video.vid = outputJSON.videos.length + 1;
             video.startTime = getLast(item.aug).startTime;
             video.duration = getLast(item.aug).duration;
+            video.path = item.path;
             if (item.path.includes('http')) {
                 video.isOnline = true;
-                video.url = item.path;
             } else {
                 video.isOnline = false;
-                video.path = item.path;
                 fs.createReadStream(_dirname + item.path).pipe(fs.createWriteStream(`public/assests/video/${item.path}`));
             }
             video.position = findValueByKey('position', item.aug);

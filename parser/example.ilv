@@ -9,6 +9,8 @@
     ^ audio <"scene_1.mp3">
     /*ssff*/
     ^ subtitle <"subtitle_1.vtt">
+    ^ font <"https://fonts.googleapis.com/css2?family=Zilla+Slab+Highlight&display=swap">
+    ^ font <"font.ttf">
 
     ^ slide = {
         $page= 1
@@ -25,7 +27,8 @@
             $width = 900
         }
 
-        ^video <"https://www.youtube.com/watch?v=jzTEx90xbAM"> = {
+        /* ?start=24 start from 24th second*/
+        ^video <"https://www.youtube.com/embed/jzTEx90xbAM"> = {
             $startTime = 0
             $duration = 60  
             $position = (200,700)
@@ -39,6 +42,24 @@
             $position = (90,220)
             $fontSize = 36
             $content = "**Intuitiv**: 2D-Array mit ~~Helligkeitswerten~~ als (unsigned) Integer [google](https://www.google.de)"
+        }
+
+        ^ text = {
+            $startTime = 0
+            $duration = 60
+            $position = (700,400)
+            $fontSize = 36
+            $fontFamily = "CustomFont2"
+            $content = "**Test**: What? Is this font"
+        }
+
+        ^ text = {
+            $startTime = 0
+            $duration = 60
+            $position = (700,600)
+            $fontSize = 36
+            $fontFamily = "Zilla Slab Highlight"
+            $content = "**Test**: What? Is this font"
         }
 
         ^ custom <"grau.html"> = {
@@ -86,7 +107,7 @@
         $name = "Part Three"
         $last = (100-600)
         ^image <"https://upload.wikimedia.org/wikipedia/commons/7/77/Hsh_logo.png"> = {
-            $width= 100
+            $width= 300
             $height = 200
             $startTime = 0
             $duration = 60
