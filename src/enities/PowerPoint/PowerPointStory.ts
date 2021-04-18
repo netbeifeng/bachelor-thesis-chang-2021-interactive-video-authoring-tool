@@ -1,6 +1,6 @@
 import PowerPointPage from './PowerPointPage';
-import powerpoint_map_1 from '../../assests/demo_1/powerpoint_map_1.json';
-import powerpoint_map_2 from '../../assests/demo_2/powerpoint_map_2.json';
+import powerpoint_map_1 from '../../assets/demo_1/powerpoint_map_1.json';
+import powerpoint_map_2 from '../../assets/demo_2/powerpoint_map_2.json';
 
 class PowerPointStory {
     powerpointMap: Array<PowerPointPage> = new Array();

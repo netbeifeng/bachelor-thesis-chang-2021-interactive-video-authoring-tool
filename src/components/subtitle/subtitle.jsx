@@ -10,12 +10,11 @@ class Subtitle extends Component {
     super(props);
 
     this.cp = new CaptionLoader();
-    // track 1 -> first demo
 
     this.state = {
       captions: [],
       currentString: " * (Kein Untertitel verfügbar) * ",
-      playIndex: 0,
+      // playIndex: 0,
       seek: 0,
       howler: undefined,
       display: true
@@ -41,33 +40,23 @@ class Subtitle extends Component {
   }
 
   componentDidMount() {
-    this.ee.on(EventEnum.ClosedCaptionEvent, (e) => {
-      // console.log(obj);
-      let playIndex = e.getPlayIndex();
-      let value = e.getValue();
-      let howler = e.getHowler();
-      if (playIndex >= 1 && playIndex != this.state.playIndex) {
-        this.cp.initiate(playIndex);
 
-        this.setState({
-          captions: this.cp.getCaptions(),
-          display: value,
-          playIndex: playIndex,
-          howler: howler
-        })
-      } else {
-        this.setState({
-          display: value,
-          howler: howler
-        })
-      }
+    this.ee.on(EventEnum.HowlerLoadEvent, (e) => {
+      // console.log('!!!!!!!!!!');
+      this.cp.initiate();
+      this.setState({
+        captions: this.cp.getCaptions(),
+        howler: e.howler
+      })
     })
 
     setInterval(() => {
       // if(this.state.howler.playing()) {
+        // console.log(this.state.howler && this.state.howler.state() == 'loaded');
       if (this.state.howler && this.state.howler.state() == 'loaded') {
         // console.log(this.state.howler);
         let seek = this.state.howler.seek();
+        // console.log(this.state.captions.length);
         if (this.state.captions.length > 0) {
           for (let cue of this.state.captions) {
             if (cue.getStart() <= seek && cue.getEnd() >= seek) {
@@ -85,13 +74,13 @@ class Subtitle extends Component {
       // }
     }, 500);
 
-    this.ee.on(EventEnum.PIXIStageInitEvent, () => {
-      this.setState({
-        currentString: " * (Bitte wählen Sie eine Ausschnitt) * ",
-        seek: 0,
-        howler: undefined,
-      })
-    });
+    // this.ee.on(EventEnum.PIXIStageInitEvent, () => {
+    //   this.setState({
+    //     currentString: " * (Bitte wählen Sie eine Ausschnitt) * ",
+    //     seek: 0,
+    //     howler: undefined,
+    //   })
+    // });
 
     // this.ee.on("howler_seek", (obj) => {
     //   this.setState({

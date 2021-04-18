@@ -1,35 +1,75 @@
 import React, { Component, useRef } from 'react';
-import Converter from '../../../../utilities/converter/Converter';
+// import _default from '../../../../../node_modules/highlight.js/scss/default.scss';
 
 class InteractionLayer extends Component {
 
     constructor(props) {
         super(props);
-        this.converter = new Converter()
+        // this.converter = new Converter()
     }
 
     render() {
         return (
             <div id='htmlInteractionLayer' style={{ zIndex: 1 }}>
-                <h1 className='slideTitle' style={{ left: '90px', top: '85px' }}>Digitale Grauwertbilder</h1>
-                {/* <object data="assests/video/video1.mp4" width = '300' height ='500'></object> */}
+                <div id='cursor'/>
+                {/* <h1 className='slideTitle' style={{ left: '90px', top: '85px' }}>Digitale Grauwertbilder</h1> */}
+                {/* <div className='quizComponent' style={{ left: '200px', top: '500px', width: '500px', height: '500px' }}>
+                    <div className='questionRow'>
+                        <span>
+                            <img className='quizIcon' src='public_imgs/question.png' />
+                        </span>
+                        <span className='questionContent'>What is this?</span>
+
+                        <div className='questionOptionBlock'>
+                            <div className='questionOption'>
+                                <div className='optionContainer'>
+                                    <span className='optionNo'>A.&nbsp;</span>
+                                    <span className='optionContent'>ABCABC</span>
+                                </div>
+                            </div>
+                            <div className='questionOption'>
+                                <div className='optionContainer'>
+                                    <span className='optionNo'>B.&nbsp;</span>
+                                    <span className='optionContent'>ABCABC</span>
+                                </div>
+                            </div>
+                            <div className='questionOption'>
+                                <div className='optionContainer'>
+                                    <span className='optionNo'>C.&nbsp;</span>
+                                    <span className='optionContent'>ABCABC</span>
+                                </div>
+                            </div>
+                            <div className='questionOption'>
+                                <div className='optionContainer'>
+                                    <span className='optionNo'>D.&nbsp;</span>
+                                    <span className='optionContent'>ABCABC</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div className="questionFeedback">
+                            <img className='feedbackIcon' src='public_imgs/cross_mark.png' />
+                            <label className='feedbackContent'>Falsch :( </label>
+                        </div>
+                        <div className="questionTip">
+                            <span>
+                                <img className='quizIcon' src='public_imgs/info.png' />
+                            </span>
+                            <span className='questionTipContent'>What isXXXXXXXX this?</span>
+                        </div>
+                    </div>
+                </div>
+                <script>
+
+                </script> */}
             </div>
         );
     }
 
     componentDidMount() {
-        // console.log(this.converter.getILV().getCustomes());
-        document.getElementById('htmlInteractionLayer').append(this.converter.getTextHTML(this.converter.getILV().getTexts()[0]));
-        document.getElementById('htmlInteractionLayer').append(this.converter.getTextHTML(this.converter.getILV().getTexts()[1]));
-        document.getElementById('htmlInteractionLayer').append(this.converter.getTextHTML(this.converter.getILV().getTexts()[2]));
-        document.getElementById('htmlInteractionLayer').append(this.converter.getCustomHTML(this.converter.getILV().getCustomes()[0]));
-        document.getElementById('htmlInteractionLayer').append(this.converter.getImageHTML(this.converter.getILV().getImages()[0]));
-        document.getElementById('htmlInteractionLayer').append(this.converter.getImageHTML(this.converter.getILV().getImages()[1]));
-        // console.log(this.converter.getILV().getVideos()[1]);
-        // console.log(this.converter.getILV().getVideos()[0]);
-        document.getElementById('htmlInteractionLayer').append(this.converter.getVideoHTML(this.converter.getILV().getVideos()[0]));
-        // document.getElementById('htmlInteractionLayer').append(this.converter.getVideoHTML(this.converter.getILV().getVideos()[1]));
     }
+
+    
 }
 
 export default InteractionLayer;

@@ -8,5 +8,4 @@ enum AnimationEnum {
     Slide = -1,
     Scale = -2
 }
-
 export default AnimationEnum;

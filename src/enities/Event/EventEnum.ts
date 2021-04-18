@@ -2,6 +2,7 @@ enum EventEnum {
     PIXISceneChangeEvent = 'scene_change',
     PIXISceneChangeVarEvent = 'scene_change_var',
     PIXIStageInitEvent = 'stage_init',
+    HowlerLoadEvent = 'howler_load',
     HowlerSeekEvent = 'howler_seek',
     HowlerPlayEvent = 'howler_play',
     HowlerPauseEvent = 'howler_pause',

@@ -1,29 +1,38 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
-import Converter from '../../utilities/converter/Converter';
+import Render from '../../utilities/render/Render';
+import * as hljs from 'highlight.js';
+
+import highlightCSS from '../../../node_modules/highlight.js/scss/default.scss';
+import markdownCSS from '../../../node_modules/github-markdown-css/github-markdown.css';
+import katexCSS from '../../../node_modules/katex/dist/katex.min.css';
+
 class HelmetHead extends Component {
   constructor(props) {
     super(props);
-    this.converter = new Converter(true);
+    this.ilvRender = new Render(true);
     // this.Helmet = React.createRef("Helmet");
   }
 
   render() {
     return (
-        <Helmet>
-            <title>Interactive Learning Video Demo</title>
-            <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-                integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossOrigin="anonymous" />
-            <meta charSet="utf-8" />
-        </Helmet>
+      <Helmet>
+        <title>Interactive Learning Video Demo</title>
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossOrigin="anonymous" />
+        <meta charSet="utf-8" />
+      </Helmet>
     );
   }
 
   componentDidMount() {
-    // console.log(this.Helmet)
-    document.querySelector('head').prepend(this.converter.getFontsHTML());
-    // (this.converter.getFontsHTML());
-
+    document.querySelector('head').prepend(this.ilvRender.getFontsHTML());
+    document.addEventListener('DOMContentLoaded', (event) => {
+      console.log('%c ---- Page is loaded ---', 'color:coral');
+      document.querySelectorAll('code').forEach((block) => {
+        hljs.highlightBlock(block);
+      });
+    });
   }
 }
 

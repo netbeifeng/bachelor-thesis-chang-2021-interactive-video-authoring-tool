@@ -57,30 +57,30 @@ class ClosedCaptionSwitch extends Component {
         };
     }
 
-    componentDidUpdate(nextProps) {
-        let howler = nextProps.howler;
-        // console.log(howler);
-        if (this.state.ccEnabled) {
-            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
-            // { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex }
-        } else {
-            // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
-            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
-        }
-        this.cc_switch.current.onclick = () => {
-            // this.changeState(element);
-            if (this.state.ccEnabled) {
-                // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
-                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
-            } else {
-                // this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
-                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
-            }
-            this.setState({
-                ccEnabled: !this.state.ccEnabled
-            })
-        };
-    }
+    // componentDidUpdate(nextProps) {
+    //     let howler = nextProps.howler;
+    //     // console.log(howler);
+    //     if (this.state.ccEnabled) {
+    //         this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
+    //         // { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex }
+    //     } else {
+    //         // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+    //         this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
+    //     }
+    //     this.cc_switch.current.onclick = () => {
+    //         // this.changeState(element);
+    //         if (this.state.ccEnabled) {
+    //             // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+    //             this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
+    //         } else {
+    //             // this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
+    //             this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
+    //         }
+    //         this.setState({
+    //             ccEnabled: !this.state.ccEnabled
+    //         })
+    //     };
+    // }
 
     // changeState(element) {
     //     let time = Date.now();

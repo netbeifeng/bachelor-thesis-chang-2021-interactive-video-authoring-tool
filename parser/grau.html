@@ -1,10 +1,294 @@
 <style>
     #GrayMatrix {
-        width: 200px;
-        height: 200px;
-        background-color: coral;
+        position: absolute;
+        /* width: 1000px;
+        height: 400px; */
+        /* background-color: coral; */
+    }
+
+    .GrayMatrix_ColorUnit {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border: 1px black solid;
+        user-select: none;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    .GrayMatrix_ColorUnit:hover {
+        border: 1px darkorange solid;
+        z-index: 2;
+    }
+
+    .GrayMatrix_ValueUnit {
+        position: absolute;
+        font-size: 28px;
+        font-family: 'Consolas';
+        width: 100px;
+        height: 100px;
+        border: 1px black solid;
+        user-select: none;
+    }
+
+    #GrayMatrix_Value {
+        position: absolute;
+        left: 650px;
+    }
+
+    .value_Text {
+        display: block;
+        padding: 8px;
+    }
+
+    #input_Div {
+        background-color: rgba(136, 136, 136, 0.4);
+        font-family: 'Consolas';
+        padding: 2px 4px;
+        border-radius: 25px;
+        font-size: 20px;
+        width: 55px;
+        position: absolute;
+        left: 550px;
+        user-select: none;
+    }
+
+    #input_Div_White {
+        background-color: white;
+        padding-left: 15px;
+        padding-top: 15px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    #input_Div_Black {
+        background-color: black;
+        padding-left: 15px;
+        padding-top: 15px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        color: white;
+    }
+
+    input[type=range][orient=vertical] {
+        margin: 16px 22px;
+        writing-mode: bt-lr;
+        -webkit-appearance: slider-vertical;
+        width: 10px;
+        height: 250px;
+        padding: 0 5px;
+    }
+
+    #panel {
+        position: absolute;
+        left: 1200px;
+    }
+
+    .panel_circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        cursor: pointer;
+        margin-bottom: 60px;
+    }
+
+    .panel_circle label {
+        font-family: 'Bahnschrift';
+        display: block;
+        width: 80%;
+        text-align: center;
+        margin: auto;
+        padding-top: 28px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    #grayButton {
+        background-color: #888;
+        border: 1px #888 solid;
+    }
+
+    #grayButton:hover {
+        background-color: white;
+    }
+
+    #binButton {
+        background-color: #000;
+        color: white;
+        border: 1px#000 solid;
+    }
+
+    #binButton:hover {
+        background-color: white;
+        color: black;
+    }
+
+    #revertButton {
+        background-color: darkorange;
+        color: white;
+        border: 1px darkorange solid;
+    }
+
+    #revertButton label {
+        padding-top: 20px;
+    }
+
+    #revertButton:hover {
+        background-color: white;
+        color: darkorange;
+        border: 1px darkorange solid;
     }
 </style>
-<div id="GrayMatrix">
-    
+
+<div>
+    <h3 style="font-family: Arial, Helvetica, sans-serif;">Array: </h3>
+
+    <div id="GrayMatrix">
+        <div id="GrayMatrix_Color">
+        </div>
+        <div id="GrayMatrix_Value">
+        </div>
+    </div>
+    <div id="input_Div" style="visibility: hidden;">
+        <div id='input_Div_White'>0</div>
+        <div id='input_Div_Black'>255</div>
+    </div>
+    <div id="panel">
+        <div class="panel_circle" id="grayButton"><label>Grau</label></div>
+        <div class="panel_circle" id="binButton"><label>Bin</label></div>
+    </div>
 </div>
+
+<script>
+    console.log('Custom Component!');
+    let isGray = true;
+    let currentSelectUnit = undefined;
+    let currentSelectColorUnitStyle = undefined;
+    let currentSelectValueUnitStyle = undefined;
+    let colorContainer = document.getElementById('GrayMatrix_Color');
+    let valueContainer = document.getElementById('GrayMatrix_Value');
+    let inputContainer = document.getElementById('input_Div');
+    document.getElementById('binButton').onclick = () => {
+        isGray = false;
+        for (let child of colorContainer.children) {
+            let gray = -1;
+            if (child.dataset.gray > 128) {
+                gray = 255;
+            } else {
+                gray = 0;
+            }
+            child.setAttribute('style', `background-color: rgb(${gray}, ${gray}, ${gray}); left: ${child.style.left}; top: ${child.style.top};`)
+        }
+
+        for (let child of valueContainer.children) {
+            let gray = -1;
+            if (child.dataset.gray > 128) {
+                gray = 255;
+            } else {
+                gray = 0;
+            }
+            child.firstChild.innerHTML = gray;
+            child.setAttribute('style', `left: ${child.style.left}; top: ${child.style.top}; border: 1px black solid; z-index: 1;`);
+        }
+
+        currentSelectUnit = undefined;
+        currentSelectColorUnitStyle = undefined;
+        currentSelectValueUnitStyle = undefined;
+        inputContainer.style.visibility = 'hidden';
+        if (document.getElementById('value_Slider')) {
+            document.getElementById('value_Slider').remove();
+        }
+    };
+
+    document.getElementById('grayButton').onclick = () => {
+        isGray = true;
+        for (let child of colorContainer.children) {
+            child.setAttribute('style', `background-color: rgb(${child.dataset.gray}, ${child.dataset.gray}, ${child.dataset.gray}); left: ${child.style.left}; top: ${child.style.top};`)
+        }
+        for (let child of valueContainer.children) {
+            child.firstChild.innerHTML = child.dataset.gray;
+            child.setAttribute('style', `left: ${child.style.left}; top: ${child.style.top}; border: 1px black solid; z-index: 1;`);
+        }
+        currentSelectUnit = undefined;
+        currentSelectColorUnitStyle = undefined;
+        currentSelectValueUnitStyle = undefined;
+        inputContainer.style.visibility = 'hidden';
+        if (document.getElementById('value_Slider')) {
+            document.getElementById('value_Slider').remove();
+        }
+    }
+
+    for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 4; j++) {
+            let valueUnit = document.createElement('div');
+            let colorUnit = document.createElement('div');
+            colorUnit.className = 'GrayMatrix_ColorUnit';
+            colorUnit.id = `colorUnit_${i}_${j}`;
+            colorUnit.onclick = (e) => {
+
+                if (currentSelectUnit) {
+                    currentSelectUnit.setAttribute('style', currentSelectColorUnitStyle);
+                    let i = currentSelectUnit.id.split('_')[1];
+                    let j = currentSelectUnit.id.split('_')[2];
+                    document.getElementById(`valueUnit_${i}_${j}`).setAttribute('style', currentSelectValueUnitStyle);
+                    if (document.getElementById('value_Slider')) {
+                        document.getElementById('value_Slider').remove();
+                    }
+                }
+                currentSelectUnit = colorUnit;
+
+                currentSelectColorUnitStyle = colorUnit.getAttribute('style');
+                colorUnit.setAttribute('style', currentSelectColorUnitStyle + 'border: 1px darkorange solid; z-index: 2;');
+                let valueUnit = document.getElementById(`valueUnit_${i}_${j}`);
+                currentSelectValueUnitStyle = valueUnit.getAttribute('style');
+                valueUnit.setAttribute('style', currentSelectValueUnitStyle + 'border: 1px darkorange solid; z-index: 2;');
+                if (isGray) {
+                    let slider = document.createElement('input');
+                    slider.id = "value_Slider";
+                    slider.setAttribute('type', `range`);
+                    slider.setAttribute('min', `0`);
+                    slider.setAttribute('value', `${valueUnit.innerText}`);
+                    slider.setAttribute('max', `256`);
+                    slider.setAttribute('orient', `vertical`);
+                    slider.oninput = (e) => {
+                        let gray = e.target.value;
+                        colorUnit.setAttribute('style', `background-color:rgb(${gray},${gray},${gray}); left: ${colorUnit.style.left}; top: ${colorUnit.style.top};` + 'border: 1px darkorange solid; z-index: 2;');
+                        currentSelectUnit = colorUnit;
+                        currentSelectColorUnitStyle = `background-color:rgb(${gray},${gray},${gray}); left: ${colorUnit.style.left}; top: ${colorUnit.style.top};` + 'border: 1px black solid; z-index: 1;';
+                        valueUnit.firstChild.innerText = `${e.target.value}`;
+                    }
+                    inputContainer.style.visibility = 'visible';
+                    document.getElementById('input_Div_White').after(slider);
+                }
+            }
+            valueUnit.className = 'GrayMatrix_ValueUnit';
+            valueUnit.id = `valueUnit_${i}_${j}`;
+            let gray = -1;
+            if (j == 2 && i == 1) {
+                gray = 109;
+            } else if (j == 1 && i == 1) {
+                gray = 0;
+            } else if (j == 1 && i == 0) {
+                gray = 41;
+            } else if (j == 2 && i == 0) {
+                gray = 148;
+            } else {
+                gray = (Math.floor(Math.random() * 256) * 0.299 + Math.floor(Math.random() * 256) * 0.299 + Math.floor(Math.random() * 256) * 0.114).toFixed(0);
+            }
+            colorUnit.style.backgroundColor = `rgb(${gray},${gray},${gray})`;
+            colorUnit.dataset.gray = gray;
+            valueUnit.innerHTML = `<label class='value_Text'>${gray}</label>`;
+            valueUnit.style.left = `${i * 100}px`;
+            valueUnit.style.top = `${j * 100}px`;
+            valueUnit.dataset.gray = gray;
+            colorUnit.style.left = `${i * 100}px`;
+            colorUnit.style.top = `${j * 100}px`;
+
+            colorContainer.appendChild(colorUnit);
+            valueContainer.appendChild(valueUnit);
+        }
+    }
+</script>

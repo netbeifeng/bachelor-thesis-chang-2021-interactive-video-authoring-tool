@@ -1,5 +1,5 @@
 import Point from './Point';
-import animation_map_1 from '../../assests/demo_1/animation_map_1.json';
+import animation_map_1 from '../../assets/demo_1/animation_map_1.json';
 import Animation from './Animation';
 import AnimationEnum from './AnimationEnum';
 import CursorMove from './CursorMove';

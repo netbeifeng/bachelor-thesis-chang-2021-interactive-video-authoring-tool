@@ -15,11 +15,13 @@ Property =
 
 Key = ( SubKey / MainKey) {return text();}
 NormakKey = "title" / "course" / "date" / "audio" / "font" / "author" / "slide" / "subtitle" / "semester" / "chapter" { return text(); }
-MainKey = NormakKey / "custom" / "quiz" / "text" / "animation" / "image" / "video" / "animation" { return text(); }
-SubKey = QuestionKey / TextKey / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" { return text(); }
+MainKey = NormakKey / "custom" / "quiz" / "text" / "animation" / "image" / "video" / "transformation" / "cursor" / "graphics" { return text(); }
+SubKey = QuestionKey / TextKey / AnimationKey / GraphicsKey / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" / "inPage" { return text(); }
 
+GraphicsKey = "radius" / "strokeColor" / "strokeWidth" { return text(); }
 TextKey = "page" / "content" / "fontSize" / "fontColor" / "fontFamily" { return text(); }
-QuestionKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" { return text(); }
+QuestionKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" / "type" { return text(); }
+AnimationKey = "elementType" / "elementId" / "toScale" / "toPosition" / "emphasisTime" / "moveTo" { return text(); }
 
 Value = value:(BasicDataType / Coordinate / Interval / Array) { return value;}
 

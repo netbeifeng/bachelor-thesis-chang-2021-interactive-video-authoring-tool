@@ -1,12 +1,12 @@
 import React, { Component, useRef } from 'react';
-import bg from "../../../../assests/demo_1/powerpoint_1.png";
-import Converter from '../../../../utilities/converter/Converter';
+
+import Render from '../../../../utilities/render/Render';
 
 class BackgroundLayer extends Component {
 
     constructor(props) {
         super(props);
-        this.footer = new Converter().getFooter();
+        this.footer = new Render('footer').getFooter();
     }
 
     render() {

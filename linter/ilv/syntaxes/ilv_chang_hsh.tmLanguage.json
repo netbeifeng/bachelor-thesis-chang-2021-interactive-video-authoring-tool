@@ -6,6 +6,9 @@
 			"include": "#Comment"
 		},
 		{
+			"include": "#SubKey"
+		},
+		{
 			"include": "#MainKey"
 		},
 		{
@@ -13,9 +16,6 @@
 		},
 		{
 			"include": "#Path"
-		},
-		{
-			"include": "#SubKey"
 		},
 		{
 			"include": "#Operator"
@@ -32,13 +32,13 @@
 		"SubKey": {
 			"patterns": [{
 				"name": "keyword.declaration.ilv_chang_hsh",
-				"match": "\\$|width|height|startTime|duration|position|questionContent|content|correctAnswer|wrongAnswers|tip|id|page|name"
+				"match": "\\$|width|height|startTime|duration|position|questionContent|content|correctAnswer|wrongAnswers|tip|id|page|name|inPage|fontSize|fontFamily|type|last|moveTo|elementType|elementId|toPosition|toScale|emphasisTime|radius|strokeColor|strokeWidth"
 			}]
 		},
 		"MainKey": {
 			"patterns": [{
 				"name": "keyword.control.ilv_chang_hsh",
-				"match": "date|title|subtitle|audio|author|semester|chapter|course|\\^|custom|slide|text|quiz"
+				"match": "date|title|subtitle|audio|author|semester|chapter|course|\\^|custom|slide|text|quiz|font|image|video|graphics|cursor|transformation"
 			}]
 		},
 		"String": {

@@ -3,12 +3,11 @@ import logo from './logo.svg';
 import './App.scss';
 import Player from './components/player/player';
 import Progress from './components/progress/progress';
-import Converter from './utilities/converter/Converter';
+
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.converter = new Converter();
   }
 
   render() {
@@ -25,7 +24,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    document.getElementsByClassName('main')[0].appendChild(this.converter.getContentNaviHTML());
+    console.log(
+      `%c ILV %c v0.0.1 %c`,
+      'background:#35495E; padding: 1px; border-radius: 3px 0 0 3px; color: #fff;',
+      `background:#19be6b; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff;`,
+      'background:transparent'
+    );
   }
 }
 

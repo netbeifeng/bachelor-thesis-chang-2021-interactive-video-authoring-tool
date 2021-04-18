@@ -2,8 +2,9 @@
     "name": "ilv",
     "displayName": "ilv",
     "description": "Interactive Learning Video",
-    "version": "0.0.1",
+    "version": "0.0.5",
     "icon": "ilv_icon.png",
+    "publisher": "aliasILV",
     "engines": {
         "vscode": "^1.55.0"
     },
@@ -11,16 +12,25 @@
         "Programming Languages"
     ],
     "contributes": {
-        "languages": [{
-            "id": "ilv_chang_hsh",
-            "aliases": ["ilv", "ilv_chang_hsh"],
-            "extensions": [".ilv"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "ilv_chang_hsh",
-            "scopeName": "source.ilv",
-            "path": "./syntaxes/ilv_chang_hsh.tmLanguage.json"
-        }]
+        "languages": [
+            {
+                "id": "ilv_chang_hsh",
+                "aliases": [
+                    "ilv",
+                    "ilv_chang_hsh"
+                ],
+                "extensions": [
+                    ".ilv"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "ilv_chang_hsh",
+                "scopeName": "source.ilv",
+                "path": "./syntaxes/ilv_chang_hsh.tmLanguage.json"
+            }
+        ]
     }
 }
