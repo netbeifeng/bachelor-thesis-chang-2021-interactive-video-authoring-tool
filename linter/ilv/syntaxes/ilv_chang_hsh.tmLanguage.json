@@ -32,13 +32,13 @@
 		"SubKey": {
 			"patterns": [{
 				"name": "keyword.declaration.ilv_chang_hsh",
-				"match": "\\$|width|height|startTime|duration|position|questionContent|content|correctAnswer|wrongAnswers|tip|id|page|name|inPage|fontSize|fontFamily|type|last|moveTo|elementType|elementId|toPosition|toScale|emphasisTime|radius|strokeColor|strokeWidth"
+				"match": "\\$\\s*(date|title|subtitle|audio|author|semester|chapter|course|width|height|startTime|duration|position|questionContent|content|correctAnswer|wrongAnswers|tip|id|page|name|inPage|fontSize|fontFamily|type|last|moveTo|elementType|elementId|toPosition|toScale|emphasisTime|strokeColor|strokeWidth|font)"
 			}]
 		},
 		"MainKey": {
 			"patterns": [{
 				"name": "keyword.control.ilv_chang_hsh",
-				"match": "date|title|subtitle|audio|author|semester|chapter|course|\\^|custom|slide|text|quiz|font|image|video|graphics|cursor|transformation"
+				"match": "\\^\\s*(custom|slide|text|quiz|image|video|graphics|cursor|transformation)"
 			}]
 		},
 		"String": {

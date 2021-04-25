@@ -7,8 +7,8 @@ class Image extends Element {
     width: number;
     height: number;
 
-    constructor(iid: number, startTime: number, duration: number, emphasisTime: number, positionX: number, positionY: number, width: number, height: number, path: string, isOnline: boolean, zIndex: number) {
-        super(startTime, duration, emphasisTime, positionX, positionY, zIndex);
+    constructor(iid: number, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, path: string, isOnline: boolean, zIndex: number) {
+        super(startTime, duration, positionX, positionY, zIndex);
         this.iid = iid;
         this.path = path;
         this.isOnline = isOnline;

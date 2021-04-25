@@ -11,14 +11,14 @@ class Quiz extends Element {
     tip: string;
 
 
-    constructor(qid: number, type: string, emphasisTime: number, questionContent: string, correctAnswer: string, wrongAnswers: Array<string>, tip: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, zIndex: number) {
-        super(startTime, duration, emphasisTime, positionX, positionY, zIndex);
+    constructor(qid: number, type: string, questionContent: string, correctAnswer: string, wrongAnswers: Array<string>, tip: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, zIndex: number) {
+        super(startTime, duration, positionX, positionY, zIndex);
         this.qid = qid;
         this.type = type;
-        if(type == "MC") {
+        if (type == "MC") {
             this.wrongAnswers = wrongAnswers;
         } else {
-            if(correctAnswer.toLocaleLowerCase() == 'true') {
+            if (correctAnswer.toLocaleLowerCase() == 'true') {
                 this.wrongAnswers.push('False');
             } else {
                 this.wrongAnswers.push('True');

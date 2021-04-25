@@ -7,8 +7,8 @@ class Video extends Element {
     height: number;
     isOnline: boolean;
 
-    constructor(vid: number, path: string, startTime: number, duration: number, emphasisTime: number, positionX: number, positionY: number, width: number, height: number, isOnline: boolean, zIndex: number) {
-        super(startTime, duration, emphasisTime, positionX, positionY, zIndex);
+    constructor(vid: number, path: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, isOnline: boolean, zIndex: number) {
+        super(startTime, duration, positionX, positionY, zIndex);
         this.vid = vid;
         this.path = path;
         this.width = width;

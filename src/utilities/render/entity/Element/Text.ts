@@ -1,3 +1,4 @@
+import Custom from "./Custom";
 import Element from "./Element";
 
 class Text extends Element {
@@ -8,8 +9,8 @@ class Text extends Element {
     fontFamily: string = 'Arial, Helvetica, sans-serif';
     markdownRender: any = require('markdown-it')().use(require('markdown-it-highlightjs'), { inline: true }).use(require('markdown-it-katex')).use(require('markdown-it-task-lists'));
 
-    constructor(tid: number, content: string, startTime: number, emphasisTime: number, duration: number, positionX: number, positionY: number, fontSize: number, fontColor: string, fontFamily: string, zIndex: number) {
-        super(startTime, duration, emphasisTime, positionX, positionY, zIndex);
+    constructor(tid: number, content: string, startTime: number, duration: number, positionX: number, positionY: number, fontSize: number, fontColor: string, fontFamily: string, zIndex: number) {
+        super(startTime, duration, positionX, positionY, zIndex);
         this.startTime = startTime;
         this.tid = tid;
         this.content = content;
@@ -39,7 +40,7 @@ class Text extends Element {
         // }});
 
         slideTextContent.appendChild(tempSpan);
-        if(this.tid < 9e2) {
+        if (this.tid < 9e2) {
             slideTextSquare.className = 'slideTextSquare';
             slideTextElement.appendChild(slideTextSquare);
         }
@@ -47,7 +48,7 @@ class Text extends Element {
         slideTextElement.id = `TID_${this.tid}`;
         slideTextElement.style.opacity = '0';
         slideTextElement.style.visibility = 'hidden';
-        
+
         // slideTextContent.dataset.duration = `${text.duration}`;
         // slideTextContent.dataset.fontColor = `${text.fontColor}`;
         // slideTextContent.dataset.fontSize = `${text.fontSize}`;

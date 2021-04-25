@@ -20,12 +20,8 @@ class ILV {
     subtitle: string;
 
     slides: Array<Slide>;
-    // texts: Array<Text>;
     animations: Array<Animation>;
-    // quizzes: Array<Quiz>;
-    // customes: Array<Custom>;
-    // videos: Array<Video>;
-    // images: Array<Image>;
+    // elements: Array<Element>;
     fonts: Array<Font>;
 
     constructor(title: string, course: string, chapter: string, author: string, semester: string, audio: string, subtitle: string) {
@@ -38,14 +34,18 @@ class ILV {
         this.subtitle = subtitle;
 
         this.slides = new Array<Slide>();
-        // this.texts = new Array<Text>();
+        // this.elements = new Array<Element>();
         this.animations = new Array<Animation>();
-        // this.quizzes = new Array<Quiz>();
-        // this.customes = new Array<Custom>();
-        // this.videos = new Array<Video>();
-        // this.images = new Array<Image>();
         this.fonts = new Array<Font>();
     }
+
+    // getElement(): Array<Element> {
+    //     return this.elements;
+    // }
+
+    // pushElement(element: Element): void {
+    //     this.elements.push(element);
+    // }
 
     getSlides(): Array<Slide> {
         return this.slides;
@@ -55,14 +55,6 @@ class ILV {
         this.slides.push(slide);
     }
 
-    // getTexts(): Array<Text> {
-    //     return this.texts;
-    // }
-
-    // pushText(text: Text): void {
-    //     this.texts.push(text);
-    // }
-
     getAnimations(): Array<Animation> {
         return this.animations;
     }
@@ -71,38 +63,6 @@ class ILV {
         this.animations.push(animation);
     }
 
-    // getCustomes(): Array<Custom> {
-    //     return this.customes;
-    // }
-
-    // pushCustom(custom: Custom): void {
-    //     this.customes.push(custom);
-    // }
-
-    // getVideos(): Array<Video> {
-    //     return this.videos;
-    // }
-
-    // pushVideo(video: Video): void {
-    //     this.videos.push(video);
-    // }
-
-    // getImages(): Array<Image> {
-    //     return this.images;
-    // }
-
-    // pushImage(image: Image): void {
-    //     this.images.push(image);
-    // }
-
-    // getQuizzes(): Array<Quiz> {
-    //     return this.quizzes;
-    // }
-
-    // pushQuiz(quiz: Quiz): void {
-    //     this.quizzes.push(quiz);
-    // }
-
     getFonts(): Array<Font> {
         return this.fonts;
     }
@@ -110,8 +70,6 @@ class ILV {
     pushFont(font: Font): void {
         this.fonts.push(font);
     }
-
-
 }
 
 export default ILV;

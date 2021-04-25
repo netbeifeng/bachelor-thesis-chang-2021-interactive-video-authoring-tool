@@ -1,18 +1,18 @@
 import Animation from '../Animation/Animation';
+import Custom from './Custom';
 import Position from './Position';
 
 abstract class Element {
     startTime: number;
     duration: number;
     position: Position;
-    emphasisTime: number;
     transformation: Array<Animation> = [];
     zIndex: number;
+    painted: boolean;
 
-    constructor(startTime: number, duration: number, emphasisTime: number, positionX: number, positionY: number, zIndex: number) {
+    constructor(startTime: number, duration: number, positionX: number, positionY: number, zIndex: number) {
         // console.log(startTime);
         this.startTime = startTime;
-        this.emphasisTime = emphasisTime;
         this.duration = duration;
         this.position = new Position(positionX, positionY);
         this.zIndex = zIndex;
@@ -21,6 +21,11 @@ abstract class Element {
 
     pushTransformation(transformation: Animation): void{
         this.transformation.push(transformation);
+    }
+
+    paint(): void {
+        document.getElementById('htmlInteractionLayer').append(this.getHTMLElement());
+        this.painted = true;
     }
 
     abstract getID(): string;

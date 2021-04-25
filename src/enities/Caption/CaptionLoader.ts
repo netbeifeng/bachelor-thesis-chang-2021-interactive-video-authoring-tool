@@ -4,7 +4,6 @@ import Caption from './Caption';
 import Render from '../../utilities/render/Render';
 
 class CaptionLoader {
-    // playlist: Array<String> = ['subtitle_1.vtt', 'subtitle_2.vtt'];
     captions: Array<Caption> = new Array();
     ilvRender: Render = new Render('subtitle');
     constructor() {

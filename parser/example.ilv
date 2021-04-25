@@ -1,21 +1,20 @@
 {
-    ^ title = "Digitale Grauwertbilder"
-    ^ course = "Computergrafik 2"
-    ^ chapter = "Kapitel 3: Bildrepräsentation und Punktoperationen"
-    ^ date = "2019-07-19 16:41:10"
-    ^ author = "Max Muster"
-    ^ semester = "SoSe 2021"
+    $title = "Digitale Grauwertbilder"
+    $course = "Computergrafik 2"
+    $chapter = "Kapitel 3: Bildrepräsentation und Punktoperationen"
+    $date = "2019-07-19 16:41:10"
+    $author = "Max Muster"
+    $semester = "SoSe 2021"
 
-    ^ audio <"scene_1.mp3">
-    /*ssff*/
-    ^ subtitle <"subtitle_1.vtt">
-    ^ font <"https://fonts.googleapis.com/css2?family=Zilla+Slab+Highlight&display=swap">
-    ^ font <"font.ttf">
+    $audio <"scene_1.mp3">
+    /*ssf
+    ss
+    f*/
+    $subtitle <"subtitle_1.vtt">
+    $font <"https://fonts.googleapis.com/css2?family=Zilla+Slab+Highlight&display=swap">
+    $font <"font.ttf">
 
-
-
-
-    ^ slide = {
+    ^slide = {
         $page= 1
         $name = "Part One"
         $last = (0-100)
@@ -24,7 +23,8 @@
         ^graphics = {
             $last = (1-20)
             $type = "circle"
-            $radius = 50
+            $width = 50
+            $height = 50
             $position = (50,700)
         }
 
@@ -80,7 +80,6 @@
             $position = (90,220)
             $fontSize = 36
             $content = "**Intuitiv**: 2D-Array mit ~~Helligkeitswerten~~ als (unsigned) Integer [google](https://www.google.de)"
-            $emphasisTime = 30
         }
 
         ^ text = {
@@ -135,17 +134,16 @@
             $position = (1000,50)
             $fontSize = 36
             $content = "
-#### tasklist 
-- [x] foo
-  - [ ] bar
-  - [x] baz
-- [ ] bim"
+            #### tasklist 
+            - [x] foo
+            - [ ] bar
+            - [x] baz
+            - [ ] bim
+            "
         }
-
 
         ^ custom <"grau.html"> = {
             $id = 59
-            $name = "GrauMatrix"
             $position = (500,400)
             $duration = 10
             $startTime = 30 
@@ -154,7 +152,6 @@
         /*ssff*/
         ^ quiz = {
             $id = 64
-            $name ="First"
             $type = "TF" /*TF for Ture/False Quiz, MC for Multiple Choice*/
             $position = (100,100)
             $height = 200
@@ -200,7 +197,6 @@
         $last =(230-280) 
         ^ quiz = {
             $id = 68
-            $name = "First"
             $type = "MC" /*TF for Ture/False Quiz, MC for Multiple Choice*/
             $position = (200,500)
             $height = 500

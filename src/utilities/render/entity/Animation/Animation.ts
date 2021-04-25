@@ -7,7 +7,7 @@ abstract class Animation {
     type: AnimationEnum;
     startTime: number;
     duration: number;
-    painted: boolean = false;
+    // painted: boolean = false;
     played: boolean = false;
 
     constructor(aid: number, type: AnimationEnum, startTime: number, duration: number) {
@@ -17,7 +17,7 @@ abstract class Animation {
         this.duration = duration;
     }
 
-    abstract paint(): void;
+    // abstract paint(): void;
     abstract animate(timeline: TimelineMax): void;
 }
 

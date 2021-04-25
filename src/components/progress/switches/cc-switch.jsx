@@ -32,69 +32,24 @@ class ClosedCaptionSwitch extends Component {
     }
 
     componentDidMount() {
-        // this.changeState(element);
         let howler = this.props.howler;
         if (this.state.ccEnabled) {
-            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
-            // { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex }
+            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, true));
         } else {
-            // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
-            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
+            this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, false));
         }
 
         this.cc_switch.current.onclick = () => {
-            // this.changeState(element);
             if (this.state.ccEnabled) {
-                // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
-                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
+                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, false));
             } else {
-                // this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
-                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
+                this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, true));
             }
             this.setState({
                 ccEnabled: !this.state.ccEnabled
             })
         };
     }
-
-    // componentDidUpdate(nextProps) {
-    //     let howler = nextProps.howler;
-    //     // console.log(howler);
-    //     if (this.state.ccEnabled) {
-    //         this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
-    //         // { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex }
-    //     } else {
-    //         // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
-    //         this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
-    //     }
-    //     this.cc_switch.current.onclick = () => {
-    //         // this.changeState(element);
-    //         if (this.state.ccEnabled) {
-    //             // this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
-    //             this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, false, howler, 'Off'));
-    //         } else {
-    //             // this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: Date.now(), howler: howler, playIndex: this.props.playIndex });
-    //             this.ee.emit(EventEnum.ClosedCaptionEvent, new ClosedCaptionEvent(Date.now(), this, this.props.playIndex, true, howler, 'On'));
-    //         }
-    //         this.setState({
-    //             ccEnabled: !this.state.ccEnabled
-    //         })
-    //     };
-    // }
-
-    // changeState(element) {
-    //     let time = Date.now();
-
-    //     if (this.state.ccEnabled) {
-    //         element.lastChild.innerHTML = " Off ";
-    //         element.style.backgroundColor = "rgba(178, 34, 34, 0.9)";
-    //         this.ee.emit("cc", { event: "Off", value: false, opacity: 0, time: time });
-    //     } else {
-    //         element.lastChild.innerHTML = " On ";
-    //         element.style.backgroundColor = "rgba(34, 139, 34, 0.9)";
-    //         this.ee.emit("cc", { event: "On", value: true, opacity: 1, time: time });
-    //     }
-    // }
 }
 
 export default ClosedCaptionSwitch;

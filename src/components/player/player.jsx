@@ -10,7 +10,6 @@ class Player extends Component {
     render() {
         return (
             <div id='pixi-container' ref={this.myRef}>
-                {/* <PIXIStage /> */}
                 <HTMLStage />
                 {/* <ThreeStage /> */}
                 <Subtitle />

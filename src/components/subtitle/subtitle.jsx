@@ -14,7 +14,6 @@ class Subtitle extends Component {
     this.state = {
       captions: [],
       currentString: " * (Kein Untertitel verfügbar) * ",
-      // playIndex: 0,
       seek: 0,
       howler: undefined,
       display: true
@@ -25,7 +24,6 @@ class Subtitle extends Component {
 
   render() {
     let style = {};
-    // console.log(this.state.display);
     if (this.state.display) {
       style.opacity = 1;
       style.zIndex = '3';
@@ -40,9 +38,13 @@ class Subtitle extends Component {
   }
 
   componentDidMount() {
+    this.ee.on(EventEnum.ClosedCaptionEvent, (e) => {
+      this.setState({
+        display: e.value
+      });
+    });
 
     this.ee.on(EventEnum.HowlerLoadEvent, (e) => {
-      // console.log('!!!!!!!!!!');
       this.cp.initiate();
       this.setState({
         captions: this.cp.getCaptions(),
@@ -51,12 +53,8 @@ class Subtitle extends Component {
     })
 
     setInterval(() => {
-      // if(this.state.howler.playing()) {
-        // console.log(this.state.howler && this.state.howler.state() == 'loaded');
       if (this.state.howler && this.state.howler.state() == 'loaded') {
-        // console.log(this.state.howler);
         let seek = this.state.howler.seek();
-        // console.log(this.state.captions.length);
         if (this.state.captions.length > 0) {
           for (let cue of this.state.captions) {
             if (cue.getStart() <= seek && cue.getEnd() >= seek) {
@@ -71,30 +69,8 @@ class Subtitle extends Component {
           })
         }
       }
-      // }
     }, 500);
 
-    // this.ee.on(EventEnum.PIXIStageInitEvent, () => {
-    //   this.setState({
-    //     currentString: " * (Bitte wählen Sie eine Ausschnitt) * ",
-    //     seek: 0,
-    //     howler: undefined,
-    //   })
-    // });
-
-    // this.ee.on("howler_seek", (obj) => {
-    //   this.setState({
-    //     seek: obj.seek
-    //   })
-    //   let seek = obj.seek;
-    //   for (let cue of this.state.captions) {
-    //     if (cue.getStart() <= seek && cue.getEnd() >= seek) {
-    //       this.setState({
-    //         currentString: cue.getText()
-    //       })
-    //     }
-    //   }
-    // });
   }
 }
 

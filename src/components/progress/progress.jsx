@@ -13,6 +13,8 @@ import ee from '../../utilities/event-emitter';
 import EventEnum from '../../enities/Event/EventEnum';
 import Render from '../../utilities/render/Render';
 import { gsap, TweenMax } from "gsap";
+import HowlerLoadEvent from '../../enities/Event/HowlerLoadEvent';
+import PlayRate from './switches/play-rate';
 
 
 class Progress extends Component {
@@ -43,7 +45,6 @@ class Progress extends Component {
         this.progress_dot = React.createRef("progress_dot");
         this.progress_bg = React.createRef("progress_bg");
         this.player_switch = React.createRef("play_switch");
-
         // this.playlist = [scene_1, scene_2];
     }
 
@@ -53,6 +54,7 @@ class Progress extends Component {
                 <div id="progress_bar">
                     <div id="switches">
                         <PlaySwitch howler={this.state.howler} playing={this.state.playing} disabled={this.state.disabled} ref={this.player_switch} />
+                        <PlayRate howler={this.state.howler}/>
                         <ClosedCaptionSwitch howler={this.state.howler} playIndex={this.state.playIndex} />
                         <VolumeSwitch howler={this.state.howler} />
                     </div>
@@ -93,8 +95,10 @@ class Progress extends Component {
             })
         }
         console.log('%c ---- PAINTING I-Layer ----', 'color: forestgreen;');
-        for (let animation of this.ilvRender.getILV().getAnimations()) {
-            animation.paint();
+        for (let slide of this.ilvRender.getILV().getSlides()) {
+            for(let element of slide.getElements()) {
+                element.paint();
+            }
         }
         console.log('%c ---- I-Layer PREPARED ----', 'color: forestgreen;');
         this.setUpQuizListner();
@@ -109,67 +113,29 @@ class Progress extends Component {
         let _that = this;
         _that.initPage();
 
-        ee.on(EventEnum.HowlerPauseEvent, () => {
+        ee.on(EventEnum.HowlerRateEvent, (e) => {
+            this.timeline.timeScale(e.rate);
+        });
+
+        ee.on(EventEnum.HowlerPauseEvent, (e) => {
             this.timeline.pause();
             console.log('%c ---- TIMELINE PAUSE ----', 'color: darkorange;');
 
         });
 
-        ee.on(EventEnum.HowlerResumeEvent, () => {
+        ee.on(EventEnum.HowlerResumeEvent, (e) => {
             this.timeline.resume();
             console.log('%c ---- TIMELINE RESUME ----', 'color: darkorange;');
         });
-
-
-
-        // ee.on(EventEnum.HowlerSeekEvent, (e) => {
-
-        // });
-        // _that.ee.on(EventEnum.PIXIStageInitEvent, () => {
-        //     _that.state.howler.unload();
-        //     _that.setState({
-        //         howler: new Howl({
-        //             src: ['/sound.ogg'],
-        //             volume: 0.5
-        //         }),
-        //         playIndex: 0,
-        //         playing: false,
-        //         disabled: true,
-        //         emphasis_points: [],
-        //         powerpoint_maps: []
-        //     });
-        //     _that.progress.current.style.width = '0px';
-        //     _that.progress_dot.current.style.left = '-15px';
-        //     _that.progress_dot.current.style.transform = '';
-
-        // });
-
-        // _that.ee.on(EventEnum.PIXISceneChangeEvent, (e) => {
-        //     let scene = e.getScene();
-        //     if (scene >= 1) {
-        //         _that.state.howler.unload();
-        //         _that.setState({
-        //             howler: new Howl({
-        //                 src: [this.playlist[scene - 1]],
-        //                 volume: 0.5,
-        //             }),
-        //             playIndex: scene,
-        //             disabled: false,
-        //             playing: true
-        //         });
-        //         this.state.powerpoint_maps = new PowerPointStory().initimate(scene).getPowerPointMap();
-
-        //         ee.emit(EventEnum.PIXISceneChangeEvent, new PIXISceneChangeEvent(Date.now(), this, -1));
 
         _that.state.howler.on('load', function () {
             _that.progress_text.current.innerHTML = "0:00 / " + _that.fmtMSS(~~_that.state.howler.duration());
             _that.timeline = _that.ilvRender.getTimeline();
             _that.timeline.pause();
             console.log(_that.timeline);
-            _that.ee.emit(EventEnum.HowlerLoadEvent, { howler: _that.state.howler });
+            _that.ee.emit(EventEnum.HowlerLoadEvent, new HowlerLoadEvent(Date.now(), _that, _that.state.howler));
             _that.state.duration = _that.state.howler.duration();
 
-            // ee.emit(EventEnum.PIXISceneChangeVarEvent, new PIXISceneChangeVarEvent(Date.now(), this, scene, _that.state.howler));
             let array = [];
             let handle_onMouseEnter = (e) => {
                 let target = e.target;
@@ -198,7 +164,6 @@ class Progress extends Component {
                         element.style.backgroundColor = "rgba(15, 114, 228, 0.9)";
                     }
                     _that.howlerSeek(_that.state.slide_map[id - 1].startTime);
-                    // ee.emit(EventEnum.HowlerSeekEvent, new HowlerSeekEvent(Date.now(), this, _that.state.slide_map[id - 1].startTime));
                     _that.state.howler.seek(_that.state.slide_map[id - 1].startTime);
                 }
             }
@@ -225,12 +190,10 @@ class Progress extends Component {
         })
 
         function step() {
-            // recursive call
+
             let howler = _that.state.howler;
             let seek = howler.seek() || 0;
             let duration = howler.duration();
-
-            // _that.ee.emit("howler_seek", { seek: seek });
 
             if (howler.playing()) {
                 window.requestAnimationFrame(step);
@@ -247,7 +210,6 @@ class Progress extends Component {
 
         _that.handle_mouse_move = (e) => {
             if (e.target.id == 'progress_transparent') {
-                // console.log(e.screenX, e.target.offsetLeft + e.target.offsetWidth);
                 let tip = this.fmtMSS(((e.screenX - e.target.offsetLeft) / (e.target.offsetWidth) * this.state.duration).toFixed(0));
                 if (document.getElementById('progress_time_tip')) {
                     let progress_time_tip = document.getElementById('progress_time_tip');
@@ -276,11 +238,9 @@ class Progress extends Component {
         _that.handleDrag = () => {
             let str = _that.progress_dot.current.style.transform;
             let x = parseInt(str.substring(0, str.indexOf(',')).replace(/[^\d.]/g, ''));
-            // console.log(str,x);
             let percentage = ((x) / _that.progress_bg.current.clientWidth);
             _that.howlerSeek(Math.round(percentage * _that.state.howler.duration()));
 
-            // ee.emit(EventEnum.HowlerSeekEvent, new HowlerSeekEvent(Date.now(), this, Math.round(percentage * _that.state.howler.duration())));
             _that.progress.current.style.width = `${percentage * 80}%`;
         }
 
@@ -295,7 +255,6 @@ class Progress extends Component {
             let seek = Math.round(percentage * _that.state.howler.duration());
             _that.howlerSeek(seek);
 
-            // ee.emit(EventEnum.HowlerSeekEvent, new HowlerSeekEvent(Date.now(), this, seek));
             _that.state.howler.seek(seek);
             if (_that.dragging) {
                 _that.dragging = false;
@@ -310,7 +269,6 @@ class Progress extends Component {
                 }
                 let seek = Math.round(e.nativeEvent.offsetX / Math.round(e.target.getBoundingClientRect().width) * _that.state.howler.duration());
                 _that.howlerSeek(seek);
-                // ee.emit(EventEnum.HowlerSeekEvent, new HowlerSeekEvent(Date.now(), this, seek));
                 _that.state.howler.seek(seek);
             }
         };

@@ -13,13 +13,13 @@ class FadeAnimation extends Animation {
         this.target = target;
     }
 
-    paint(): void {
-        document.getElementById('htmlInteractionLayer').append(this.target.getHTMLElement());
-        if(this.target instanceof Custom) {
-            document.body.append(this.target.getScriptTagHTML());
-        }
-        this.painted = true;
-    }
+    // paint(): void {
+    //     document.getElementById('htmlInteractionLayer').append(this.target.getHTMLElement());
+    //     if(this.target instanceof Custom) {
+    //         document.body.append(this.target.getScriptTagHTML());
+    //     }
+    //     this.painted = true;
+    // }
 
     animate(timeline: TimelineMax): void {
         timeline.to(`#${this.target.getID()}`, { visibility: 'visible', opacity: 1, duration: 2 }, `start+=${this.target.startTime}`)

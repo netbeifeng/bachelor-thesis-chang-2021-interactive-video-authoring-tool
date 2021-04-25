@@ -153,7 +153,7 @@ const parseSlideJSON = (json, slide) => {
             // custom.name = findValueByKey('name', item.aug);
             custom.startTime = getLast(item.aug, slide).startTime;
             custom.duration = getLast(item.aug, slide).duration;
-            custom.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
+            // custom.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             custom.path = item.path;
             custom.position = findValueByKey('position', item.aug);
             custom.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);
@@ -171,7 +171,7 @@ const parseSlideJSON = (json, slide) => {
             quiz.startTime = getLast(item.aug, slide).startTime;
             quiz.duration = getLast(item.aug, slide).duration;
             quiz.position = findValueByKey('position', item.aug);
-            quiz.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
+            // quiz.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             quiz.height = findValueByKey('height', item.aug);
             quiz.width = findValueByKey('width', item.aug);
             quiz.questionContent = findValueByKey('questionContent', item.aug);
@@ -195,7 +195,7 @@ const parseSlideJSON = (json, slide) => {
             // /\s\s+/g
             // console.log(text.content.charAt(20));
             text.position = findValueByKey('position', item.aug);
-            text.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
+            // text.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             text.fontSize = findValueByKey('fontSize', item.aug) == undefined ? 26 : findValueByKey('fontSize', item.aug);
             text.fontColor = findValueByKey('fontColor', item.aug) == undefined ? '#000000' : findValueByKey('fontColor', item.aug);
             text.fontFamily = findValueByKey('fontFamily', item.aug) == undefined ? 'Arial, Helvetica, sans-serif' : findValueByKey('fontFamily', item.aug);
@@ -210,7 +210,7 @@ const parseSlideJSON = (json, slide) => {
             // video.vid = outputJSON.videos.length + 1;
             video.startTime = getLast(item.aug, slide).startTime;
             video.duration = getLast(item.aug, slide).duration;
-            video.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
+            // video.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             video.path = item.path;
             if (item.path.includes('http')) {
                 video.isOnline = true;
@@ -240,7 +240,7 @@ const parseSlideJSON = (json, slide) => {
             image.iid = findValueByKey('id', item.aug);
             image.startTime = getLast(item.aug, slide).startTime;
             image.duration = getLast(item.aug, slide).duration;
-            image.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
+            // image.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             image.path = item.path;
             if (item.path.includes('http')) {
                 image.isOnline = true;
@@ -263,16 +263,16 @@ const parseSlideJSON = (json, slide) => {
             graphics.gid = findValueByKey('id', item.aug);
             graphics.startTime = getLast(item.aug, slide).startTime;
             graphics.duration = getLast(item.aug, slide).duration;
-            graphics.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
+            // graphics.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             graphics.position = findValueByKey('position', item.aug);
-            if(graphics.type == 'circle') {
-                // graphics.radius = findValueByKey('radius', item.aug);
-                graphics.height = findValueByKey('radius', item.aug) * 2;
-                graphics.width = findValueByKey('radius', item.aug) * 2;
-            } else {
-                graphics.height = findValueByKey('height', item.aug);
-                graphics.width = findValueByKey('width', item.aug);
-            }
+            // if(graphics.type == 'circle') {
+            //     // graphics.radius = findValueByKey('radius', item.aug);
+            //     graphics.height = findValueByKey('radius', item.aug) * 2;
+            //     graphics.width = findValueByKey('radius', item.aug) * 2;
+            // } else {
+            graphics.height = findValueByKey('height', item.aug);
+            graphics.width = findValueByKey('width', item.aug);
+            // }
             graphics.strokeColor = findValueByKey('strokeColor', item.aug) == undefined ? 'firebrick' : findValueByKey('strokeColor', item.aug);
             graphics.strokeWidth = findValueByKey('strokeWidth', item.aug) == undefined ? 4 : findValueByKey('strokeWidth', item.aug);
             graphics.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);

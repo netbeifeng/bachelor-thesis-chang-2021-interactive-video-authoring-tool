@@ -15,18 +15,9 @@ class SlideAnimation extends Animation {
         this.elementId = elementId;
         this.elementType = elementType;
     }
-    paint(): void {
-        let compundId = `${this.elementType.charAt(0).toUpperCase()}ID_${this.elementId}`;
-        this.target = document.getElementById(compundId);
-        this.painted = true;
-    }
 
     animate(timeline: TimelineMax): void {
-        timeline.to(this.target, { left: this.toPosition.x, top: this.toPosition.y, duration: this.duration }, `start+=${this.startTime}`);
-    }
-
-    erase(): void {
-
+        timeline.to(document.getElementById(`${this.elementType.charAt(0).toUpperCase()}ID_${this.elementId}`), { left: this.toPosition.x, top: this.toPosition.y, duration: this.duration }, `start+=${this.startTime}`);
     }
 }
 

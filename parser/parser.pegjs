@@ -7,10 +7,10 @@ Augumentation = _ "{" _ "}" _ { return {}; } / _ "{" head:(_ Property _ )* "}" _
 
 Property = 
 "$" _ key:(SubKey/QuestionKey) _ "=" _ value:Value _ End { return { key: key, value: value}; }
+/ "$" _ key:Key _ "<"_ path:String _">" _ End { return { key: key, path: path}; } 
+/ "$" _ key:Key _ "=" _ value:Value _ End {  return { key: key, value: value}; } 
 /  "^" _ key:Key _ "<"_ path:String _">" _ "=" _ subAug:Augumentation _ End { return { key: key, path: path, aug: subAug};}
 / "^" _ key:Key _ "=" _ subAug:Augumentation _ End { return { key: key, aug: subAug};}
-/ "^" _ key:Key _ "<"_ path:String _">" _ End { return { key: key, path: path}; } 
-/ "^" _ key:Key _ "=" _ value:Value _ End {  return { key: key, value: value}; } 
 / c:COMMENT {return {key: 'comment' , value: c.join('').split(',').join('')}; }
 
 Key = ( SubKey / MainKey) {return text();}
@@ -18,7 +18,7 @@ NormakKey = "title" / "course" / "date" / "audio" / "font" / "author" / "slide" 
 MainKey = NormakKey / "custom" / "quiz" / "text" / "animation" / "image" / "video" / "transformation" / "cursor" / "graphics" { return text(); }
 SubKey = QuestionKey / TextKey / AnimationKey / GraphicsKey / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" / "inPage" { return text(); }
 
-GraphicsKey = "radius" / "strokeColor" / "strokeWidth" { return text(); }
+GraphicsKey = "strokeColor" / "strokeWidth" { return text(); }
 TextKey = "page" / "content" / "fontSize" / "fontColor" / "fontFamily" { return text(); }
 QuestionKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" / "type" { return text(); }
 AnimationKey = "elementType" / "elementId" / "toScale" / "toPosition" / "emphasisTime" / "moveTo" { return text(); }
@@ -27,8 +27,8 @@ Value = value:(BasicDataType / Coordinate / Interval / Array) { return value;}
 
 _ "whitespace" = [ \t\r\n]*	
 
-Coordinate = "(" x:Number "," y:Number ")" { return {x: x, y: y};}
-Interval = "(" s:Number "-" e:Number ")" { return {startTime:s, endTime:e} }
+Coordinate = "(" _ x:Number _ "," _ y:Number _ ")" { return {x: x, y: y};}
+Interval = "(" _ s:Number _ "-" _ e:Number _ ")" { return {startTime:s, endTime:e} }
 
 Array = "[" _ "]" { return []; } / "[" head:(_ BasicDataType _ ",")* tail:(_ BasicDataType _) "]" { return head.concat([tail]) .map((element) => element[1]); }
 

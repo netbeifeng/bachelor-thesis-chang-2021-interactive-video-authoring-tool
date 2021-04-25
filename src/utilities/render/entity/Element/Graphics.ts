@@ -8,8 +8,8 @@ class Graphics extends Element {
     strokeWidth: number;
     strokeColor: string;
 
-    constructor(gid: number, startTime: number, emphasisTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, type: string, strokeWidth: number, strokeColor: string, zIndex: number) {
-        super(startTime, duration, emphasisTime, positionX, positionY, zIndex);
+    constructor(gid: number, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, type: string, strokeWidth: number, strokeColor: string, zIndex: number) {
+        super(startTime, duration, positionX, positionY, zIndex);
         this.startTime = startTime;
         this.gid = gid;
         this.type = type;

@@ -85,68 +85,6 @@ class VolumeSwitch extends Component {
             howler.volume((element.value / 100).toFixed(2));
         }
     }
-
-    // componentDidUpdate(nextProps) { 
-    //     let howler = nextProps.howler;
-    //     this.button_volume.current.onclick = () => {
-    //         let element = this.button_volume.current;
-    //         if (this.state.muted) {
-    //             this.setState({
-    //                 volume: this.state.volumeBeforeMute,
-    //                 level: this.state.levelBeforeMute,
-    //                 muted: false
-    //             });
-    //             switch (this.state.level) {
-    //                 case 0: { element.className = "fas fa-volume-mute"; break; }
-    //                 case 1: { element.className = "fas fa-volume-down"; break; }
-    //                 case 2: { element.className = "fas fa-volume-up"; break; }
-    //             }
-    //             howler.volume((this.state.volumeBeforeMute / 100).toFixed(2));
-    //         } else {
-    //             this.setState({
-    //                 volumeBeforeMute: this.state.volume,
-    //                 levelBeforeMute: this.state.level,
-    //             });
-
-    //             element.className = "fas fa-volume-mute";
-
-    //             this.setState({
-    //                 volume: 0,
-    //                 level: 0,
-    //                 muted: true
-    //             });
-    //             howler.volume(0);
-    //         }
-    //     }
-
-        // this.input_volume.current.onmousemove = () => {
-        //     let element = this.input_volume.current;
-        //     this.setState({
-        //         volume: element.value
-        //     })
-        //     if (element.value >= 50) {
-        //         this.setState({
-        //             level: 2
-        //         })
-        //     } else if (element.value > 0 && element.value < 50) {
-        //         this.setState({
-        //             level: 1
-        //         })
-        //     } else {
-        //         this.setState({
-        //             level: 0
-        //         })
-        //     }
-
-        //     switch (this.state.level) {
-        //         case 0: { this.button_volume.current.className = "fas fa-volume-mute"; break; }
-        //         case 1: { this.button_volume.current.className = "fas fa-volume-down"; break; }
-        //         case 2: { this.button_volume.current.className = "fas fa-volume-up"; break; }
-        //     }
-
-        //     howler.volume((element.value / 100).toFixed(2));
-        // }
-    // }
 }
 
 export default VolumeSwitch;
