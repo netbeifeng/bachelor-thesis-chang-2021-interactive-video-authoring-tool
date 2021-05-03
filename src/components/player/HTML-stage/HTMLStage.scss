@@ -13,7 +13,7 @@ $mainColor: #DD3A04;
         height: 30px;
     }
 
-    code {
+    p code {
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
@@ -23,7 +23,7 @@ $mainColor: #DD3A04;
         font: 24px Monaco, Consolas, "Andale  Mono", "DejaVu Sans Mono", monospace;
     }
 
-    pre code {
+    pre {
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
@@ -33,7 +33,7 @@ $mainColor: #DD3A04;
         font: 24px Monaco, Consolas, "Andale  Mono", "DejaVu Sans Mono", monospace;
     }
 
-    code.hljs {
+    p code.hljs {
         display: inline;
     }
 

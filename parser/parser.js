@@ -1,16 +1,25 @@
-var fs = require("fs")
-var ASTY = require("asty")
-var PEG = require("pegjs")
-var PEGUtil = require("pegjs-util");
-var minify = require('html-minifier').minify;
+const fs = require("fs");
+const ASTY = require("asty");
+const PEG = require("pegjs");
+const Validator = require("../validator/validator");
+const PEGUtil = require("pegjs-util");
+const minify = require('html-minifier').minify;
 
-var _dirname = 'parser/';
 
-console.log("--- START PARSE ILV ---");
+const args = process.argv.slice(2);
 
-var asty = new ASTY()
-var parser = PEG.generate(fs.readFileSync(_dirname + "parser.pegjs", "utf8"))
-var result = PEGUtil.parse(parser, fs.readFileSync(_dirname + "example.ilv", "utf8"), {
+const _dirname = `parser/${args[0]}/`;
+const _dirname_res = `parser/${args[0]}/ilv_resources/`;
+// args[0];
+console.log("--- START PARSE ILV-DOCUMENT ---");
+
+const validator = new Validator();
+
+const asty = new ASTY();
+
+const parser = PEG.generate(fs.readFileSync("parser/parser.pegjs", "utf8"));
+
+var result = PEGUtil.parse(parser, fs.readFileSync(_dirname + `${args[0]}.ilv`, "utf8"), {
     startRule: "start",
     makeAST: function (line, column, offset, args) {
         return asty.create.apply(asty, args).pos(line, column, offset)
@@ -21,6 +30,8 @@ var outputJSON = {
     fonts: [],
     slides: [],
 };
+
+var idArray = [];
 
 const findValueByKey = (key, json) => {
     for (let i = 0; i < json.length; i++) {
@@ -42,7 +53,7 @@ const findTransformationInElement = (type, id, json, parent) => {
             transformation.elementId = id;
             // animation.elementId = findValueByKey('elementId', json[i]);
             transformation.type = findValueByKey('type', json[i].aug);
-            console.log(findValueByKey('type', json[i].aug));
+            // console.log(findValueByKey('type', json[i].aug));
             if (transformation.type.toLowerCase() == 'slide') {
                 transformation.toPosition = findValueByKey('toPosition', json[i].aug);
                 transformation.toScale = null;
@@ -55,17 +66,31 @@ const findTransformationInElement = (type, id, json, parent) => {
     }
 }
 
-const getLast = (obj, slide) => {
-    if (findValueByKey('startTime', obj) != undefined || findValueByKey('last', obj) != undefined) {
-        if (findValueByKey('last', obj) == undefined) {
+
+
+const getStartAndDuration = (element, slide) => {
+    if (findValueByKey('startTime', element) != undefined || findValueByKey('last', element) != undefined) {
+        if (findValueByKey('last', element) == undefined) {
             return {
-                startTime: findValueByKey('startTime', obj),
-                duration: findValueByKey('duration', obj)
+                startTime: findValueByKey('startTime', element),
+                duration: findValueByKey('duration', element)
             };
         }
+
+        let startTime = findValueByKey('last', element).startTime;
+        let endTime = findValueByKey('last', element).endTime;
+        if (endTime < startTime) {
+            if (element.page) {
+                throw `ERROR: Invalid last parameter in Slide ${element.page} (${element.name}), EndTime ${endTime} less than StartTime ${startTime}.`;
+            } else {
+                throw `ERROR: Invalid last parameter in Element ${element.id} (${element.name}), EndTime ${endTime} less than StartTime ${startTime}.`;
+
+            }
+        }
+
         return {
-            startTime: findValueByKey('last', obj).startTime,
-            duration: findValueByKey('last', obj).endTime - findValueByKey('last', obj).startTime
+            startTime: startTime,
+            duration: endTime - startTime
         };
     } else {
         // console.log(slide);
@@ -82,8 +107,8 @@ const fetchSlides = (json) => {
         if (json[i].key == 'slide') {
             let slide = {
                 sid: outputJSON.slides.length + 1,
-                startTime: getLast(json[i].aug).startTime,
-                duration: getLast(json[i].aug).duration,
+                startTime: getStartAndDuration(json[i].aug).startTime,
+                duration: getStartAndDuration(json[i].aug).duration,
                 name: findValueByKey('name', json[i].aug),
                 page: findValueByKey('page', json[i].aug),
                 videos: [],
@@ -99,8 +124,8 @@ const fetchSlides = (json) => {
             outputJSON.slides.push(slide);
         } else {
             if (json[i].key == 'audio' || json[i].key == 'subtitle') {
-                fs.createReadStream(_dirname + json[i].path).pipe(fs.createWriteStream(`public/assets/${json[i].key}/${json[i].path}`));
-                outputJSON[json[i].key] = json[i].value != null ? json[i].value : json[i].path;
+                fs.createReadStream(_dirname_res + json[i].path).pipe(fs.createWriteStream(`public/assets/${json[i].key}/${json[i].path}`));
+                outputJSON[json[i].key] = json[i].value != undefined ? json[i].value : json[i].path;
             } else if (json[i].key == 'font') {
                 if (json[i].path.includes('http')) {
                     outputJSON.fonts.push({
@@ -111,11 +136,11 @@ const fetchSlides = (json) => {
                     });
                 } else {
                     localFontString += `@font-face{
-                        font-family: 'CustomFont${outputJSON.fonts.length + 1}'; 
+                        font-family: 'font${outputJSON.fonts.length + 1}'; 
                         src: url('../fonts/${json[i].path}');
                     }\n`;
 
-                    fs.createReadStream(_dirname + json[i].path).pipe(fs.createWriteStream(`./src/assets/${json[i].key}s/${json[i].path}`));
+                    fs.createReadStream(_dirname_res + json[i].path).pipe(fs.createWriteStream(`./src/assets/${json[i].key}s/${json[i].path}`));
 
                     outputJSON.fonts.push({
                         fid: outputJSON.fonts.length + 1,
@@ -150,14 +175,16 @@ const parseSlideJSON = (json, slide) => {
             };
             // custom.cid = outputJSON.customes.length + 1;
             custom.cid = findValueByKey('id', item.aug);
+            custom.id = custom.cid;
+            idArray.push(custom.id);
             // custom.name = findValueByKey('name', item.aug);
-            custom.startTime = getLast(item.aug, slide).startTime;
-            custom.duration = getLast(item.aug, slide).duration;
+            custom.startTime = getStartAndDuration(item.aug, slide).startTime;
+            custom.duration = getStartAndDuration(item.aug, slide).duration;
             // custom.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             custom.path = item.path;
             custom.position = findValueByKey('position', item.aug);
             custom.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);
-            custom.htmlContent = "<div class='customComponent'>" + minify(fs.readFileSync(_dirname + item.path, "utf-8")) + "</div>";
+            custom.htmlContent = "<div class='customComponent'>" + minify(fs.readFileSync(_dirname_res + item.path, "utf-8")) + "</div>";
             findTransformationInElement('custom', custom.cid, item.aug, custom);
             slide.customes.push(custom);
         } else if (item.key.includes('quiz')) {
@@ -166,10 +193,12 @@ const parseSlideJSON = (json, slide) => {
             };
             // quiz.qid = outputJSON.quizzes.length + 1;
             quiz.qid = findValueByKey('id', item.aug);
+            quiz.id = quiz.qid;
+            idArray.push(quiz.id);
             // quiz.name = findValueByKey('name', item.aug);
             quiz.type = findValueByKey('type', item.aug);
-            quiz.startTime = getLast(item.aug, slide).startTime;
-            quiz.duration = getLast(item.aug, slide).duration;
+            quiz.startTime = getStartAndDuration(item.aug, slide).startTime;
+            quiz.duration = getStartAndDuration(item.aug, slide).duration;
             quiz.position = findValueByKey('position', item.aug);
             // quiz.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             quiz.height = findValueByKey('height', item.aug);
@@ -186,10 +215,12 @@ const parseSlideJSON = (json, slide) => {
                 transformations: []
             };
             text.tid = findValueByKey('id', item.aug);
+            text.id = text.tid;
+            idArray.push(text.id);
             // text.tid = outputJSON.texts.length + 1;
             // console.log(item.aug);
-            text.startTime = getLast(item.aug, slide).startTime;
-            text.duration = getLast(item.aug, slide).duration;
+            text.startTime = getStartAndDuration(item.aug, slide).startTime;
+            text.duration = getStartAndDuration(item.aug, slide).duration;
             text.content = findValueByKey('content', item.aug).replace(/(\r\n)/gm, '\n').replace(/[^(\S|\n)][^(\S|\n)]{4,11}/gm, '');
             // console.log(text.content);
             // /\s\s+/g
@@ -207,16 +238,18 @@ const parseSlideJSON = (json, slide) => {
                 transformations: []
             };
             video.vid = findValueByKey('id', item.aug);
+            video.id = video.vid;
+            idArray.push(video.id);
             // video.vid = outputJSON.videos.length + 1;
-            video.startTime = getLast(item.aug, slide).startTime;
-            video.duration = getLast(item.aug, slide).duration;
+            video.startTime = getStartAndDuration(item.aug, slide).startTime;
+            video.duration = getStartAndDuration(item.aug, slide).duration;
             // video.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             video.path = item.path;
             if (item.path.includes('http')) {
                 video.isOnline = true;
             } else {
                 video.isOnline = false;
-                fs.createReadStream(_dirname + item.path).pipe(fs.createWriteStream(`public/assets/video/${item.path}`));
+                fs.createReadStream(_dirname_res + item.path).pipe(fs.createWriteStream(`public/assets/video/${item.path}`));
             }
             video.position = findValueByKey('position', item.aug);
             video.height = findValueByKey('height', item.aug);
@@ -228,8 +261,8 @@ const parseSlideJSON = (json, slide) => {
             let cursorAnimation = {};
             // cursorAnimation.aid = findValueByKey('id', item.aug);
             cursorAnimation.type = 'cursor';
-            cursorAnimation.startTime = findValueByKey('startTime', item.aug);
-            cursorAnimation.duration = findValueByKey('duration', item.aug) == undefined ? 3 : findValueByKey('duration', item.aug);
+            cursorAnimation.startTime = getStartAndDuration(item.aug, slide).startTime;
+            cursorAnimation.duration = getStartAndDuration(item.aug, slide).duration == undefined ? 3 : getStartAndDuration(item.aug, slide).duration;
             cursorAnimation.moveTo = findValueByKey('moveTo', item.aug);
             slide.animations.push(cursorAnimation);
         } else if (item.key == 'image') {
@@ -238,8 +271,10 @@ const parseSlideJSON = (json, slide) => {
             };
             // image.iid = outputJSON.images.length + 1;
             image.iid = findValueByKey('id', item.aug);
-            image.startTime = getLast(item.aug, slide).startTime;
-            image.duration = getLast(item.aug, slide).duration;
+            image.id = image.iid;
+            idArray.push(image.id);
+            image.startTime = getStartAndDuration(item.aug, slide).startTime;
+            image.duration = getStartAndDuration(item.aug, slide).duration;
             // image.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             image.path = item.path;
             if (item.path.includes('http')) {
@@ -247,7 +282,7 @@ const parseSlideJSON = (json, slide) => {
                 image.path = item.path;
             } else {
                 image.isOnline = false;
-                fs.createReadStream(_dirname + item.path).pipe(fs.createWriteStream(`public/assets/image/${item.path}`));
+                fs.createReadStream(_dirname_res + item.path).pipe(fs.createWriteStream(`public/assets/image/${item.path}`));
             }
             image.position = findValueByKey('position', item.aug);
             image.height = findValueByKey('height', item.aug);
@@ -261,8 +296,10 @@ const parseSlideJSON = (json, slide) => {
             }
             graphics.type = findValueByKey('type', item.aug);
             graphics.gid = findValueByKey('id', item.aug);
-            graphics.startTime = getLast(item.aug, slide).startTime;
-            graphics.duration = getLast(item.aug, slide).duration;
+            graphics.id = graphics.gid;
+            idArray.push(graphics.id);
+            graphics.startTime = getStartAndDuration(item.aug, slide).startTime;
+            graphics.duration = getStartAndDuration(item.aug, slide).duration;
             // graphics.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             graphics.position = findValueByKey('position', item.aug);
             // if(graphics.type == 'circle') {
@@ -282,19 +319,47 @@ const parseSlideJSON = (json, slide) => {
     }
 }
 
+const isRepeat = (arr) => {
+    var hash = {};
+    for (var i in arr) {
+        if (hash[arr[i]]) {
+            throw 'ERROR: ID = ' + arr[i] + ' Collation dected!';
+        }
+        hash[arr[i]] = true;
+    }
+}
 
 if (result.error !== null) {
     console.error("ERROR: Parsing Failure:\n" + PEGUtil.errorMessage(result.error, true).replace(/^/mg, "ERROR: "));
 } else {
+    console.log("--- PARSE PASS ---");
     fetchSlides(result.ast);
-    console.log(outputJSON);
-    fs.writeFile('./src/assets/build.json', JSON.stringify(outputJSON), 'utf8', function (error) {
-        if (error) {
-            console.log(error);
-            return false;
-        }
-        console.log('--- Successful parsed! ---');
-    })
-}
+    if (!outputJSON.subtitle) {
+        outputJSON.subtitle = "";
+    }
+    console.log("--- ID COLLATION DETCTING ---");
+    isRepeat(idArray);
 
-console.log('--- END PARSE ILV ---');
+    console.log("--- NO ID COLLATION ---");
+    console.log("--- ILV-JSON PREPARED ---");
+
+    console.log("--- START VALIDATE ILV-JSON ---");
+    // console.log(validator.validate(outputJSON));
+    if (!validator.validate(outputJSON)) {
+        console.log("--- VALIDATE FAILED ---");
+        throw validator.getErrors();
+    } else {
+        console.log("--- VALIDATE PASS ---");
+        // console.log(outputJSON);
+
+        fs.writeFile(`./parser/${args[0]}/build.json`, JSON.stringify(outputJSON), 'utf8', function (error) {
+            if (error) {
+                console.log(error);
+                return false;
+            }
+            fs.createReadStream(`parser/${args[0]}/build.json`).pipe(fs.createWriteStream(`src/assets/build.json`));
+            console.log('--- ILV-JSON EXPORTED ---');
+        });
+    }
+    console.log('--- END PARSE & VALIDATE ILV ---');
+}

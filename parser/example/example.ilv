@@ -1,0 +1,216 @@
+{
+    $title = "Digitale Grauwertbilder"
+    $course = "Computergrafik 2"
+    $chapter = "Kapitel 3: Bildrepräsentation und Punktoperationen"
+    $date = "2019-07-19 16:41:10"
+    $author = "Max Muster"
+    $semester = "SoSe 2021"
+
+    $audio <"scene_1.mp3">
+    /*ssf
+    ss
+    f*/
+    $subtitle <"subtitle_1.vtt">
+    $font <"https://fonts.googleapis.com/css2?family=Zilla+Slab+Highlight&display=swap">
+    $font <"font.ttf"> 
+
+    ^slide = {
+        $page= 1
+        $name = "Part One"
+        $last = (0-100)
+        $startTime = 0
+        $duration = 0
+        ^graphics = { 
+            $id = 61
+            $last = (1-20)
+            $type = "circle"
+            $width = 50
+            $height = 50
+            $position = (50,700)
+        }
+
+        ^graphics = {
+            $id = 62
+            $last = (1-20)
+            $type = "rectangle"
+            $width = 50
+            $height = 50
+            $position = (200,700)
+        }
+
+        ^cursor = {
+            $startTime = 10
+            $duration = 3 
+            $moveTo = (100,200)
+        }
+
+        ^video <"video1.mp4"> = {
+            $id = 24
+            $startTime = 10
+            $duration = 10  
+            $position = (200,400)
+            $height = 500
+            $width = 900
+            ^ transformation = {
+                $startTime = 16
+                $duration = 3 
+                $type = "slide"
+                $toPosition = (800,300)
+            }
+
+            ^ transformation = {
+                $startTime = 12
+                $type = "scale"
+                $toScale = (1.2,1.2)
+            }
+        }
+
+        /* ?start=24 start from 24th second*/
+        ^video <"https://www.youtube.com/embed/jzTEx90xbAM"> = {
+            $id = 25
+            $startTime = 20
+            $duration = 10  
+            $position = (200,700)
+            $height = 500
+            $width = 900
+        }
+
+        ^ text = {
+            $id = 11
+            $startTime = 0
+            $duration = 60
+            $position = (90,220)
+            $fontSize = 36
+            $content = "**Intuitiv**: 2D-Array mit ~~Helligkeitswerten~~ als (unsigned) Integer [google](https://www.google.de)"
+        }
+
+        ^ text = {
+            $id = 14
+            $startTime = 0
+            $duration = 60
+            $position = (700,400)
+            $fontSize = 36
+            $fontFamily = "font2"
+            $content = "**Test**: What? Is this font `Thread.sleep(500);`{.java} \n```js\nconsole.log('Hello World');\n```\n $\\displaystyle= \\frac{k(k+1)+2(k+1)}{2}$ \n `x=4`{.js} \n::: warning\n*here be dragons*\n:::"
+        }
+
+        ^ text = {
+            $id = 18
+            $startTime = 0
+            $duration = 60
+            $position = (700,700)
+            $fontSize = 36
+            $fontFamily = "Zilla Slab Highlight"
+            $content = "**Test**: What? 
+            ```js
+            console.log('Hello World');
+            ```
+            Is this font"
+        }
+
+        ^ text = {
+            $id = 118
+            $position = (50,100)
+            $fontSize = 36
+            $content = "
+            Unordered
+
+            + Create a list by starting a line with `+`, `-`, or `*`
+            + Sub-lists are made by indenting 2 spaces:
+              - Marker character change forces new list start:
+                * Ac tristique libero volutpat at
+                + Facilisis in pretium nisl aliquet
+                - Nulla volutpat aliquam velit
+            + Very easy!
+
+            Ordered
+
+            1. Lorem ipsum dolor sit amet
+            2. Consectetur adipiscing elit
+            3. Integer molestie lorem at massa
+            "
+        }
+
+       ^ text = {
+            $id = 111
+            $position = (1000,50)
+            $fontSize = 36
+            $content = "
+            #### tasklist 
+            - [x] foo
+            - [ ] bar
+            - [x] baz
+            - [ ] bim
+            "
+        }
+
+        ^ custom <"grau.html"> = {
+            $id = 59
+            $position = (500,400)
+            $duration = 10
+            $startTime = 30 
+        }
+
+        /*ssff*/
+        ^ quiz = {
+            $id = 64
+            $type = "TF" /*TF for Ture/False Quiz, MC for Multiple Choice*/
+            $position = (100,100)
+            $height = 200
+            $width = 500/*ssff*/
+            $duration = 20
+            $startTime = 15
+            $questionContent = "Is it right?"
+            $correctAnswer = "True"
+            $tip = "Because ... XXX"
+        }
+    }
+
+    ^ slide = {
+        $page= 2
+        $name = "Part Two"
+        $last =(100-200)
+
+        ^image <"image.png"> = {
+            $id = 22
+            $width = 100
+            $height = 100
+            $startTime = 100
+            $duration = 5
+            $position = (300,400)
+        }
+    }
+
+    ^ slide = {
+        $page= 3
+        $name = "Part Three"
+        $last = (200-230)
+        ^image <"https://upload.wikimedia.org/wikipedia/commons/7/77/Hsh_logo.png"> = {
+            $id = 23
+            $width= 300
+            $height = 200
+            $position = (100,200)
+        }
+    }
+
+    ^ slide = {
+        $page= 4
+        $name = "Part Four"
+        $last =(230-280) 
+        ^ quiz = {
+            $id = 68
+            $type = "MC" /*TF for Ture/False Quiz, MC for Multiple Choice*/
+            $position = (200,500)
+            $height = 500
+            $width = 500/*ssff*/
+            $questionContent = "f(2,1) = ?"
+            $correctAnswer = "109"
+            $wrongAnswers = [
+                "41",
+                "0",
+                "148"
+            ]
+            $tip = "Index von r,c fängt mit 0 an."
+        }
+    }
+}

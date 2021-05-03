@@ -11,7 +11,6 @@ class Player extends Component {
         return (
             <div id='pixi-container' ref={this.myRef}>
                 <HTMLStage />
-                {/* <ThreeStage /> */}
                 <Subtitle />
             </div>
         );
@@ -19,7 +18,6 @@ class Player extends Component {
 
     constructor(props) {
         super(props);
-        this.myRef = React.createRef();
     }
 
     componentDidMount() {

@@ -1,21 +1,24 @@
 import axios from 'axios';
 import webvtt from 'node-webvtt';
 import Caption from './Caption';
-import Render from '../../utilities/render/Render';
+import ILVObject from '../../utilities/ILVObject';
 
 class CaptionLoader {
     captions: Array<Caption> = new Array();
-    ilvRender: Render = new Render('subtitle');
+    // objectFactory: ILVGenerator = new ILVObject('subtitle');
     constructor() {
         
     }
 
     initiate() {
-        axios.get(`assets/subtitle/${this.ilvRender.getILV().subtitle}`).then(res => {
-            for (let item of webvtt.parse(res.data).cues) {
-                this.captions.push(new Caption(item.identifier, item.start, item.end, item.text));
-            }
-        });
+        if(ILVObject.subtitle.length > 0) {
+            axios.get(`assets/subtitle/${ILVObject.subtitle}`).then(res => {
+                for (let item of webvtt.parse(res.data).cues) {
+                    this.captions.push(new Caption(item.identifier, item.start, item.end, item.text));
+                }
+            });
+        }
+        console.log('No Subtitle INPUT!');
     }
 
     getCaptions() {

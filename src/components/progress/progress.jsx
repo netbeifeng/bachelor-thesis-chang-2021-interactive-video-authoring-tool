@@ -11,7 +11,7 @@ import { Howl, Howler } from 'howler';
 import ee from '../../utilities/event-emitter';
 
 import EventEnum from '../../enities/Event/EventEnum';
-import Render from '../../utilities/render/Render';
+import ILVObject from '../../utilities/ILVObject';
 import { gsap, TweenMax } from "gsap";
 import HowlerLoadEvent from '../../enities/Event/HowlerLoadEvent';
 import PlayRate from './switches/play-rate';
@@ -21,20 +21,20 @@ class Progress extends Component {
 
     constructor(props) {
         super(props);
-        this.ilvRender = new Render();
-
+        console.log()
+        this.ILVObject = ILVObject;
 
         this.state = {
             seek: 0,
             howler: new Howl({
-                src: [`assets/audio/${this.ilvRender.getILV().audio}`],
+                src: [`assets/audio/${this.ILVObject.audio}`],
                 volume: 0.5
             }),
-            // playIndex: 0,
-            disabled: true,
-            playing: false,
+            // // playIndex: 0,
+            // disabled: true,
+            // playing: false,
             slide_point: [],
-            slide_map: this.ilvRender.getILV().getSlides()
+            slide_map: this.ILVObject.getSlides()
         }
         this.ee = ee;
 
@@ -44,8 +44,6 @@ class Progress extends Component {
         this.progress_text = React.createRef("progress_text");
         this.progress_dot = React.createRef("progress_dot");
         this.progress_bg = React.createRef("progress_bg");
-        this.player_switch = React.createRef("play_switch");
-        // this.playlist = [scene_1, scene_2];
     }
 
     render() {
@@ -53,9 +51,9 @@ class Progress extends Component {
             <div id="progress_container">
                 <div id="progress_bar">
                     <div id="switches">
-                        <PlaySwitch howler={this.state.howler} playing={this.state.playing} disabled={this.state.disabled} ref={this.player_switch} />
+                        <PlaySwitch howler={this.state.howler} />
                         <PlayRate howler={this.state.howler}/>
-                        <ClosedCaptionSwitch howler={this.state.howler} playIndex={this.state.playIndex} />
+                        <ClosedCaptionSwitch />
                         <VolumeSwitch howler={this.state.howler} />
                     </div>
 
@@ -87,7 +85,7 @@ class Progress extends Component {
 
 
     initPage() {
-        document.getElementsByClassName('main')[0].appendChild(this.ilvRender.getContentNaviHTML(this.state.howler));
+        document.getElementsByClassName('main')[0].appendChild(ILVObject.getContentNaviHTML());
         for (let span of document.getElementsByClassName('content_item')) {
             span.addEventListener('click', () => {
                 this.state.howler.seek(Number(span.dataset.startTime));
@@ -95,7 +93,7 @@ class Progress extends Component {
             })
         }
         console.log('%c ---- PAINTING I-Layer ----', 'color: forestgreen;');
-        for (let slide of this.ilvRender.getILV().getSlides()) {
+        for (let slide of this.ILVObject.getSlides()) {
             for(let element of slide.getElements()) {
                 element.paint();
             }
@@ -130,7 +128,7 @@ class Progress extends Component {
 
         _that.state.howler.on('load', function () {
             _that.progress_text.current.innerHTML = "0:00 / " + _that.fmtMSS(~~_that.state.howler.duration());
-            _that.timeline = _that.ilvRender.getTimeline();
+            _that.timeline = _that.ILVObject.getTimeline();
             _that.timeline.pause();
             console.log(_that.timeline);
             _that.ee.emit(EventEnum.HowlerLoadEvent, new HowlerLoadEvent(Date.now(), _that, _that.state.howler));

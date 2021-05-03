@@ -1,0 +1,733 @@
+{
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string",
+            "minLength": 1
+        },
+        "course": {
+            "type": "string",
+            "minLength": 1
+        },
+        "chapter": {
+            "type": "string",
+            "minLength": 1
+        },
+        "author": {
+            "type": "string",
+            "minLength": 1
+        },
+        "date": {
+            "type": "string",
+            "minLength": 1
+        },
+        "semester": {
+            "type": "string",
+            "minLength": 1
+        },
+        "audio": {
+            "type": "string",
+            "minLength": 1
+        },
+        "subtitle": {
+            "type": "string",
+            "minLength": 1
+        },
+        "fonts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "fid": {
+                        "type": "number",
+                        "minimum": 1
+                    },
+                    "isOnline": {
+                        "type": "boolean"
+                    },
+                    "type": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "path": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                },
+                "required": [
+                    "fid",
+                    "isOnline",
+                    "type",
+                    "path"
+                ]
+            },
+            "uniqueItems": true
+        },
+        "slides": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "sid": {
+                        "type": "number",
+                        "minimum": 1
+                    },
+                    "startTime": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "duration": {
+                        "type": "number",
+                        "minimum": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "page": {
+                        "type": "number",
+                        "minimum": 1
+                    },
+                    "videos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "vid": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "startTime": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "duration": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "path": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "isOnline": {
+                                    "type": "boolean"
+                                },
+                                "position": {
+                                    "type": "object",
+                                    "properties": {
+                                        "x": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "y": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ]
+                                },
+                                "height": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "width": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "zIndex": {
+                                    "type": "number"
+                                },
+                                "transformations": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "elementType": {
+                                                "type": "string"
+                                            },
+                                            "elementId": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "startTime": {
+                                                "type": "number"
+                                            },
+                                            "duration": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "elementType",
+                                            "elementId",
+                                            "type",
+                                            "startTime",
+                                            "duration"
+                                        ]
+                                    },
+                                    "uniqueItems": true
+                                }
+                            },
+                            "required": [
+                                "vid",
+                                "path",
+                                "isOnline",
+                                "height",
+                                "width",
+                                "zIndex",
+                                "startTime",
+                                "position",
+                                "duration"
+                            ]
+                        },
+                        "uniqueItems": true
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "iid": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "startTime": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "duration": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "path": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "isOnline": {
+                                    "type": "boolean"
+                                },
+                                "position": {
+                                    "type": "object",
+                                    "properties": {
+                                        "x": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "y": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ]
+                                },
+                                "height": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "width": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "zIndex": {
+                                    "type": "number"
+                                },
+                                "transformations": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "elementType": {
+                                                "type": "string"
+                                            },
+                                            "elementId": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "startTime": {
+                                                "type": "number"
+                                            },
+                                            "duration": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "elementType",
+                                            "elementId",
+                                            "type",
+                                            "startTime",
+                                            "duration"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "iid",
+                                "path",
+                                "isOnline",
+                                "height",
+                                "width",
+                                "zIndex",
+                                "startTime",
+                                "position",
+                                "duration"
+                            ]
+                        },
+                        "uniqueItems": true
+                    },
+                    "quizzes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "qid": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "startTime": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "duration": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "position": {
+                                    "type": "object",
+                                    "properties": {
+                                        "x": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "y": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ]
+                                },
+                                "height": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "width": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "zIndex": {
+                                    "type": "number"
+                                },
+                                "questionContent": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "correctAnswer": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "tip": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "transformations": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "elementType": {
+                                                "type": "string"
+                                            },
+                                            "elementId": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "startTime": {
+                                                "type": "string"
+                                            },
+                                            "duration": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "elementType",
+                                            "elementId",
+                                            "type",
+                                            "startTime",
+                                            "duration"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "qid",
+                                "tip",
+                                "correctAnswer",
+                                "questionContent",
+                                "height",
+                                "width",
+                                "zIndex",
+                                "startTime",
+                                "position",
+                                "duration"
+                            ]
+                        },
+                        "uniqueItems": true
+                    },
+                    "texts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "tid": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "startTime": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "duration": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "position": {
+                                    "type": "object",
+                                    "properties": {
+                                        "x": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "y": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ]
+                                },
+                                "content": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "fontSize": {
+                                    "type": "number"
+                                },
+                                "fontColor": {
+                                    "type": "string"
+                                },
+                                "fontFamily": {
+                                    "type": "string"
+                                },
+                                "transformations": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "elementType": {
+                                                "type": "string"
+                                            },
+                                            "elementId": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "startTime": {
+                                                "type": "string"
+                                            },
+                                            "duration": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "elementType",
+                                            "elementId",
+                                            "type",
+                                            "startTime",
+                                            "duration"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "tid",
+                                "content",
+                                "zIndex",
+                                "startTime",
+                                "position",
+                                "duration"
+                            ]
+                        },
+                        "uniqueItems": true
+                    },
+                    "customes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "cid": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "startTime": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "duration": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "position": {
+                                    "type": "object",
+                                    "properties": {
+                                        "x": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "y": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ]
+                                },
+                                "path": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "zIndex": {
+                                    "type": "number"
+                                },
+                                "htmlContent": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "transformations": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "elementType": {
+                                                "type": "string"
+                                            },
+                                            "elementId": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "startTime": {
+                                                "type": "string"
+                                            },
+                                            "duration": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "elementType",
+                                            "elementId",
+                                            "type",
+                                            "startTime",
+                                            "duration"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "cid",
+                                "path",
+                                "htmlContent",
+                                "zIndex",
+                                "startTime",
+                                "position",
+                                "duration"
+                            ]
+                        },
+                        "uniqueItems": true
+                    },
+                    "graphics": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "gid": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "startTime": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "duration": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "position": {
+                                    "type": "object",
+                                    "properties": {
+                                        "x": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "y": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ]
+                                },
+                                "height": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "width": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "zIndex": {
+                                    "type": "number"
+                                },
+                                "strokeColor": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "strokeWidth": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "transformations": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "elementType": {
+                                                "type": "string"
+                                            },
+                                            "elementId": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "startTime": {
+                                                "type": "string"
+                                            },
+                                            "duration": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "elementType",
+                                            "elementId",
+                                            "type",
+                                            "startTime",
+                                            "duration"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "gid",
+                                "type",
+                                "height",
+                                "width",
+                                "zIndex",
+                                "startTime",
+                                "position",
+                                "duration"
+                            ]
+                        },
+                        "uniqueItems": true
+                    },
+                    "animations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "startTime": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "duration": {
+                                    "type": "number",
+                                    "minimum": 1
+                                },
+                                "moveTo": {
+                                    "type": "object",
+                                    "properties": {
+                                        "x": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "y": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "type",
+                                "moveTo",
+                                "startTime",
+                                "duration"
+                            ]
+                        },
+                        "uniqueItems": true
+                    },
+                    "uniqueItems": true
+                },
+                "required": [
+                    "sid",
+                    "name",
+                    "page",
+                    "startTime",
+                    "duration"
+                ]
+            }
+        }
+    },
+    "required": [
+        "title",
+        "course",
+        "chapter",
+        "date",
+        "semester",
+        "audio",
+        "slides"
+    ],
+    "additionalProperties": false
+}

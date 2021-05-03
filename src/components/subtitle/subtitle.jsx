@@ -6,23 +6,22 @@ import EventEnum from '../../enities/Event/EventEnum';
 
 
 class Subtitle extends Component {
+  state = {
+    captions: [],
+    currentString: " * (Kein Untertitel verfügbar) * ",
+    seek: 0,
+    howler: undefined,
+    display: true
+  }
+
+  cp = new CaptionLoader();
+
   constructor(props) {
     super(props);
-
-    this.cp = new CaptionLoader();
-
-    this.state = {
-      captions: [],
-      currentString: " * (Kein Untertitel verfügbar) * ",
-      seek: 0,
-      howler: undefined,
-      display: true
-    }
-
     this.ee = ee;
   }
 
-  render() {
+  renderStyle() {
     let style = {};
     if (this.state.display) {
       style.opacity = 1;
@@ -32,8 +31,12 @@ class Subtitle extends Component {
       style.zIndex = '-1';
     }
 
+    return style;
+  }
+
+  render() {
     return (
-      <span id='closed_captions' style={style}> {this.state.currentString} </span>
+      <span id='closed_captions' style={this.renderStyle()}> {this.state.currentString} </span>
     );
   }
 

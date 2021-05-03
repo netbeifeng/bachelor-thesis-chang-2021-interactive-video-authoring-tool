@@ -1,12 +1,12 @@
 import React, { Component, useRef } from 'react';
 
-import Render from '../../../../utilities/render/Render';
+import ILVObject from '../../../../utilities/ILVObject';
 
 class BackgroundLayer extends Component {
 
     constructor(props) {
         super(props);
-        this.footer = new Render('footer').getFooter();
+        this.footer = ILVObject.getFooter();
     }
 
     render() {

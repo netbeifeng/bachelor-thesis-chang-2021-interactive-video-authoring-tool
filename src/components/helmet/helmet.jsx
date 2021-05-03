@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
-import Render from '../../utilities/render/Render';
+import ILVObject from '../../utilities/ILVObject';
 import * as hljs from 'highlight.js';
 
 import highlightCSS from '../../../node_modules/highlight.js/scss/default.scss';
@@ -10,8 +10,7 @@ import katexCSS from '../../../node_modules/katex/dist/katex.min.css';
 class HelmetHead extends Component {
   constructor(props) {
     super(props);
-    this.ilvRender = new Render(true);
-    // this.Helmet = React.createRef("Helmet");
+    this.ILVObject = ILVObject;
   }
 
   render() {
@@ -26,7 +25,7 @@ class HelmetHead extends Component {
   }
 
   componentDidMount() {
-    document.querySelector('head').prepend(this.ilvRender.getFontsHTML());
+    document.querySelector('head').prepend(this.ILVObject.getFontsHTML());
     document.addEventListener('DOMContentLoaded', (event) => {
       console.log('%c ---- Page is loaded ---', 'color:coral');
       document.querySelectorAll('code').forEach((block) => {
