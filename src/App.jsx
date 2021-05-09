@@ -12,13 +12,11 @@ class App extends Component {
 
   render() {
     return (
-
       <div className="main">
         <div id='head_container'>
           <h1>Interactive Learning Video Demo</h1>
         </div>
         <Player />
-        <Progress />
       </div>
     );
   }

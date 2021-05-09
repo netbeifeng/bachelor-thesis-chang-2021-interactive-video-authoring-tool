@@ -36,7 +36,7 @@ var idArray = [];
 const findValueByKey = (key, json) => {
     for (let i = 0; i < json.length; i++) {
         if (key == json[i].key) {
-            return json[i].value != null ? json[i].value : json[i].path;
+            return json[i].value != null ? json[i].value : "ERROR";
         }
     }
     return undefined;
@@ -66,8 +66,6 @@ const findTransformationInElement = (type, id, json, parent) => {
     }
 }
 
-
-
 const getStartAndDuration = (element, slide) => {
     if (findValueByKey('startTime', element) != undefined || findValueByKey('last', element) != undefined) {
         if (findValueByKey('last', element) == undefined) {
@@ -84,7 +82,6 @@ const getStartAndDuration = (element, slide) => {
                 throw `ERROR: Invalid last parameter in Slide ${element.page} (${element.name}), EndTime ${endTime} less than StartTime ${startTime}.`;
             } else {
                 throw `ERROR: Invalid last parameter in Element ${element.id} (${element.name}), EndTime ${endTime} less than StartTime ${startTime}.`;
-
             }
         }
 
@@ -124,34 +121,34 @@ const fetchSlides = (json) => {
             outputJSON.slides.push(slide);
         } else {
             if (json[i].key == 'audio' || json[i].key == 'subtitle') {
-                fs.createReadStream(_dirname_res + json[i].path).pipe(fs.createWriteStream(`public/assets/${json[i].key}/${json[i].path}`));
-                outputJSON[json[i].key] = json[i].value != undefined ? json[i].value : json[i].path;
+                fs.createReadStream(_dirname_res + json[i].value).pipe(fs.createWriteStream(`public/assets/${json[i].key}/${json[i].value}`));
+                outputJSON[json[i].key] = json[i].value != undefined ? json[i].value : "ERROR";
             } else if (json[i].key == 'font') {
-                if (json[i].path.includes('http')) {
+                if (json[i].value.includes('http')) {
                     outputJSON.fonts.push({
                         fid: outputJSON.fonts.length + 1,
                         type: "WebFont",
                         isOnline: true,
-                        path: json[i].path
+                        path: json[i].value
                     });
                 } else {
                     localFontString += `@font-face{
                         font-family: 'font${outputJSON.fonts.length + 1}'; 
-                        src: url('../fonts/${json[i].path}');
+                        src: url('../fonts/${json[i].value}');
                     }\n`;
 
-                    fs.createReadStream(_dirname_res + json[i].path).pipe(fs.createWriteStream(`./src/assets/${json[i].key}s/${json[i].path}`));
+                    fs.createReadStream(_dirname_res + json[i].value).pipe(fs.createWriteStream(`./src/assets/${json[i].key}s/${json[i].value}`));
 
                     outputJSON.fonts.push({
                         fid: outputJSON.fonts.length + 1,
                         type: "LocalFont",
                         isOnline: false,
-                        path: json[i].path
+                        path: json[i].value
                     });
 
                 }
             } else if (json[i].key != 'comment') {
-                outputJSON[json[i].key] = json[i].value != null ? json[i].value : json[i].path;
+                outputJSON[json[i].key] = json[i].value != null ? json[i].value : "ERROR";
             }
         }
     }
@@ -181,10 +178,10 @@ const parseSlideJSON = (json, slide) => {
             custom.startTime = getStartAndDuration(item.aug, slide).startTime;
             custom.duration = getStartAndDuration(item.aug, slide).duration;
             // custom.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
-            custom.path = item.path;
+            custom.path = findValueByKey('path', item.aug);
             custom.position = findValueByKey('position', item.aug);
             custom.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);
-            custom.htmlContent = "<div class='customComponent'>" + minify(fs.readFileSync(_dirname_res + item.path, "utf-8")) + "</div>";
+            custom.htmlContent = "<div class='customComponent'>" + minify(fs.readFileSync(_dirname_res + custom.path, "utf-8")) + "</div>";
             findTransformationInElement('custom', custom.cid, item.aug, custom);
             slide.customes.push(custom);
         } else if (item.key.includes('quiz')) {
@@ -244,12 +241,18 @@ const parseSlideJSON = (json, slide) => {
             video.startTime = getStartAndDuration(item.aug, slide).startTime;
             video.duration = getStartAndDuration(item.aug, slide).duration;
             // video.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
-            video.path = item.path;
-            if (item.path.includes('http')) {
+            video.path = findValueByKey('path', item.aug);
+            if (video.path.includes('youtube')) {
+                video.isYouTube = true;
                 video.isOnline = true;
             } else {
-                video.isOnline = false;
-                fs.createReadStream(_dirname_res + item.path).pipe(fs.createWriteStream(`public/assets/video/${item.path}`));
+                video.isYouTube = false;
+                if (video.path.includes('http')) {
+                    video.isOnline = true;
+                } else {
+                    video.isOnline = false;
+                    fs.createReadStream(_dirname_res + video.path).pipe(fs.createWriteStream(`public/assets/video/${video.path}`));
+                }
             }
             video.position = findValueByKey('position', item.aug);
             video.height = findValueByKey('height', item.aug);
@@ -276,13 +279,13 @@ const parseSlideJSON = (json, slide) => {
             image.startTime = getStartAndDuration(item.aug, slide).startTime;
             image.duration = getStartAndDuration(item.aug, slide).duration;
             // image.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
-            image.path = item.path;
-            if (item.path.includes('http')) {
+            // image.path = findValueByKey('path', item.aug);
+            image.path = findValueByKey('path', item.aug);
+            if (image.path.includes('http')) {
                 image.isOnline = true;
-                image.path = item.path;
             } else {
                 image.isOnline = false;
-                fs.createReadStream(_dirname_res + item.path).pipe(fs.createWriteStream(`public/assets/image/${item.path}`));
+                fs.createReadStream(_dirname_res + image.path).pipe(fs.createWriteStream(`public/assets/image/${image.path}`));
             }
             image.position = findValueByKey('position', item.aug);
             image.height = findValueByKey('height', item.aug);
@@ -344,6 +347,7 @@ if (result.error !== null) {
     console.log("--- ILV-JSON PREPARED ---");
 
     console.log("--- START VALIDATE ILV-JSON ---");
+    // console.log(outputJSON.slides[1]);
     // console.log(validator.validate(outputJSON));
     if (!validator.validate(outputJSON)) {
         console.log("--- VALIDATE FAILED ---");

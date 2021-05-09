@@ -12,7 +12,7 @@ class CursorAnimation extends Animation {
     }
 
 
-    animate(timeline: TimelineMax): void {
+    animate(timeline: gsap.core.Timeline): void {
         timeline
         // .to(this.target, { visibility: 'visible', opacity: 1, duration: 2 }, `start+=${this.startTime - 2}`)
         .to(document.getElementById('cursor'), { left: this.moveTo.x, top: this.moveTo.y , duration: this.duration }, `start+=${this.startTime}`);

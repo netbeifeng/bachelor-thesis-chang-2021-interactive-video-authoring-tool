@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import ILVObject from '../../utilities/ILVObject';
-import * as hljs from 'highlight.js';
 
 import highlightCSS from '../../../node_modules/highlight.js/scss/default.scss';
 import markdownCSS from '../../../node_modules/github-markdown-css/github-markdown.css';
@@ -26,12 +25,6 @@ class HelmetHead extends Component {
 
   componentDidMount() {
     document.querySelector('head').prepend(this.ILVObject.getFontsHTML());
-    document.addEventListener('DOMContentLoaded', (event) => {
-      console.log('%c ---- Page is loaded ---', 'color:coral');
-      document.querySelectorAll('code').forEach((block) => {
-        hljs.highlightBlock(block);
-      });
-    });
   }
 }
 

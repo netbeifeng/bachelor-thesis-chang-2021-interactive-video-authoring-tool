@@ -1,18 +1,16 @@
-import React, { Component, useRef } from 'react';
+import React, { Component } from 'react';
 
-import ILVObject from '../../../../utilities/ILVObject';
 
 class BackgroundLayer extends Component {
 
     constructor(props) {
         super(props);
-        this.footer = ILVObject.getFooter();
+        this.footer = this.props.ILV.getFooter();
     }
 
     render() {
         return (
             <div id='htmlBackgroundLayer' style={{zIndex: 0}}>
-                {/* <img id='backgroundImg'/> */}
                 <div id='backgroundBottom'>
                     <div id='backgroundLine'/>
                     <div id='backgroundInfo'>

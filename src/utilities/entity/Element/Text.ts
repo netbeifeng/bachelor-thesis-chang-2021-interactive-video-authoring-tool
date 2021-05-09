@@ -1,4 +1,3 @@
-import Custom from "./Custom";
 import Element from "./Element";
 
 class Text extends Element {
@@ -7,7 +6,11 @@ class Text extends Element {
     fontSize: number = 26;
     fontColor: string = '#000000';
     fontFamily: string = 'Arial, Helvetica, sans-serif';
-    markdownRender: any = require('markdown-it')().use(require('markdown-it-highlightjs'), { inline: true }).use(require('markdown-it-katex')).use(require('markdown-it-task-lists'));
+    markdownRender: any = require('markdown-it')()
+                            .use(require('markdown-it-highlightjs'), { inline: true })
+                            // .use(require('markdown-it-prism'))
+                            .use(require('@iktakahiro/markdown-it-katex'))
+                            .use(require('markdown-it-task-lists'));
 
     constructor(tid: number, content: string, startTime: number, duration: number, positionX: number, positionY: number, fontSize: number, fontColor: string, fontFamily: string, zIndex: number) {
         super(startTime, duration, positionX, positionY, zIndex);

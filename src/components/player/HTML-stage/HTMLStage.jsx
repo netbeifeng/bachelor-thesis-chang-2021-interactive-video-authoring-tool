@@ -1,8 +1,8 @@
-import React, { Component, useRef } from 'react';
+import React, { Component } from 'react';
 import BackgroundLayer from './html-component/BackgroundLayer';
 import InteractionLayer from './html-component/InteractionLayer';
 import './HTMLStage.scss';
-import '../../../assets/fontCSS/font.scss'; 
+import '../../../assets/fontCSS/font.scss';
 
 class HTMLStage extends Component {
 
@@ -13,8 +13,8 @@ class HTMLStage extends Component {
     render() {
         return (
             <div id='htmlStage'>
-                <BackgroundLayer/>
-                <InteractionLayer/>
+                <BackgroundLayer hgTimeline={this.props.hgTimeline} ILV={this.props.ILV} />
+                <InteractionLayer hgTimeline={this.props.hgTimeline} ILV={this.props.ILV} />
             </div>
         );
     }

@@ -1,8 +1,8 @@
 import Element from "../Element/Element";
 import Animation from "./Animation";
 import AnimationEnum from "./AnimationEnum";
-import { TimelineMax } from "gsap/all";
-import Custom from "../Element/Custom";
+import { gsap } from "gsap";
+
 
 
 class FadeAnimation extends Animation {
@@ -21,10 +21,10 @@ class FadeAnimation extends Animation {
     //     this.painted = true;
     // }
 
-    animate(timeline: TimelineMax): void {
+    animate(timeline: gsap.core.Timeline): void {
         timeline.to(`#${this.target.getID()}`, { visibility: 'visible', opacity: 1, duration: 2 }, `start+=${this.target.startTime}`)
-                .to(`#${this.target.getID()}`, { opacity: 0, duration: 2 }, `start+=${this.target.startTime + this.target.duration}`)
-                .to(`#${this.target.getID()}`, { visibility: 'hidden' }, `start+=${this.target.startTime + this.target.duration + 2}`);
+            .to(`#${this.target.getID()}`, { opacity: 0, duration: 2 }, `start+=${this.target.startTime + this.target.duration}`)
+            .to(`#${this.target.getID()}`, { visibility: 'hidden' }, `start+=${this.target.startTime + this.target.duration + 2}`);
 
     }
 }

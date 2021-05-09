@@ -2,7 +2,7 @@ import Element from "./Element";
 
 class Quiz extends Element {
     qid: number;
-    type: string;
+    // type: string;
     width: number;
     height: number;
     questionContent: string;
@@ -11,22 +11,23 @@ class Quiz extends Element {
     tip: string;
 
 
-    constructor(qid: number, type: string, questionContent: string, correctAnswer: string, wrongAnswers: Array<string>, tip: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, zIndex: number) {
+    constructor(qid: number, questionContent: string, correctAnswer: string, wrongAnswers: Array<string>, tip: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, zIndex: number) {
+        // constructor(qid: number, type: string, questionContent: string, correctAnswer: string, wrongAnswers: Array<string>, tip: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, zIndex: number) {
         super(startTime, duration, positionX, positionY, zIndex);
         this.qid = qid;
-        this.type = type;
-        if (type == "MC") {
-            this.wrongAnswers = wrongAnswers;
-        } else {
-            if (correctAnswer.toLocaleLowerCase() == 'true') {
-                this.wrongAnswers.push('False');
-            } else {
-                this.wrongAnswers.push('True');
-            }
-        }
+        // this.type = type;
+        // if (type == "MC") {
+        this.wrongAnswers = wrongAnswers;
+        // } else {
+        //     if (correctAnswer.toLocaleLowerCase() == 'true') {
+        //         this.wrongAnswers.push('False');
+        //     } else {
+        //         this.wrongAnswers.push('True');
+        //     }
+        // }
         this.questionContent = questionContent;
         this.correctAnswer = correctAnswer;
-        this.wrongAnswers = wrongAnswers;
+        // this.wrongAnswers = wrongAnswers;
         this.tip = tip;
         this.width = width;
         this.height = height;
@@ -55,37 +56,37 @@ class Quiz extends Element {
         let questionOptionBlock = document.createElement('div');
         questionOptionBlock.className = 'questionOptionBlock';
         let answers = [];
-        if (this.type == "MC") {
-            for (let answer of this.wrongAnswers) {
-                answers.push({
-                    isCorrect: false,
-                    content: answer
-                });
-            }
-
-            let correctAnswer = this.correctAnswer;
+        // if (this.type == "MC") {
+        for (let answer of this.wrongAnswers) {
             answers.push({
-                isCorrect: true,
-                content: correctAnswer
+                isCorrect: false,
+                content: answer
             });
-        } else if (this.type == "TF") {
-            let correctAnswer = this.correctAnswer;
-            answers.push({
-                isCorrect: true,
-                content: correctAnswer
-            });
-            if (correctAnswer.toLocaleLowerCase() == 'true') {
-                answers.push({
-                    isCorrect: false,
-                    content: 'False'
-                });
-            } else {
-                answers.push({
-                    isCorrect: false,
-                    content: 'Ture'
-                });
-            }
         }
+
+        let correctAnswer = this.correctAnswer;
+        answers.push({
+            isCorrect: true,
+            content: correctAnswer
+        });
+        // } else if (this.type == "TF") {
+        //     let correctAnswer = this.correctAnswer;
+        //     answers.push({
+        //         isCorrect: true,
+        //         content: correctAnswer
+        //     });
+        //     if (correctAnswer.toLocaleLowerCase() == 'true') {
+        //         answers.push({
+        //             isCorrect: false,
+        //             content: 'False'
+        //         });
+        //     } else {
+        //         answers.push({
+        //             isCorrect: false,
+        //             content: 'Ture'
+        //         });
+        //     }
+        // }
 
         const shuffleArray = (array) => {
             for (var i = array.length - 1; i > 0; i--) {

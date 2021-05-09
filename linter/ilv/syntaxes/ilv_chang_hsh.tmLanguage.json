@@ -15,9 +15,6 @@
 			"include": "#String"
 		},
 		{
-			"include": "#Path"
-		},
-		{
 			"include": "#Operator"
 		},
 		{
@@ -26,13 +23,12 @@
 		{
 			"include": "#Braces"
 		}
-
 	],
 	"repository": {
 		"SubKey": {
 			"patterns": [{
 				"name": "keyword.declaration.ilv_chang_hsh",
-				"match": "\\$\\s*(date|title|subtitle|audio|author|semester|chapter|course|width|height|startTime|duration|position|questionContent|content|correctAnswer|wrongAnswers|tip|id|page|name|inPage|fontSize|fontFamily|type|last|moveTo|elementType|elementId|toPosition|toScale|emphasisTime|strokeColor|strokeWidth|font)"
+				"match": "\\$\\s*(date|title|subtitle|audio|author|semester|chapter|course|width|height|startTime|duration|position|questionContent|content|correctAnswer|wrongAnswers|tip|id|page|name|inPage|fontSize|fontFamily|type|path|last|moveTo|elementType|elementId|toPosition|toScale|emphasisTime|strokeColor|strokeWidth|font)"
 			}]
 		},
 		"MainKey": {
@@ -80,17 +76,6 @@
 				{
 					"name": "meta.tag",
 					"match": "\\[|\\]|\\(|\\)|\\{|\\}"
-				}
-			]
-		},
-		"Path": {
-			"name": "entity.name.function",
-			"begin": "<\"",
-			"end": "\">",
-			"patterns": [
-				{
-					"name": "entity.name.function",
-					"match": "\\\\."
 				}
 			]
 		}

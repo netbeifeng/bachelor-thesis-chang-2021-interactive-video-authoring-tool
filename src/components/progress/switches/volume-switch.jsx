@@ -1,4 +1,4 @@
-import React, { Component, createRef, useRef } from 'react';
+import React, { Component } from 'react';
 
 class VolumeSwitch extends Component {
     constructor(props) {

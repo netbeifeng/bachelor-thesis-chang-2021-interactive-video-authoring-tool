@@ -1,4 +1,4 @@
-class Caption {
+class Cue {
     id: number;
     start: number;
     end: number;
@@ -28,4 +28,4 @@ class Caption {
     }
 }
 
-export default Caption;
+export default Cue;

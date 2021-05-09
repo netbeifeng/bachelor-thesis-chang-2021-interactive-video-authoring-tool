@@ -7,21 +7,19 @@ Property = prop:InlineProperty _ SEMICOLON? _ { return prop; }
 		 / prop:BlockProperty _ SEMICOLON? _ { return prop; }
          / com:COMMENT {return {key: 'comment' , value: com.join('').split(',').join('')}; }
 
-InlineProperty = INLINEPREFIX _ key:Key _ LT _ path:String _ GT _ { return { key: key, path: path}; } 
-			   / INLINEPREFIX _ key:Key _ EqualSign _ value:Value _  {  return { key: key, value: value}; } 
+InlineProperty = INLINEPREFIX _ key:Key _ EqualSign _ value:Value _  {  return { key: key, value: value}; } 
 
-BlockProperty = BLOCKPREFIX _ key:Key _ LT _ path:String _ GT _ EqualSign _ block:Block _ { return { key: key, path: path, aug: block};}
-			  / BLOCKPREFIX _ key:Key _ EqualSign _ block:Block _ { return { key: key, aug: block};}
+BlockProperty =  BLOCKPREFIX _ key:Key _ EqualSign _ block:Block _ { return { key: key, aug: block};}
 
 Key = ( BlockKey / InlineKey ) {return text();}
 
 
 BlockKey =  "custom" / "quiz" / "text" / "animation" / "image" / "video" / "transformation" / "cursor" / "graphics" { return text(); }
-InlineKey = QuestionKey / TextKey / AnimationKey / GraphicsKey / RootKey / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" / "inPage" { return text(); }
+InlineKey = QuestionKey / TextKey / AnimationKey / GraphicsKey / RootKey / "path" / "type" / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" / "inPage" { return text(); }
 RootKey = "title" / "course" / "date" / "audio" / "font" / "author" / "slide" / "subtitle" / "semester" / "chapter" { return text(); }
 GraphicsKey = "strokeColor" / "strokeWidth" { return text(); }
 TextKey = "page" / "content" / "fontSize" / "fontColor" / "fontFamily" { return text(); }
-QuestionKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" / "type" { return text(); }
+QuestionKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" { return text(); }
 AnimationKey = "elementType" / "elementId" / "toScale" / "toPosition" / "emphasisTime" / "moveTo" { return text(); }
 
 Value = value:(BasicDataType / Coordinate / Interval / Array) { return value;}

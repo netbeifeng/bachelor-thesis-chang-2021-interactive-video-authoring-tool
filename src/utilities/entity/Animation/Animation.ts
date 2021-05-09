@@ -1,5 +1,5 @@
 import AnimationEnum from "./AnimationEnum";
-import { TimelineMax } from "gsap/all";
+import { gsap } from "gsap";
 
 
 abstract class Animation {
@@ -18,7 +18,7 @@ abstract class Animation {
     }
 
     // abstract paint(): void;
-    abstract animate(timeline: TimelineMax): void;
+    abstract animate(timeline: gsap.core.Timeline): void;
 }
 
 export default Animation;

@@ -13,7 +13,8 @@ $mainColor: #DD3A04;
         height: 30px;
     }
 
-    p code {
+    li code, p code {
+        display: inline;
         border-radius: 5px;
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;

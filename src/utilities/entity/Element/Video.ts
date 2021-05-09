@@ -6,14 +6,16 @@ class Video extends Element {
     width: number;
     height: number;
     isOnline: boolean;
+    isYouTube: boolean;
 
-    constructor(vid: number, path: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, isOnline: boolean, zIndex: number) {
+    constructor(vid: number, path: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, isOnline: boolean, isYouTube: boolean, zIndex: number) {
         super(startTime, duration, positionX, positionY, zIndex);
         this.vid = vid;
         this.path = path;
         this.width = width;
         this.height = height;
         this.isOnline = isOnline;
+        this.isYouTube = isYouTube;
     }
 
     getID(): string {
@@ -23,7 +25,7 @@ class Video extends Element {
     getHTMLElement(): HTMLElement {
         let objectElement: any;
 
-        if (this.isOnline) {
+        if (this.isYouTube) {
             objectElement = document.createElement('object');
             objectElement.data = this.path;
             objectElement.id = `VID_${this.vid}`;
@@ -31,7 +33,11 @@ class Video extends Element {
             objectElement.height = `${this.height}px`;
         } else {
             objectElement = document.createElement('video');
-            objectElement.src = "assets/video/" + this.path;
+            if(this.isOnline) {
+                objectElement.src = this.path;
+            } else {
+                objectElement.src = "assets/video/" + this.path;
+            }
             objectElement.controls = 'controls';
             objectElement.autoplay = false;
             objectElement.id = `VID_${this.vid}`;

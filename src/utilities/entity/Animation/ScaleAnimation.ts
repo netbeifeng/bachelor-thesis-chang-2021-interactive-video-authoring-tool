@@ -8,7 +8,6 @@ class ScaleAnimation extends Animation {
     elementId: number;
     elementType: string;
 
-
     constructor(aid: number, type: AnimationEnum, startTime: number, duration: number, elementId: number, elementType: string, toScale: Position) {
         super(aid, type, startTime, duration);
         this.toScale = toScale;
@@ -16,7 +15,7 @@ class ScaleAnimation extends Animation {
         this.elementType = elementType;
     }
 
-    animate(timeline: TimelineMax): void {
+    animate(timeline: gsap.core.Timeline): void {
         timeline.to(document.getElementById(`${this.elementType.charAt(0).toUpperCase()}ID_${this.elementId}`), { scaleX: this.toScale.x, scaleY: this.toScale.y, duration: this.duration }, `start+=${this.startTime}`);
     }
 }

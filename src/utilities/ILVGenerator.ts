@@ -1,5 +1,7 @@
 import json from '../assets/build.json';
-import { Base64 } from 'js-base64';
+
+import axios from 'axios';
+import webvtt from 'node-webvtt';
 
 import ILV from './entity/ILV';
 import Slide from './entity/Slide';
@@ -13,17 +15,20 @@ import FadeAnimation from './entity/Animation/FadeAnimation';
 import AnimationEnum from './entity/Animation/AnimationEnum';
 import CursorAnimation from './entity/Animation/CursorAnimation';
 import Position from './entity/Element/Position';
-import SlideAnimation from './entity/Animation/SlideAnimation';
+import MoveAnimation from './entity/Animation/MoveAnimation';
 import ScaleAnimation from './entity/Animation/ScaleAnimation';
 import Element from './entity/Element/Element';
 import Animation from './entity/Animation/Animation';
 import Graphics from './entity/Element/Graphics';
+import Cue from './entity/Cue';
+
 
 class ILVGenerator {
     ilv: ILV;
 
     constructor() {
         this.ilv = new ILV(json.title, json.course, json.chapter, json.author, json.semester, json.audio, json.subtitle);
+        this.buildSubtitles();
         this.buildFonts();
         this.buildSlides();
     }
@@ -41,7 +46,6 @@ class ILVGenerator {
     }
 
     buildSlides(): void {
-        // if (!min) {
         for (let slide of json.slides) {
             let slideObject = new Slide(slide.sid, slide.page, slide.name, slide.startTime, slide.duration);
             this.buildSlideTexts(slide, slideObject);
@@ -54,11 +58,6 @@ class ILVGenerator {
             this.ilv.pushSlide(slideObject);
         }
         this.buildAnimations();
-        // } else {
-        //     for (let slide of json.slides) {
-        //         this.ilv.pushSlide(new Slide(slide.sid, slide.page, slide.name, slide.startTime, slide.duration));
-        //     }
-        // }
     }
 
     buildSlideTexts(slideJSON: any, slideObject: Slide): void {
@@ -89,7 +88,7 @@ class ILVGenerator {
     buildSlideVideos(slideJSON: any, slideObject: Slide): void {
         if (slideJSON.videos.length > 0) {
             for (let video of slideJSON.videos) {
-                let videoObject = new Video(video.vid, video.path, video.startTime, video.duration, video.position.x, video.position.y, video.width, video.height, video.isOnline, video.zIndex);
+                let videoObject = new Video(video.vid, video.path, video.startTime, video.duration, video.position.x, video.position.y, video.width, video.height, video.isOnline, video.isYouTube, video.zIndex);
                 slideObject.animations.push(new FadeAnimation(1e3 + video.vid, AnimationEnum.Fade, video.startTime, video.duration, videoObject));
                 this.buildElementTransformation(video, videoObject, slideObject.animations);
                 slideObject.pushElement(videoObject);
@@ -100,7 +99,7 @@ class ILVGenerator {
     buildSlideQuizzes(slideJSON: any, slideObject: Slide): void {
         if (slideJSON.quizzes.length > 0) {
             for (let quiz of slideJSON.quizzes) {
-                let quizObject = new Quiz(quiz.qid, quiz.type, quiz.questionContent, quiz.correctAnswer, quiz.wrongAnswers, quiz.tip, quiz.startTime, quiz.duration, quiz.position.x, quiz.position.y, quiz.width, quiz.height, quiz.zIndex);
+                let quizObject = new Quiz(quiz.qid, quiz.questionContent, quiz.correctAnswer, quiz.wrongAnswers, quiz.tip, quiz.startTime, quiz.duration, quiz.position.x, quiz.position.y, quiz.width, quiz.height, quiz.zIndex);
                 slideObject.animations.push(new FadeAnimation(1e3 + quiz.qid, AnimationEnum.Fade, quiz.startTime, quiz.duration, quizObject));
                 this.buildElementTransformation(quiz, quizObject, slideObject.animations);
                 slideObject.pushElement(quizObject);
@@ -143,7 +142,7 @@ class ILVGenerator {
         if (elementJSON.transformations.length > 0) {
             for (let transformation of elementJSON.transformations) {
                 if (transformation.type == "slide") {
-                    let slideAnimation = new SlideAnimation(3e3, AnimationEnum.Slide, transformation.startTime, transformation.duration, transformation.elementId, transformation.elementType, new Position(transformation.toPosition.x, transformation.toPosition.y));
+                    let slideAnimation = new MoveAnimation(3e3, AnimationEnum.Move, transformation.startTime, transformation.duration, transformation.elementId, transformation.elementType, new Position(transformation.toPosition.x, transformation.toPosition.y));
                     elementObject.pushTransformation(slideAnimation);
                     animationArray.push(slideAnimation);
                 } else if (transformation.type == "scale") {
@@ -158,6 +157,16 @@ class ILVGenerator {
     buildFonts(): void {
         for (let font of json.fonts) {
             this.ilv.pushFont(new Font(font.fid, font.path, font.isOnline, font.type));
+        }
+    }
+
+    buildSubtitles(): void {
+        if(json.subtitle.length > 0) {
+            axios.get(`assets/subtitle/${this.getILV().subtitle}`).then(res => {
+                for (let item of webvtt.parse(res.data).cues) {
+                    this.ilv.pushCue(new Cue(item.identifier, item.start, item.end, item.text));
+                }
+            });
         }
     }
 }

@@ -5,7 +5,8 @@ import Font from "./Element/Font";
 // import Image from "./Element/Image";
 // import Quiz from "./Element/Quiz";
 import Slide from "./Slide";
-import { TimelineMax, TweenMax, gsap } from 'gsap/all';
+// import { gsap } from 'gsap/all';
+import Cue from "./Cue";
 // import Text from "./Element/Text";
 // import Video from "./Element/Video";
 
@@ -20,11 +21,12 @@ class ILV {
     audio: string;
     subtitle: string;
 
-    slides: Array<Slide>;
-    animations: Array<Animation>;
+    slides: Array<Slide> = new Array<Slide>();
+    animations: Array<Animation> = new Array<Animation>();
     // elements: Array<Element>;
-    fonts: Array<Font>;
-    timeline: TimelineMax;
+    fonts: Array<Font> = new Array<Font>();
+    cues: Array<Cue> = new Array<Cue>();
+    // timeline: gsap.core.Timeline;
 
     constructor(title: string, course: string, chapter: string, author: string, semester: string, audio: string, subtitle?: string) {
         this.title = title;
@@ -34,11 +36,6 @@ class ILV {
         this.author = author;
         this.semester = semester;
         this.subtitle = subtitle;
-
-        this.slides = new Array<Slide>();
-        // this.elements = new Array<Element>();
-        this.animations = new Array<Animation>();
-        this.fonts = new Array<Font>();
     }
 
     // getElement(): Array<Element> {
@@ -73,14 +70,22 @@ class ILV {
         this.fonts.push(font);
     }
 
-    getTimeline(): TimelineMax {
-        this.timeline = new TimelineMax();
-        this.timeline.addLabel("start", 0);
-        for (let animation of this.getAnimations()) {
-            animation.animate(this.timeline);
-        }
-        return this.timeline;
+    getCues(): Array<Cue> {
+        return this.cues;
     }
+
+    pushCue(cue: Cue): void {
+        this.cues.push(cue);
+    }
+
+    // getTimeline(): gsap.core.Timeline {
+    //     this.timeline = gsap.timeline();
+    //     this.timeline.addLabel("start", 0);
+    //     for (let animation of this.getAnimations()) {
+    //         animation.animate(this.timeline);
+    //     }
+    //     return this.timeline;
+    // }
 
     getFooter(currentTime: number): any {
         return {
@@ -93,8 +98,8 @@ class ILV {
     }
 
     getSlidePagebyTime(currentTime: number): number {
-        for(let slide of this.getSlides()) {
-            if(currentTime > slide.startTime && currentTime <= (slide.startTime + slide.duration)) {
+        for (let slide of this.getSlides()) {
+            if (currentTime > slide.startTime && currentTime <= (slide.startTime + slide.duration)) {
                 return slide.page;
             }
         }
@@ -127,7 +132,6 @@ class ILV {
             >${slide.name}
             </span> 
             (${secondFormatter(slide.startTime)})<br/>`;
-
         }
 
         return contentNavigation;

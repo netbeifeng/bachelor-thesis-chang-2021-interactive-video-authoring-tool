@@ -3,7 +3,7 @@ import Animation from "./Animation";
 import AnimationEnum from "./AnimationEnum";
 
 
-class SlideAnimation extends Animation {
+class MoveAnimation extends Animation {
     toPosition: Position;
     elementId: number;
     elementType: string;
@@ -16,9 +16,9 @@ class SlideAnimation extends Animation {
         this.elementType = elementType;
     }
 
-    animate(timeline: TimelineMax): void {
+    animate(timeline: gsap.core.Timeline): void {
         timeline.to(document.getElementById(`${this.elementType.charAt(0).toUpperCase()}ID_${this.elementId}`), { left: this.toPosition.x, top: this.toPosition.y, duration: this.duration }, `start+=${this.startTime}`);
     }
 }
 
-export default SlideAnimation;
+export default MoveAnimation;

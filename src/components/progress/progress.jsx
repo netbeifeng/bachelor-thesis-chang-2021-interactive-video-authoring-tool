@@ -1,19 +1,9 @@
-import React, { Component, createRef, useRef } from 'react';
+import React, { Component } from 'react';
 import './progress.scss';
-
 import PlaySwitch from './switches/play-switch';
 import ClosedCaptionSwitch from './switches/cc-switch';
 import VolumeSwitch from './switches/volume-switch';
-
 import Draggable from 'react-draggable';
-
-import { Howl, Howler } from 'howler';
-import ee from '../../utilities/event-emitter';
-
-import EventEnum from '../../enities/Event/EventEnum';
-import ILVObject from '../../utilities/ILVObject';
-import { gsap, TweenMax } from "gsap";
-import HowlerLoadEvent from '../../enities/Event/HowlerLoadEvent';
 import PlayRate from './switches/play-rate';
 
 
@@ -21,27 +11,18 @@ class Progress extends Component {
 
     constructor(props) {
         super(props);
-        console.log()
-        this.ILVObject = ILVObject;
+
+        this.ILVObject = this.props.ILV;
 
         this.state = {
-            seek: 0,
-            howler: new Howl({
-                src: [`assets/audio/${this.ILVObject.audio}`],
-                volume: 0.5
-            }),
-            // // playIndex: 0,
-            // disabled: true,
-            // playing: false,
             slide_point: [],
-            slide_map: this.ILVObject.getSlides()
+            slide_map: this.ILVObject.getSlides(),
+            progress_text: "-  📼  -",
+            progress_width: "0px"
         }
-        this.ee = ee;
 
         this.dragging = false;
 
-        this.progress = React.createRef("progress");
-        this.progress_text = React.createRef("progress_text");
         this.progress_dot = React.createRef("progress_dot");
         this.progress_bg = React.createRef("progress_bg");
     }
@@ -51,16 +32,16 @@ class Progress extends Component {
             <div id="progress_container">
                 <div id="progress_bar">
                     <div id="switches">
-                        <PlaySwitch howler={this.state.howler} />
-                        <PlayRate howler={this.state.howler}/>
+                        <PlaySwitch howler={this.props.hgTimeline.howlerTimeline} timeline={this.props.hgTimeline.gsapTimeline} />
+                        <PlayRate howler={this.props.hgTimeline.howlerTimeline} timeline={this.props.hgTimeline.gsapTimeline} />
                         <ClosedCaptionSwitch />
-                        <VolumeSwitch howler={this.state.howler} />
+                        <VolumeSwitch howler={this.props.hgTimeline.howlerTimeline} />
                     </div>
 
-                    <div id="progress_text" ref={this.progress_text}>
-                        <span>-  📼</span>&nbsp;-
-                        {/* <img src={loading} width={30} height={30} /> */}
+                    <div id="progress_text">
+                        <span>{this.state.progress_text}</span>
                     </div>
+
                     <div id="progress_bg" ref={this.progress_bg}></div>
                     <div id="progress_transparent" onClick={this.handle_progress_click} onMouseMove={this.handle_mouse_move} onMouseLeave={this.handle_mouse_leave}>
                         <Draggable
@@ -76,137 +57,87 @@ class Progress extends Component {
                         </Draggable>
                         {this.state.slide_point}
                     </div>
-                    <div id="progress" ref={this.progress}></div>
+                    <div id="progress" style={{ width: this.state.progress_width }}></div>
                 </div>
             </div>
         );
     }
 
+    // buildTimeline() {
+    //     this.props.hgTimeline.gsapTimeline.addLabel("start", 0);
+    //     for (let animation of this.ILVObject.getAnimations()) {
+    //         animation.animate(this.props.hgTimeline.gsapTimeline);
+    //     }
+    //     this.props.hgTimeline.gsapTimeline.pause();
+    // }
 
+    // paintElements() {
+    //     for (let slide of this.ILVObject.getSlides()) {
+    //         for (let element of slide.getElements()) {
+    //             element.paint();
+    //         }
+    //     }
+    // }
 
-    initPage() {
-        document.getElementsByClassName('main')[0].appendChild(ILVObject.getContentNaviHTML());
-        for (let span of document.getElementsByClassName('content_item')) {
-            span.addEventListener('click', () => {
-                this.state.howler.seek(Number(span.dataset.startTime));
-                this.howlerSeek(Number(span.dataset.startTime));
-            })
-        }
-        console.log('%c ---- PAINTING I-Layer ----', 'color: forestgreen;');
-        for (let slide of this.ILVObject.getSlides()) {
-            for(let element of slide.getElements()) {
-                element.paint();
-            }
-        }
-        console.log('%c ---- I-Layer PREPARED ----', 'color: forestgreen;');
-        this.setUpQuizListner();
-        console.log('%c ---- Listner PREPARED ----', 'color: blue;');
-    }
+    // initPage() {
+    //     // console.log('%c ---- PAINTING I-Layer ----', 'color: forestgreen;');
+    //     // this.paintElements();
+    //     // console.log('%c ---- I-Layer PREPARED ----', 'color: forestgreen;');
 
-    howlerSeek(seek) {
-        this.timeline.seek(Math.round(seek));
-    }
+    //     // console.log('%c ---- BUILDING TIMELINE ----', 'color: hotpink;');
+    //     // this.buildTimeline();
+    //     // console.log('%c ---- TIMELINE BUILT ----', 'color: hotpink;');
+
+    //     // this.setUpQuizListner();
+    //     // this.setUpNavigationListner();
+    //     // console.log('%c ---- Listner PREPARED ----', 'color: blue;');
+    // }
 
     componentDidMount() {
+        // this.initPage();
         let _that = this;
-        _that.initPage();
-
-        ee.on(EventEnum.HowlerRateEvent, (e) => {
-            this.timeline.timeScale(e.rate);
-        });
-
-        ee.on(EventEnum.HowlerPauseEvent, (e) => {
-            this.timeline.pause();
-            console.log('%c ---- TIMELINE PAUSE ----', 'color: darkorange;');
-
-        });
-
-        ee.on(EventEnum.HowlerResumeEvent, (e) => {
-            this.timeline.resume();
-            console.log('%c ---- TIMELINE RESUME ----', 'color: darkorange;');
-        });
-
-        _that.state.howler.on('load', function () {
-            _that.progress_text.current.innerHTML = "0:00 / " + _that.fmtMSS(~~_that.state.howler.duration());
-            _that.timeline = _that.ILVObject.getTimeline();
-            _that.timeline.pause();
-            console.log(_that.timeline);
-            _that.ee.emit(EventEnum.HowlerLoadEvent, new HowlerLoadEvent(Date.now(), _that, _that.state.howler));
-            _that.state.duration = _that.state.howler.duration();
-
-            let array = [];
-            let handle_onMouseEnter = (e) => {
-                let target = e.target;
-                let id = target.id.split('_')[2];
-                let tag_element = document.createElement('span');
-                tag_element.id = `progress_point_tag_${id}`;
-                tag_element.className = "progress_point_tag";
-                tag_element.innerHTML = _that.state.slide_map[id - 1].name;
-                target.appendChild(tag_element);
-            };
-
-            let handle_onMouseLeave = (e) => {
-                let target = e.target;
-                target.firstChild.remove();
-            };
-
-            let handle_onMouseClick = (e) => {
-                let target = e.target;
-                if (target.className === "progress_point") {
-                    let id = target.id.split('_')[2];
-                    if (!_that.state.howler.playing()) {
-                        _that.state.howler.play();
-                        let element = document.getElementById("player_switch");
-                        element.firstChild.className = "fas fa-pause";
-                        element.lastChild.innerHTML = " Pause ";
-                        element.style.backgroundColor = "rgba(15, 114, 228, 0.9)";
-                    }
-                    _that.howlerSeek(_that.state.slide_map[id - 1].startTime);
-                    _that.state.howler.seek(_that.state.slide_map[id - 1].startTime);
-                }
-            }
-
-            for (let [index, value] of _that.state.slide_map.entries()) {
-                if (index != 0) {
-                    let id = `progress_point_${value.page}`;
-                    let key = `progress_point_key_${index}`;
-                    let percentage = (value.startTime / _that.state.howler.duration()).toFixed(2) * 100;
-                    let style = {
-                        marginLeft: `${percentage}%`
-                    }
-                    array.push(<span className="progress_point" id={id} key={key} style={style} onClick={handle_onMouseClick} onMouseEnter={handle_onMouseEnter} onMouseLeave={handle_onMouseLeave}></ span>);
-                }
-            }
-
+        // listener for howler audio load
+        this.props.hgTimeline.howlerTimeline.on('load', function () {
+            _that.state.duration = _that.getHowlerTimeline().duration();
             _that.setState({
-                slide_point: array,
+                progress_text: "0:00 / " + _that.fmtMSS(~~_that.getHowlerTimeline().duration())
             })
+            _that.generatePointTag();
         });
 
-        _that.state.howler.on('play', function () {
+        // listener for howler play
+        this.props.hgTimeline.howlerTimeline.on('play', function () {
             window.requestAnimationFrame(step);
-        })
-
-        function step() {
-
-            let howler = _that.state.howler;
-            let seek = howler.seek() || 0;
-            let duration = howler.duration();
-
-            if (howler.playing()) {
-                window.requestAnimationFrame(step);
-                _that.progress_text.current.innerHTML = (_that.fmtMSS(~~seek) + " / " + _that.fmtMSS(~~duration));
-                if (Math.abs(seek - duration) <= 0.5) {
-                    _that.progress.current.style.width = '80%';
-                    _that.progress_dot.current.style.left = _that.progress_dot.current.parentNode.width - 15 + 'px';
-                } else if (seek != 0 && !_that.dragging) {
-                    _that.progress.current.style.width = (seek / duration) * 80 + '%';
-                    _that.progress_dot.current.setAttribute('style', `transform: translate(${((seek / duration) * (_that.progress_dot.current.parentNode.clientWidth)).toFixed(2)}px, -10px)`)
+            function step() {
+                let howler = _that.getHowlerTimeline();
+                let seek = howler.seek() || 0;
+                let duration = howler.duration();
+                // let currentSlide = _that.ILVObject.getSlidePagebyTime(seek);
+                if (howler.playing()) {
+                    window.requestAnimationFrame(step);
+                    _that.setState({
+                        progress_text: (_that.fmtMSS(~~seek) + " / " + _that.fmtMSS(~~duration))
+                    })
+                    if (Math.abs(seek - duration) <= 0.5) {
+                        _that.setState({
+                            progress_width: '80%'
+                        });
+                        _that.progress_dot.current.style.left = _that.progress_dot.current.parentNode.width - 15 + 'px';
+                    } else if (seek != 0 && !_that.dragging) {
+                        _that.setState({
+                            progress_width: (seek / duration) * 80 + '%'
+                        });
+                        _that.progress_dot.current.setAttribute('style', `transform: translate(${((seek / duration) * (_that.progress_dot.current.parentNode.clientWidth)).toFixed(2)}px, -10px)`)
+                    }
                 }
             }
-        }
+        })
+        // this.setUpPlaybackStateListners();
+        this.setUpProgressListners();
+    }
 
-        _that.handle_mouse_move = (e) => {
+    setUpProgressListners() {
+        this.handle_mouse_move = (e) => {
             if (e.target.id == 'progress_transparent') {
                 let tip = this.fmtMSS(((e.screenX - e.target.offsetLeft) / (e.target.offsetWidth) * this.state.duration).toFixed(0));
                 if (document.getElementById('progress_time_tip')) {
@@ -223,51 +154,54 @@ class Progress extends Component {
             }
         }
 
-        _that.handle_mouse_leave = (e) => {
+        this.handle_mouse_leave = (e) => {
             if (e.target.id == 'progress_transparent') {
                 e.target.removeChild(document.getElementById('progress_time_tip'));
             }
         }
 
-        _that.handleStart = () => {
-            _that.dragging = true;
+        this.handleStart = () => {
+            this.dragging = true;
         }
 
-        _that.handleDrag = () => {
-            let str = _that.progress_dot.current.style.transform;
+        this.handleDrag = () => {
+            let str = this.progress_dot.current.style.transform;
             let x = parseInt(str.substring(0, str.indexOf(',')).replace(/[^\d.]/g, ''));
-            let percentage = ((x) / _that.progress_bg.current.clientWidth);
-            _that.howlerSeek(Math.round(percentage * _that.state.howler.duration()));
-
-            _that.progress.current.style.width = `${percentage * 80}%`;
+            let percentage = ((x) / this.progress_bg.current.clientWidth);
+            this.gsapTimelineSeek(Math.round(percentage * this.props.hgTimeline.howlerTimeline.duration()));
+            this.setState({
+                progress_width: `${percentage * 80}%`
+            });
+            // _that.progress.current.style.width = `${percentage * 80}%`;
         }
 
-        _that.handleStop = () => {
-            if (!_that.state.howler.playing() && _that.state.howler.seek() === 0) {
-                _that.player_switch.current.setState({ playing: true });
-                _that.state.howler.play();
+        this.handleStop = () => {
+            if (!this.props.hgTimeline.howlerTimeline.playing() && this.getHowlerTimeline().seek() === 0) {
+                this.player_switch.current.setState({ playing: true });
+                this.getHowlerTimeline().play();
             }
-            let str = _that.progress_dot.current.style.transform;
+            let str = this.progress_dot.current.style.transform;
             let x = parseInt(str.substring(0, str.indexOf(',')).replace(/[^\d.]/g, ''));
-            let percentage = ((x) / _that.progress_bg.current.clientWidth);
-            let seek = Math.round(percentage * _that.state.howler.duration());
-            _that.howlerSeek(seek);
-
-            _that.state.howler.seek(seek);
-            if (_that.dragging) {
-                _that.dragging = false;
+            let percentage = ((x) / this.progress_bg.current.clientWidth);
+            let seek = Math.round(percentage * this.getHowlerTimeline().duration());
+            // this.gsapTimelineSeek(seek);
+            // this.state.howler.seek(seek);
+            this.timelineSeek(seek);
+            if (this.dragging) {
+                this.dragging = false;
             }
         }
 
-        _that.handle_progress_click = (e) => {
-            if (e.target.id === "progress_transparent") {
-                if (!_that.state.howler.playing() && _that.state.howler.seek() === 0) {
-                    _that.player_switch.current.setState({ playing: true });
-                    _that.state.howler.play();
-                }
-                let seek = Math.round(e.nativeEvent.offsetX / Math.round(e.target.getBoundingClientRect().width) * _that.state.howler.duration());
-                _that.howlerSeek(seek);
-                _that.state.howler.seek(seek);
+        this.handle_progress_click = (e) => {
+            if (e.target.id === "progress_transparent" && this.getHowlerTimeline().playing()) {
+                // if (! && _that.state.howler.seek() === 0) {
+                //     _that.player_switch.current.setState({ playing: true });
+                //     _that.state.howler.play();
+                // }
+                let seek = Math.round(e.nativeEvent.offsetX / Math.round(e.target.getBoundingClientRect().width) * this.getHowlerTimeline().duration());
+                this.timelineSeek(seek);
+                // this.gsapTimelineSeek(seek);
+                // this.state.howler.seek(seek);
             }
         };
     }
@@ -276,36 +210,70 @@ class Progress extends Component {
         return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
     }
 
-    setUpQuizListner() {
-        if (document.getElementsByClassName('quizComponent').length > 0) {
-            for (let option of document.getElementsByClassName('questionOption')) {
-                option.addEventListener('click', () => {
-                    let quizComponent = option.parentElement.parentElement.parentElement;
-                    let questionFeedback = option.parentElement.parentElement.getElementsByClassName('questionFeedback')[0];
-                    let questionTip = option.parentElement.parentElement.getElementsByClassName('questionTip')[0];
-                    if (option.dataset.correct == 'true') {
-                        option.className = "questionOption_right";
-                        questionFeedback.innerHTML = `<img class='feedbackIcon' src='public_imgs/check_mark.png' />
-                        <label class='feedbackContent'>Richtig :) </label>`;
-                        questionFeedback.style.color = "forestgreen";
-                    } else {
-                        option.className = "questionOption_wrong";
-                        questionFeedback.innerHTML = `<img class='feedbackIcon' src='public_imgs/cross_mark.png' />
-                        <label class='feedbackContent'>Falsch :( </label>`;
-                        questionFeedback.style.color = "firebrick";
-                    }
-                    if (!quizComponent.dataset.isSelected) {
-                        TweenMax.to(quizComponent, {
-                            height: quizComponent.clientHeight * 1.6, duration: 2, onComplete: () => {
-                                TweenMax.to(questionTip, { opacity: 1, visibility: 'visible', duration: 1 });
-                                TweenMax.to(questionFeedback, { opacity: 1, visibility: 'visible', duration: 1 });
-                            }
-                        });
-                    }
-                    quizComponent.dataset.isSelected = true;
-                });
+    gsapTimelineSeek(seek) {
+        this.props.hgTimeline.gsapTimeline.seek(Math.round(seek));
+    }
+
+    howlerTimelineSeek(seek) {
+        this.props.hgTimeline.howlerTimeline.seek(Math.round(seek));
+    }
+
+    timelineSeek(seek) {
+        this.props.hgTimeline.gsapTimeline.seek(Math.round(seek));
+        this.props.hgTimeline.howlerTimeline.seek(Math.round(seek));
+    }
+
+    generatePointTag() {
+        let _that = this;
+        let array = [];
+        let handle_onMouseEnter = (e) => {
+            let target = e.target;
+            let id = target.id.split('_')[2];
+            let tag_element = document.createElement('span');
+            tag_element.id = `progress_point_tag_${id}`;
+            tag_element.className = "progress_point_tag";
+            tag_element.innerHTML = _that.state.slide_map[id - 1].name;
+            target.appendChild(tag_element);
+        };
+
+        let handle_onMouseLeave = (e) => {
+            let target = e.target;
+            target.firstChild.remove();
+        };
+
+        let handle_onMouseClick = (e) => {
+            let target = e.target;
+            if (target.className === "progress_point" && _that.getHowlerTimeline().playing()) {
+                let id = target.id.split('_')[2];
+                _that.timelineSeek(_that.state.slide_map[id - 1].startTime);
+                // _that.gsapTimelineSeek(_that.state.slide_map[id - 1].startTime);
+                // _that.state.howler.seek(_that.state.slide_map[id - 1].startTime);
             }
         }
+
+        for (let [index, value] of _that.state.slide_map.entries()) {
+            if (index != 0) {
+                let id = `progress_point_${value.page}`;
+                let key = `progress_point_key_${index}`;
+                let percentage = (value.startTime / _that.getHowlerTimeline().duration()).toFixed(2) * 100;
+                let style = {
+                    marginLeft: `${percentage}%`
+                }
+                array.push(<span className="progress_point" id={id} key={key} style={style} onClick={handle_onMouseClick} onMouseEnter={handle_onMouseEnter} onMouseLeave={handle_onMouseLeave}></ span>);
+            }
+        }
+
+        _that.setState({
+            slide_point: array,
+        })
+    }
+
+    getHowlerTimeline() {
+        return this.props.hgTimeline.howlerTimeline;
+    }
+
+    getGSAPTimeline() {
+        return this.props.hgTimeline.gsapTimeline;
     }
 }
 

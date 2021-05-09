@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import ee from '../../utilities/event-emitter';
-import CaptionLoader from '../../enities/Caption/CaptionLoader';
+import ee from '../../../utilities/event-emitter';
+// import CaptionLoader from '../../enities/Caption/CaptionLoader';
 import './Subtitle.scss';
-import EventEnum from '../../enities/Event/EventEnum';
+import EventEnum from '../../../enities/Event/EventEnum';
+// import ILVObject from '../../../utilities/ILVObject';
 
 
 class Subtitle extends Component {
   state = {
-    captions: [],
+    cues: [],
     currentString: " * (Kein Untertitel verfügbar) * ",
     seek: 0,
-    howler: undefined,
-    display: true
+    // howler: undefined,
+    display: false
   }
 
-  cp = new CaptionLoader();
+  // cp = new CaptionLoader();
 
   constructor(props) {
     super(props);
@@ -47,19 +48,20 @@ class Subtitle extends Component {
       });
     });
 
-    this.ee.on(EventEnum.HowlerLoadEvent, (e) => {
-      this.cp.initiate();
-      this.setState({
-        captions: this.cp.getCaptions(),
-        howler: e.howler
-      })
+    // this.ee.on(EventEnum.HowlerLoadEvent, (e) => {
+    // this.cp.initiate();
+    let cues = this.props.ILV.getCues();
+    this.setState({
+      cues: cues == undefined ? [] : cues,
+      // howler: e.howler
     })
+    // })
 
     setInterval(() => {
-      if (this.state.howler && this.state.howler.state() == 'loaded') {
-        let seek = this.state.howler.seek();
-        if (this.state.captions.length > 0) {
-          for (let cue of this.state.captions) {
+      if (this.props.hgTimeline.howlerTimeline && this.props.hgTimeline.howlerTimeline.state() == 'loaded') {
+        let seek = this.props.hgTimeline.howlerTimeline.seek();
+        if (this.state.cues.length > 0) {
+          for (let cue of this.state.cues) {
             if (cue.getStart() <= seek && cue.getEnd() >= seek) {
               this.setState({
                 currentString: cue.getText()
