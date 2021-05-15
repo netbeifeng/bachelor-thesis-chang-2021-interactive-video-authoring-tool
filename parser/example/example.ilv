@@ -2,17 +2,16 @@
     $title = "Digitale Grauwertbilder"
     $course = "Computergrafik 2"
     $chapter = "Kapitel 3: Bildrepräsentation und Punktoperationen"
-    $date = "2019-07-19 16:41:10"
     $author = "Max Muster"
     $semester = "SoSe 2021"
 
-    $audio = "scene_1.mp3"
+    $audio = "C:\\Users\\Chang\\Desktop\\example\\scene_1.mp3"
     /*ssf
     ss
     f*/
-    $subtitle = "subtitle_1.vtt"
+    $subtitle = "C:\\Users\\Chang\\Desktop\\example\\subtitle_1.vtt"
     $font = "https://fonts.googleapis.com/css2?family=Zilla+Slab+Highlight&display=swap"
-    $font = "font.ttf"
+    $font = "C:\\Users\\Chang\\Desktop\\example\\font.ttf"
 
     ^slide = {
         $page = 1
@@ -46,7 +45,7 @@
 
         ^video = {
             $id = 24
-            $path = "video1.mp4"
+            $path = "C:\\Users\\Chang\\Desktop\\example\\video1.mp4"
             $startTime = 10
             $duration = 10  
             $position = (200,400)
@@ -148,7 +147,7 @@
 
         ^ custom = {
             $id = 59
-$path = "grau.html"
+            $path = "C:\\Users\\Chang\\Desktop\\example\\grau.html"
             $position = (500,400)
             $duration = 10
             $startTime = 30 
@@ -178,7 +177,7 @@ $path = "grau.html"
 
         ^image = {
             $id = 22
-$path = "image.png"
+$path = "C:\\Users\\Chang\\Desktop\\example\\image.png"
             $width = 100
             $height = 100
             $startTime = 100

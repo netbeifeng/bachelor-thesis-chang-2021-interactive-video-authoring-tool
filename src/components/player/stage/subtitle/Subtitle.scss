@@ -1,0 +1,19 @@
+#closed_captions {
+    display: block;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    font-size: 36px;
+    font-family: "Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue";
+    text-align: center;
+    -webkit-font-smoothing: antialiased;
+    transform: translate(-50%, -50%);
+    color: #fafbfc;
+    padding: 8px 18px;
+    width: fit-content;
+    max-width: 50%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 3;
+    border-radius: 12px;
+    transition: all ease-in-out .9s;
+}

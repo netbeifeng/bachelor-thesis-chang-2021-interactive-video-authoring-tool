@@ -1,0 +1,138 @@
+#control-container {
+    height: 30%;
+}
+
+button {
+    font-size: 39px;
+}
+
+#bottom-control {
+    border-radius: 6px;
+    position: absolute;
+    bottom: 6%;
+    width: 100%;
+    height: fit-content;
+    user-select: none;
+}
+
+#cc_switch {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 85%;
+    font-size: 48px;
+    color: #fafbfc;
+    background-color: rgba(178, 34, 34, 0.9);
+    font-family: "UnitMedium";
+    padding: 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all ease-in-out .9s;
+    width: 180px;
+    text-align: center;
+}
+
+#player_rate {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 25%;
+    font-size: 48px;
+    color: #fafbfc;
+    background-color: #009fd4e3;
+    font-family: "UnitMedium";
+    padding: 10px 18px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all ease-in-out .9s;
+    width: 320px;
+    text-align: center;
+
+
+}
+
+.player_rate_selections {
+    position: absolute;
+    background-color: transparent;
+    height: fit-content;
+    width: 380px;
+    height: 200px;
+    bottom: 0;
+    left: 0;
+}
+
+.player_rate_selection {
+    position: absolute;
+    padding: 10px 18px;
+    border-radius: 15px;
+    width: 100px;
+    cursor: pointer;
+    font-family: "UnitMedium";
+    font-size: 48px;
+    text-align: center;
+    color: #fafbfc;
+    background-color: #009fd4e3;
+}
+
+.player_rate_selection:hover {
+    background-color: #fafbfc;
+    color: #009fd4e3;
+    border: 3px #009fd4e3 solid;
+}
+
+#player_switch {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 9%;
+    font-size: 48px;
+    color: #fafbfc;
+    background-color: rgba(228, 135, 15, 0.9);
+    font-family: "UnitMedium";
+    padding: 10px 18px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all ease-in-out .9s;
+    width: 210px;
+    text-align: center;
+}
+
+#volume_slider {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 65%;
+    font-size: 48px;
+    color: #fafbfc;
+    background-color: rgba(168, 15, 228, 0.7);
+    font-family: "UnitMedium";
+    padding: 10px 18px;
+    border-radius: 15px;
+    width: 420px;
+    text-align: center;
+}
+
+#button-container {
+    margin-bottom: 30px;
+}
+
+#volume_icon {
+    cursor: pointer;
+    width: 20%;
+}
+
+#volume_value {
+    width: 20%;
+}
+
+#volume {
+    /* width:180px; */
+    height: 34px;
+    outline: none;
+    background: none;
+    width: 55%;
+    margin: 0 15px;
+}

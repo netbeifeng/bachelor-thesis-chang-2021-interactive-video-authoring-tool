@@ -1,0 +1,126 @@
+
+.progress_point {
+    display: block;
+    position: absolute;
+    background-color: rgba(250, 128, 114, 0.9);
+    transform: translateY(-15px);
+    width: 15px;
+    height: 40px;
+    border-radius: 8px;
+    z-index: 9 !important;
+    cursor: pointer;
+}
+
+.progress_point_tag {
+    display: inline-block;
+    position: absolute;
+    text-align: center;
+    min-width: 140px;
+    max-width: 900px;
+    white-space: nowrap;
+    top: 140%;
+    padding: 2px 40px;
+    transform: translateX(-50%);
+    color: coral;
+    background-color: rgba(255, 255, 255, 0.85);
+    box-shadow: 5px 10px 18px #888888;
+    font-size: 26px;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: inherit;
+}
+
+#progress_dot {
+    display: block;
+    position: absolute;
+    background-color: rgba(114, 245, 250, 0.9);
+    transform: translateY(-11px);
+    width: 30px;
+    left: -15px;
+    height: 30px;
+    border-radius: 15px;
+    z-index: 9 !important;
+    cursor: move;
+}
+
+#progress-transparent {
+    position: relative;
+    left: 10%;
+    right: 10%;
+    top: -10px;
+    /* bottom: 5%; */
+    width: 80%;
+    height: 10px;
+    background-color: transparent;
+    color: transparent;
+    z-index: 1;
+    border-radius: inherit;
+    cursor: pointer;
+}
+
+#progress-bg {
+    position: relative;
+    left: 10%;
+    right: 10%;
+    top: 0;
+    /* bottom: 5%; */
+    width: 80%;
+    height: 10px;
+    background-color: gray;
+    color: gray;
+    z-index: -1;
+    border-radius: 15px;
+}
+
+#progress {
+    position: relative;
+    left: 10%;
+    right: 10%;
+    top: -20px;
+    /* bottom: 5%; */
+    width: 0%;
+    height: 10px;
+    background-color: white;
+    color: white;
+    z-index: 0;
+    border-radius: 15px;
+}
+
+#progress_time_tip {
+    position: relative;
+    width: fit-content;
+    padding: 5px 10px;
+    height: 50px;
+    top: 50px;
+    color: white;
+    font-family: 'Consolas';
+    font-size: 18px;
+    background-color: #88888871;
+    border-radius: inherit;
+}
+
+#progress-text {
+    position: relative;
+    color: white;
+    font-family: "UnitMedium";
+    position: absolute;
+    /* bottom: 10%; */
+    border-radius: 15px;
+    background-color: salmon;
+    width: fit-content;
+    padding: 8px;
+    margin-top: 15px;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 30px;
+
+    span {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    img {
+        display: inline-block;
+        vertical-align: middle;
+    }
+}

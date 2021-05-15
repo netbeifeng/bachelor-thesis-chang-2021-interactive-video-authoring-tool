@@ -1,5 +1,4 @@
 import Animation from '../Animation/Animation';
-import Custom from './Custom';
 import Position from './Position';
 
 abstract class Element {
@@ -11,7 +10,6 @@ abstract class Element {
     painted: boolean;
 
     constructor(startTime: number, duration: number, positionX: number, positionY: number, zIndex: number) {
-        // console.log(startTime);
         this.startTime = startTime;
         this.duration = duration;
         this.position = new Position(positionX, positionY);

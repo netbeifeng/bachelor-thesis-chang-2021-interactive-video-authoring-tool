@@ -17,10 +17,6 @@
             "type": "string",
             "minLength": 1
         },
-        "date": {
-            "type": "string",
-            "minLength": 1
-        },
         "semester": {
             "type": "string",
             "minLength": 1
@@ -724,7 +720,6 @@
         "title",
         "course",
         "chapter",
-        "date",
         "semester",
         "audio",
         "slides"

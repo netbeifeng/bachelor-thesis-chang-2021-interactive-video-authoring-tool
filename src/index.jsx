@@ -3,18 +3,14 @@ import ReactDOM from 'react-dom';
 import './utilities/reset.css';
 import './index.scss';
 import App from './App';
-import HelmetHead from './components/helmet/helmet';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <div>
-    <HelmetHead />
-    {/* <React.StrictMode> */}
     <App />
     <div className={'signature'}>
-      BA
+      ILV-Player
     </div>
-    {/* </React.StrictMode> */}
   </div>,
   document.getElementById('root'),
 );

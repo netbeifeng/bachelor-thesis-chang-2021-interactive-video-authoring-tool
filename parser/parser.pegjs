@@ -16,7 +16,7 @@ Key = ( BlockKey / InlineKey ) {return text();}
 
 BlockKey =  "custom" / "quiz" / "text" / "animation" / "image" / "video" / "transformation" / "cursor" / "graphics" { return text(); }
 InlineKey = QuestionKey / TextKey / AnimationKey / GraphicsKey / RootKey / "path" / "type" / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" / "inPage" { return text(); }
-RootKey = "title" / "course" / "date" / "audio" / "font" / "author" / "slide" / "subtitle" / "semester" / "chapter" { return text(); }
+RootKey = "title" / "course" / "audio" / "font" / "author" / "slide" / "subtitle" / "semester" / "chapter" { return text(); }
 GraphicsKey = "strokeColor" / "strokeWidth" { return text(); }
 TextKey = "page" / "content" / "fontSize" / "fontColor" / "fontFamily" { return text(); }
 QuestionKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" { return text(); }

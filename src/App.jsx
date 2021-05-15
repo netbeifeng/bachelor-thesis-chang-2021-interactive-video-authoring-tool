@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.scss';
-import Player from './components/player/player';
-import Progress from './components/progress/progress';
+import Player from './components/player/Player';
+import Head from './components/head/Head';
+import ILVGenerator from './utilities/ILVGenerator';
 
 
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      ILVObject: new ILVGenerator().getILV()
+    }
   }
 
   render() {
     return (
-      <div className="main">
-        <div id='head_container'>
-          <h1>Interactive Learning Video Demo</h1>
+      <div>
+        <Head ILVObject={this.state.ILVObject} />
+        <div className="main">
+          <div id='head_container'>
+            <h1>Interactive Learning Video Demo</h1>
+          </div>
+          <Player ILVObject={this.state.ILVObject} />
         </div>
-        <Player />
       </div>
     );
   }

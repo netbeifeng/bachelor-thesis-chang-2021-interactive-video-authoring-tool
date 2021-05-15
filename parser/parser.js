@@ -1,29 +1,35 @@
 const fs = require("fs");
-const ASTY = require("asty");
-const PEG = require("pegjs");
-const Validator = require("../validator/validator");
-const PEGUtil = require("pegjs-util");
-const minify = require('html-minifier').minify;
+const os = require('os');
 
+const platform = os.platform();
+var divider = '/';
+if (platform === 'win32') {
+    divider = '\\';
+}
+
+
+const Validator = require("../validator/validator");
+const minify = require('html-minifier').minify;
 
 const args = process.argv.slice(2);
 
 const _dirname = `parser/${args[0]}/`;
-const _dirname_res = `parser/${args[0]}/ilv_resources/`;
-// args[0];
+const _dirname_res = ``;
+// const _dirname_res = `parser/${args[0]}/ilv_resources/`;
 console.log("--- START PARSE ILV-DOCUMENT ---");
 
 const validator = new Validator();
 
-const asty = new ASTY();
-
+// const asty = new ASTY();
+const PEG = require("pegjs");
+const PEGUtil = require("pegjs-util");
 const parser = PEG.generate(fs.readFileSync("parser/parser.pegjs", "utf8"));
 
 var result = PEGUtil.parse(parser, fs.readFileSync(_dirname + `${args[0]}.ilv`, "utf8"), {
     startRule: "start",
-    makeAST: function (line, column, offset, args) {
-        return asty.create.apply(asty, args).pos(line, column, offset)
-    }
+    // makeAST: function (line, column, offset, args) {
+    //     return asty.create.apply(asty, args).pos(line, column, offset)
+    // }
 })
 
 var outputJSON = {
@@ -64,6 +70,10 @@ const findTransformationInElement = (type, id, json, parent) => {
             parent.transformations.push(transformation);
         }
     }
+}
+
+const getFileNameFromPath = (path) => {
+    return path.substr(path.lastIndexOf(divider) + 1);
 }
 
 const getStartAndDuration = (element, slide) => {
@@ -116,13 +126,12 @@ const fetchSlides = (json) => {
                 graphics: [],
                 texts: []
             };
-            // console.log(slide);
             parseSlideJSON(json[i].aug, slide);
             outputJSON.slides.push(slide);
         } else {
             if (json[i].key == 'audio' || json[i].key == 'subtitle') {
-                fs.createReadStream(_dirname_res + json[i].value).pipe(fs.createWriteStream(`public/assets/${json[i].key}/${json[i].value}`));
-                outputJSON[json[i].key] = json[i].value != undefined ? json[i].value : "ERROR";
+                fs.createReadStream(_dirname_res + json[i].value).pipe(fs.createWriteStream(`public/assets/${json[i].key}/${getFileNameFromPath(json[i].value)}`));
+                outputJSON[json[i].key] = json[i].value != undefined ? getFileNameFromPath(json[i].value) : "ERROR";
             } else if (json[i].key == 'font') {
                 if (json[i].value.includes('http')) {
                     outputJSON.fonts.push({
@@ -134,10 +143,10 @@ const fetchSlides = (json) => {
                 } else {
                     localFontString += `@font-face{
                         font-family: 'font${outputJSON.fonts.length + 1}'; 
-                        src: url('../fonts/${json[i].value}');
+                        src: url('../fonts/${getFileNameFromPath(json[i].value)}');
                     }\n`;
 
-                    fs.createReadStream(_dirname_res + json[i].value).pipe(fs.createWriteStream(`./src/assets/${json[i].key}s/${json[i].value}`));
+                    fs.createReadStream(_dirname_res + json[i].value).pipe(fs.createWriteStream(`./src/assets/${json[i].key}s/${getFileNameFromPath(json[i].value)}`));
 
                     outputJSON.fonts.push({
                         fid: outputJSON.fonts.length + 1,
@@ -251,7 +260,8 @@ const parseSlideJSON = (json, slide) => {
                     video.isOnline = true;
                 } else {
                     video.isOnline = false;
-                    fs.createReadStream(_dirname_res + video.path).pipe(fs.createWriteStream(`public/assets/video/${video.path}`));
+                    fs.createReadStream(_dirname_res + video.path).pipe(fs.createWriteStream(`public/assets/video/${getFileNameFromPath(video.path)}`));
+                    video.path = getFileNameFromPath(video.path);
                 }
             }
             video.position = findValueByKey('position', item.aug);
@@ -286,6 +296,7 @@ const parseSlideJSON = (json, slide) => {
             } else {
                 image.isOnline = false;
                 fs.createReadStream(_dirname_res + image.path).pipe(fs.createWriteStream(`public/assets/image/${image.path}`));
+                image.path = getFileNameFromPath(image.path);
             }
             image.position = findValueByKey('position', item.aug);
             image.height = findValueByKey('height', item.aug);
