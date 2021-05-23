@@ -15,6 +15,7 @@ class Validator {
     getErrors() {
         return this.ajvValidate.errors;
     }
+    
 }
 
 module.exports = Validator;

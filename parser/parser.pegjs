@@ -1,18 +1,17 @@
 start = Block
 
 Block = _ BLOCKSTART _ BLOCKEND _ { return {}; } 
-      / _ BLOCKSTART head:(_ Property _ )* BLOCKEND _ { return head.map((element) => element[1]); }
+      / _ BLOCKSTART prop:(_ Property _ )* BLOCKEND _ { return prop.map((element) => element[1]); }
 
 Property = prop:InlineProperty _ SEMICOLON? _ { return prop; } 
 		 / prop:BlockProperty _ SEMICOLON? _ { return prop; }
-         / com:COMMENT {return {key: 'comment' , value: com.join('').split(',').join('')}; }
+         / com:COMMENT { return {key: 'comment' , value: com.join('').split(',').join('')}; }
 
 InlineProperty = INLINEPREFIX _ key:Key _ EqualSign _ value:Value _  {  return { key: key, value: value}; } 
 
 BlockProperty =  BLOCKPREFIX _ key:Key _ EqualSign _ block:Block _ { return { key: key, aug: block};}
 
-Key = ( BlockKey / InlineKey ) {return text();}
-
+Key = ( BlockKey / InlineKey ) { return text(); }
 
 BlockKey =  "custom" / "quiz" / "text" / "animation" / "image" / "video" / "transformation" / "cursor" / "graphics" { return text(); }
 InlineKey = QuestionKey / TextKey / AnimationKey / GraphicsKey / RootKey / "path" / "type" / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" / "inPage" { return text(); }
@@ -22,7 +21,7 @@ TextKey = "page" / "content" / "fontSize" / "fontColor" / "fontFamily" { return 
 QuestionKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" { return text(); }
 AnimationKey = "elementType" / "elementId" / "toScale" / "toPosition" / "emphasisTime" / "moveTo" { return text(); }
 
-Value = value:(BasicDataType / Coordinate / Interval / Array) { return value;}
+Value = value:(BasicDataType / Coordinate / Interval / Array) { return value; }
 
 _ "whitespace" = [ \t\r\n]*	
 
@@ -55,7 +54,7 @@ Escape = "\\" character:["\\/bfnrt] {
 	return String.fromCodePoint(parseInt(codePoint.join(''), 16)); 
 }
 
-COMMENT = COMSTART (NOT_COM/COMMENT)* COMSTOP
+COMMENT = COMSTART (NOT_COM / COMMENT)* COMSTOP
 
 NOT_COM = (!COMSTOP !COMSTART.)
 
@@ -67,8 +66,5 @@ COMSTOP = '*/'
 
 BLOCKSTART = "{"
 BLOCKEND = "}"
-
-LT = "<"
-GT = ">"
 
 SEMICOLON = ";"

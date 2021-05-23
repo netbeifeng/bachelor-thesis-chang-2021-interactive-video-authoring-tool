@@ -20,24 +20,21 @@ console.log("--- START PARSE ILV-DOCUMENT ---");
 
 const validator = new Validator();
 
-// const asty = new ASTY();
 const PEG = require("pegjs");
 const PEGUtil = require("pegjs-util");
 const parser = PEG.generate(fs.readFileSync("parser/parser.pegjs", "utf8"));
 
 var result = PEGUtil.parse(parser, fs.readFileSync(_dirname + `${args[0]}.ilv`, "utf8"), {
-    startRule: "start",
-    // makeAST: function (line, column, offset, args) {
-    //     return asty.create.apply(asty, args).pos(line, column, offset)
-    // }
-})
+    startRule: "start"
+});
 
-var outputJSON = {
+var ilvJSON = {
     fonts: [],
     slides: [],
 };
 
 var idArray = [];
+
 
 const findValueByKey = (key, json) => {
     for (let i = 0; i < json.length; i++) {
@@ -52,14 +49,11 @@ const findTransformationInElement = (type, id, json, parent) => {
     for (let i = 0; i < json.length; i++) {
         let transformation = {};
         if ('transformation' == json[i].key) {
-            // animation.elementType = findValueByKey('elementType', json[i]);
             transformation.elementType = type;
             transformation.startTime = findValueByKey('startTime', json[i].aug);
             transformation.duration = findValueByKey('duration', json[i].aug) == undefined ? 3 : findValueByKey('duration', json[i].aug);
             transformation.elementId = id;
-            // animation.elementId = findValueByKey('elementId', json[i]);
             transformation.type = findValueByKey('type', json[i].aug);
-            // console.log(findValueByKey('type', json[i].aug));
             if (transformation.type.toLowerCase() == 'slide') {
                 transformation.toPosition = findValueByKey('toPosition', json[i].aug);
                 transformation.toScale = null;
@@ -108,16 +102,18 @@ const getStartAndDuration = (element, slide) => {
     }
 }
 
-const fetchSlides = (json) => {
+const rearrange = (json, slide) => {
+    const normalKey = ['comment', 'page', 'name', 'last', "startTime", "duration"];
     let localFontString = "";
     for (let i = 0; i < json.length; i++) {
-        if (json[i].key == 'slide') {
-            let slide = {
-                sid: outputJSON.slides.length + 1,
-                startTime: getStartAndDuration(json[i].aug).startTime,
-                duration: getStartAndDuration(json[i].aug).duration,
-                name: findValueByKey('name', json[i].aug),
-                page: findValueByKey('page', json[i].aug),
+        let item = json[i];
+        if (item.key == 'slide') {
+            let _slide = {
+                sid: ilvJSON.slides.length + 1,
+                startTime: getStartAndDuration(item.aug).startTime,
+                duration: getStartAndDuration(item.aug).duration,
+                name: findValueByKey('name', item.aug),
+                page: findValueByKey('page', item.aug),
                 videos: [],
                 animations: [],
                 images: [],
@@ -126,56 +122,9 @@ const fetchSlides = (json) => {
                 graphics: [],
                 texts: []
             };
-            parseSlideJSON(json[i].aug, slide);
-            outputJSON.slides.push(slide);
-        } else {
-            if (json[i].key == 'audio' || json[i].key == 'subtitle') {
-                fs.createReadStream(_dirname_res + json[i].value).pipe(fs.createWriteStream(`public/assets/${json[i].key}/${getFileNameFromPath(json[i].value)}`));
-                outputJSON[json[i].key] = json[i].value != undefined ? getFileNameFromPath(json[i].value) : "ERROR";
-            } else if (json[i].key == 'font') {
-                if (json[i].value.includes('http')) {
-                    outputJSON.fonts.push({
-                        fid: outputJSON.fonts.length + 1,
-                        type: "WebFont",
-                        isOnline: true,
-                        path: json[i].value
-                    });
-                } else {
-                    localFontString += `@font-face{
-                        font-family: 'font${outputJSON.fonts.length + 1}'; 
-                        src: url('../fonts/${getFileNameFromPath(json[i].value)}');
-                    }\n`;
-
-                    fs.createReadStream(_dirname_res + json[i].value).pipe(fs.createWriteStream(`./src/assets/${json[i].key}s/${getFileNameFromPath(json[i].value)}`));
-
-                    outputJSON.fonts.push({
-                        fid: outputJSON.fonts.length + 1,
-                        type: "LocalFont",
-                        isOnline: false,
-                        path: json[i].value
-                    });
-
-                }
-            } else if (json[i].key != 'comment') {
-                outputJSON[json[i].key] = json[i].value != null ? json[i].value : "ERROR";
-            }
-        }
-    }
-
-    // if(localFontString.length > 0) {
-    fs.writeFile('./src/assets/fontCSS/font.scss', localFontString, 'utf8', function (error) {
-        if (error) {
-            console.log(error);
-            return false;
-        }
-    });
-    // }
-}
-
-const parseSlideJSON = (json, slide) => {
-    for (let i = 0; i < json.length; i++) {
-        let item = json[i];
-        if (item.key.includes('custom')) {
+            rearrange(item.aug, _slide);
+            ilvJSON.slides.push(_slide);
+        } else if (item.key == 'custom') {
             let custom = {
                 transformations: []
             };
@@ -193,7 +142,7 @@ const parseSlideJSON = (json, slide) => {
             custom.htmlContent = "<div class='customComponent'>" + minify(fs.readFileSync(_dirname_res + custom.path, "utf-8")) + "</div>";
             findTransformationInElement('custom', custom.cid, item.aug, custom);
             slide.customes.push(custom);
-        } else if (item.key.includes('quiz')) {
+        } else if (item.key == 'quiz') {
             let quiz = {
                 transformations: []
             };
@@ -272,7 +221,6 @@ const parseSlideJSON = (json, slide) => {
             slide.videos.push(video);
         } else if (item.key == 'cursor') {
             let cursorAnimation = {};
-            // cursorAnimation.aid = findValueByKey('id', item.aug);
             cursorAnimation.type = 'cursor';
             cursorAnimation.startTime = getStartAndDuration(item.aug, slide).startTime;
             cursorAnimation.duration = getStartAndDuration(item.aug, slide).duration == undefined ? 3 : getStartAndDuration(item.aug, slide).duration;
@@ -282,20 +230,17 @@ const parseSlideJSON = (json, slide) => {
             let image = {
                 transformations: []
             };
-            // image.iid = outputJSON.images.length + 1;
             image.iid = findValueByKey('id', item.aug);
             image.id = image.iid;
             idArray.push(image.id);
             image.startTime = getStartAndDuration(item.aug, slide).startTime;
             image.duration = getStartAndDuration(item.aug, slide).duration;
-            // image.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
-            // image.path = findValueByKey('path', item.aug);
             image.path = findValueByKey('path', item.aug);
             if (image.path.includes('http')) {
                 image.isOnline = true;
             } else {
                 image.isOnline = false;
-                fs.createReadStream(_dirname_res + image.path).pipe(fs.createWriteStream(`public/assets/image/${image.path}`));
+                fs.createReadStream(_dirname_res + image.path).pipe(fs.createWriteStream(`public/assets/image/${getFileNameFromPath(image.path)}`));
                 image.path = getFileNameFromPath(image.path);
             }
             image.position = findValueByKey('position', item.aug);
@@ -329,8 +274,41 @@ const parseSlideJSON = (json, slide) => {
             graphics.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);
             findTransformationInElement('graphics', graphics.gid, item.aug, graphics);
             slide.graphics.push(graphics);
+        } else {
+            if (item.key == 'audio' || item.key == 'subtitle') {
+                fs.createReadStream(_dirname_res + item.value).pipe(fs.createWriteStream(`public/assets/${item.key}/${getFileNameFromPath(item.value)}`));
+                ilvJSON[item.key] = item.value != undefined ? getFileNameFromPath(item.value) : "ERROR";
+            } else if (item.key == 'font') {
+                if (item.value.includes('http')) {
+                    ilvJSON.fonts.push({
+                        fid: ilvJSON.fonts.length + 1,
+                        type: "WebFont",
+                        isOnline: true,
+                        path: item.value
+                    });
+                } else {
+                    localFontString += `@font-face{
+                        font-family: 'font${ilvJSON.fonts.length + 1}'; 
+                        src: url('../fonts/${getFileNameFromPath(item.value)}');
+                    }\n`;
+
+                    fs.createReadStream(_dirname_res + item.value).pipe(fs.createWriteStream(`./src/assets/${item.key}s/${getFileNameFromPath(item.value)}`));
+
+                    ilvJSON.fonts.push({
+                        fid: ilvJSON.fonts.length + 1,
+                        type: "LocalFont",
+                        isOnline: false,
+                        path: item.value
+                    });
+
+                }
+            } else if (normalKey.indexOf(item.key) == -1) {
+                ilvJSON[item.key] = item.value != null ? item.value : "ERROR";
+            }
         }
     }
+
+    fs.writeFile('./src/assets/fontCSS/font.scss', localFontString, 'utf8', (error) => { console.log(error); });
 }
 
 const isRepeat = (arr) => {
@@ -347,9 +325,9 @@ if (result.error !== null) {
     console.error("ERROR: Parsing Failure:\n" + PEGUtil.errorMessage(result.error, true).replace(/^/mg, "ERROR: "));
 } else {
     console.log("--- PARSE PASS ---");
-    fetchSlides(result.ast);
-    if (!outputJSON.subtitle) {
-        outputJSON.subtitle = "";
+    rearrange(result.ast);
+    if (!ilvJSON.subtitle) {
+        ilvJSON.subtitle = "";
     }
     console.log("--- ID COLLATION DETCTING ---");
     isRepeat(idArray);
@@ -358,16 +336,15 @@ if (result.error !== null) {
     console.log("--- ILV-JSON PREPARED ---");
 
     console.log("--- START VALIDATE ILV-JSON ---");
-    // console.log(outputJSON.slides[1]);
-    // console.log(validator.validate(outputJSON));
-    if (!validator.validate(outputJSON)) {
+
+    console.log(ilvJSON);
+    if (!validator.validate(ilvJSON)) {
         console.log("--- VALIDATE FAILED ---");
         throw validator.getErrors();
     } else {
         console.log("--- VALIDATE PASS ---");
-        // console.log(outputJSON);
 
-        fs.writeFile(`./parser/${args[0]}/build.json`, JSON.stringify(outputJSON), 'utf8', function (error) {
+        fs.writeFile(`./parser/${args[0]}/build.json`, JSON.stringify(ilvJSON), 'utf8', function (error) {
             if (error) {
                 console.log(error);
                 return false;

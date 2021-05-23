@@ -6,9 +6,6 @@
     $semester = "SoSe 2021"
 
     $audio = "C:\\Users\\Chang\\Desktop\\example\\scene_1.mp3"
-    /*ssf
-    ss
-    f*/
     $subtitle = "C:\\Users\\Chang\\Desktop\\example\\subtitle_1.vtt"
     $font = "https://fonts.googleapis.com/css2?family=Zilla+Slab+Highlight&display=swap"
     $font = "C:\\Users\\Chang\\Desktop\\example\\font.ttf"
