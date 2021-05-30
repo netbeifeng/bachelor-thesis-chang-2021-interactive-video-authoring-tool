@@ -12,13 +12,15 @@ class Control extends Component {
 
     render() {
         return (
-            <div id="control-container">
-                <div id="bottom-control">
-                    <div id="button-container">
-                        <Buttons ILV={this.props.ILV}></Buttons>
-                    </div>
-                    <div id="progress-container">
-                        <Slider ILV={this.props.ILV} />
+            <div id='player-control'>
+                <div id="control-container">
+                    <div id="bottom-control">
+                        <div id="button-container">
+                            <Buttons ILV={this.props.ILV}></Buttons>
+                        </div>
+                        <div id="progress-container">
+                            <Slider ILV={this.props.ILV} />
+                        </div>
                     </div>
                 </div>
             </div>

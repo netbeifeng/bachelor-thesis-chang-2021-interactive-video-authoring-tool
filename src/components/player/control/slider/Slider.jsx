@@ -67,13 +67,8 @@ class Slider extends Component {
         this.props.ILV.ILVTimeline.howlerTimeline.on('play', function () {
             window.requestAnimationFrame(step);
             function step() {
-                // let howler = _that.props.ILV.ILVTimeline.howlerTimeline;
-                // let seek = howler.seek() || 0;
                 let seek = _that.props.ILV.ILVTimeline.howlerTimeline.seek();
                 let duration = _that.props.ILV.ILVPlayer.duration;
-
-                // console.log(_that.props.ILV.ILVPlayer);
-
 
                 if (_that.props.ILV.ILVPlayer.playing) {
                     window.requestAnimationFrame(step);
@@ -94,7 +89,6 @@ class Slider extends Component {
                 }
             }
         })
-        // this.setUpPlaybackStateListners();
         this.setUpProgressListners();
     }
 
@@ -134,20 +128,13 @@ class Slider extends Component {
             this.setState({
                 progress_width: `${percentage * 80}%`
             });
-            // _that.progress.current.style.width = `${percentage * 80}%`;
         }
 
         this.handleStop = () => {
-            // if (!this.props.ILV.ILVTimeline.howlerTimeline.playing() && this.getHowlerTimeline().seek() === 0) {
-            //     this.player_switch.current.setState({ playing: true });
-            //     this.getHowlerTimeline().play();
-            // }
             let str = this.progress_dot.current.style.transform;
             let x = parseInt(str.substring(0, str.indexOf(',')).replace(/[^\d.]/g, ''));
             let percentage = ((x) / this.progress_bg.current.clientWidth);
             let seek = Math.round(percentage * this.props.ILV.ILVPlayer.duration);
-            // this.gsapTimelineSeek(seek);
-            // this.state.howler.seek(seek);
             this.props.ILV.ILVTimeline.timelineSeek(seek);
             if (this.dragging) {
                 this.dragging = false;
@@ -155,17 +142,9 @@ class Slider extends Component {
         }
 
         this.handle_progress_click = (e) => {
-            // console.log(this.props.ILV.ILVPlayer.playing);
             if (e.target.id === "progress-transparent" && this.props.ILV.ILVPlayer.playing) {
-                // if (! && _that.state.howler.seek() === 0) {
-                //     _that.player_switch.current.setState({ playing: true });
-                //     _that.state.howler.play();
-                // }
-
                 let seek = Math.round(e.nativeEvent.offsetX / Math.round(e.target.getBoundingClientRect().width) * this.props.ILV.ILVPlayer.duration);
                 this.props.ILV.ILVTimeline.timelineSeek(seek);
-                // this.gsapTimelineSeek(seek);
-                // this.state.howler.seek(seek);
             }
         };
     }
@@ -173,19 +152,6 @@ class Slider extends Component {
     fmtMSS(s) {
         return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
     }
-
-    // gsapTimelineSeek(seek) {
-    //     this.props.hgTimeline.gsapTimeline.seek(Math.round(seek));
-    // }
-
-    // howlerTimelineSeek(seek) {
-    //     this.props.hgTimeline.howlerTimeline.seek(Math.round(seek));
-    // }
-
-    // timelineSeek(seek) {
-    //     this.props.hgTimeline.gsapTimeline.seek(Math.round(seek));
-    //     this.props.hgTimeline.howlerTimeline.seek(Math.round(seek));
-    // }
 
     generatePointTag() {
         let _that = this;
@@ -210,8 +176,6 @@ class Slider extends Component {
             if (target.className === "progress_point" && _that.props.ILV.ILVTimeline.howlerTimeline.playing()) {
                 let id = target.id.split('_')[2];
                 _that.props.ILV.ILVTimeline.timelineSeek(_that.state.slide_map[id - 1].startTime);
-                // _that.gsapTimelineSeek(_that.state.slide_map[id - 1].startTime);
-                // _that.state.howler.seek(_that.state.slide_map[id - 1].startTime);
             }
         }
 

@@ -8,8 +8,16 @@ class Head extends Component {
   constructor(props) {
     super(props);
     this.fonts = this.props.ILVObject.getFonts().map((font) => {
-      if (font.isOnline)
+      if (font.isOnline) {
         return <style key={font.fid}>{`@import url('${font.path}');`}</style>
+      } else { 
+        return <style key={font.fid}>
+                  {`@font-face{
+                    font-family: '${font.path.replace('.','')}'; 
+                    src: url('./assets/fonts/${font.path}');
+                  }`}
+               </style>; 
+      }
     });
   }
 

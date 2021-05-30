@@ -15,7 +15,7 @@ class Player extends Component {
         this.timelineSeek = this.timelineSeek.bind(this);
         this.timelinePlay = this.timelinePlay.bind(this);
         this.timelinePause = this.timelinePause.bind(this);
-        this.timelineRate = this.timelineRate.bind(this);
+        this.timelineRate = this.timelineSpeed.bind(this);
         this.howlerVolume = this.howlerVolume.bind(this);
         this.updatePlayerCurrentTiming = this.updatePlayerCurrentTiming.bind(this);
 
@@ -31,7 +31,7 @@ class Player extends Component {
                     timelineSeek: this.timelineSeek,
                     timelinePlay: this.timelinePlay,
                     timelinePause: this.timelinePause,
-                    timelineRate: this.timelineRate,
+                    timelineRate: this.timelineSpeed,
                     howlerVolume: this.howlerVolume
                 },
                 ILVPlayer: {
@@ -49,24 +49,14 @@ class Player extends Component {
                 }
             }
         }
-
-
-
     }
-
 
     render() {
         return (
             <div id='player-container'>
-                <div id='player-stage'>
-                    <Stage ILV={this.state.ILV} />
-                </div>
-                <div id='player-control'>
-                    <Control ILV={this.state.ILV} />
-                </div>
-                <div id='player-navigator'>
-                    <Navigator ILV={this.state.ILV} />
-                </div>
+                <Stage ILV={this.state.ILV} />
+                <Control ILV={this.state.ILV} />
+                <Navigator ILV={this.state.ILV} />
             </div>
         );
     }
@@ -77,6 +67,10 @@ class Player extends Component {
         this.setState({
             ILV: ILV
         });
+    }
+
+    componentDidMount() {
+        this.initPlayer();
     }
 
     initPlayer() {
@@ -124,7 +118,7 @@ class Player extends Component {
         this.state.ILV.ILVTimeline.gsapTimeline.pause();
     }
 
-    timelineRate(rate) {
+    timelineSpeed(rate) {
         let ILV = this.state.ILV;
         ILV.ILVPlayer.playSpeed = rate;
         this.setState({
@@ -146,10 +140,6 @@ class Player extends Component {
             ILV: ILV
         });
         this.state.ILV.ILVTimeline.howlerTimeline.volume(vol);
-    }
-
-    componentDidMount() {
-        this.initPlayer();
     }
 
     changeCaptionDisplayState = () => {

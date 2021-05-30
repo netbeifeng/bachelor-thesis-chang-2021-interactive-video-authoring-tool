@@ -88,7 +88,7 @@
             $duration = 60
             $position = (700,400)
             $fontSize = 36
-            $fontFamily = "font2"
+            $fontFamily = "fontttf"
             $content = "**Test**: What? Is this font `Thread.sleep(500);`{.java} \n```js\nconsole.log('Hello World');\n```\n $\\displaystyle= \\frac{k(k+1)+2(k+1)}{2}$ \n `x=4`{.js} \n::: warning\n*here be dragons*\n:::"
         }
 
@@ -142,14 +142,6 @@
             "
         }
 
-        ^ custom = {
-            $id = 59
-            $path = "C:\\Users\\Chang\\Desktop\\example\\grau.html"
-            $position = (500,400)
-            $duration = 10
-            $startTime = 30 
-        }
-
         /*ssff*/
         ^ quiz = {
             $id = 64
@@ -200,6 +192,13 @@ $path = "https://upload.wikimedia.org/wikipedia/commons/7/77/Hsh_logo.png"
         $page= 4
         $name = "Part Four"
         $last =(230-280) 
+        ^ custom = {
+            $id = 59
+            $path = "C:\\Users\\Chang\\Desktop\\example\\grau.html"
+            $position = (500,400)
+            $duration = 10
+            $startTime = 260 
+        }
         ^ quiz = {
             $id = 68
             $position = (200,500)

@@ -2,28 +2,28 @@ class Cue {
     id: number;
     start: number;
     end: number;
-    text: String;
+    text: string;
 
-    constructor(id: number, start: number, end: number, text: String) {
+    constructor(id: number, start: number, end: number, text: string) {
         this.id = id;
         this.start = start;
         this.end = end;
         this.text = text;
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
 
-    getStart() {
+    getStart(): number {
         return this.start;
     }
 
-    getEnd() {
+    getEnd(): number {
         return this.end;
     }
 
-    getText() {
+    getText(): string {
         return this.text;
     }
 }

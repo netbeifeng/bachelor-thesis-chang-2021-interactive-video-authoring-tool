@@ -1,5 +1,0 @@
-[
-    { "id": 1, "imgPath": "bg1", "description": "Digitale Grauwert", "startTime": 0, "endTime": 111 },
-    { "id": 2, "imgPath": "bg2", "description": "Frage 1", "startTime": 166, "endTime": 200 },
-    { "id": 3, "imgPath": "bg3", "description": "Frage 2", "startTime": 258, "endTime": 333 }
-]

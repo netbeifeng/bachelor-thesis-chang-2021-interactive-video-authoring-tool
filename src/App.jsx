@@ -12,17 +12,11 @@ class App extends Component {
       ILVObject: new ILVGenerator().getILV()
     }
   }
-
   render() {
     return (
       <div>
         <Head ILVObject={this.state.ILVObject} />
-        <div className="main">
-          <div id='head_container'>
-            <h1>Interactive Learning Video Demo</h1>
-          </div>
-          <Player ILVObject={this.state.ILVObject} />
-        </div>
+        <Player ILVObject={this.state.ILVObject} />
       </div>
     );
   }

@@ -7,6 +7,12 @@ if (platform === 'win32') {
     divider = '\\';
 }
 
+const mdRender = require('markdown-it')()
+    .use(require('markdown-it-highlightjs'), { inline: true })
+    // .use(require('markdown-it-prism'))
+    .use(require('@iktakahiro/markdown-it-katex'))
+    .use(require('markdown-it-task-lists'));
+
 
 const Validator = require("../validator/validator");
 const minify = require('html-minifier').minify;
@@ -177,6 +183,7 @@ const rearrange = (json, slide) => {
             text.startTime = getStartAndDuration(item.aug, slide).startTime;
             text.duration = getStartAndDuration(item.aug, slide).duration;
             text.content = findValueByKey('content', item.aug).replace(/(\r\n)/gm, '\n').replace(/[^(\S|\n)][^(\S|\n)]{4,11}/gm, '');
+            text.content = mdRender.render(text.content);
             // console.log(text.content);
             // /\s\s+/g
             // console.log(text.content.charAt(20));
@@ -282,23 +289,22 @@ const rearrange = (json, slide) => {
                 if (item.value.includes('http')) {
                     ilvJSON.fonts.push({
                         fid: ilvJSON.fonts.length + 1,
-                        type: "WebFont",
                         isOnline: true,
                         path: item.value
                     });
                 } else {
-                    localFontString += `@font-face{
-                        font-family: 'font${ilvJSON.fonts.length + 1}'; 
-                        src: url('../fonts/${getFileNameFromPath(item.value)}');
-                    }\n`;
+                    // localFontString += 
+                    // `@font-face{
+                    //     font-family: 'font${ilvJSON.fonts.length + 1}'; 
+                    //     src: url('../fonts/${getFileNameFromPath(item.value)}');
+                    // }\n`;
 
-                    fs.createReadStream(_dirname_res + item.value).pipe(fs.createWriteStream(`./src/assets/${item.key}s/${getFileNameFromPath(item.value)}`));
+                    fs.createReadStream(_dirname_res + item.value).pipe(fs.createWriteStream(`./public/assets/${item.key}s/${getFileNameFromPath(item.value)}`));
 
                     ilvJSON.fonts.push({
                         fid: ilvJSON.fonts.length + 1,
-                        type: "LocalFont",
                         isOnline: false,
-                        path: item.value
+                        path: getFileNameFromPath(item.value)
                     });
 
                 }
@@ -308,7 +314,7 @@ const rearrange = (json, slide) => {
         }
     }
 
-    fs.writeFile('./src/assets/fontCSS/font.scss', localFontString, 'utf8', (error) => { console.log(error); });
+    // fs.writeFile('./src/assets/fontCSS/font.scss', localFontString, 'utf8', (error) => { console.log(error); });
 }
 
 const isRepeat = (arr) => {

@@ -1,4 +1,4 @@
-import json from '../assets/build.json';
+import ilvJSON from '../assets/build.json';
 
 import axios from 'axios';
 import webvtt from 'node-webvtt';
@@ -9,7 +9,7 @@ import Text from './entity/Element/Text';
 import Custom from './entity/Element/Custom';
 import Image from './entity/Element/Image';
 import Video from './entity/Element/Video';
-import Font from './entity/Element/Font';
+import Font from './entity/Font';
 import Quiz from './entity/Element/Quiz';
 import FadeAnimation from './entity/Animation/FadeAnimation';
 import AnimationEnum from './entity/Animation/AnimationEnum';
@@ -22,12 +22,11 @@ import Animation from './entity/Animation/Animation';
 import Graphics from './entity/Element/Graphics';
 import Cue from './entity/Cue';
 
-
 class ILVGenerator {
     ilv: ILV;
 
     constructor() {
-        this.ilv = new ILV(json.title, json.course, json.chapter, json.author, json.semester, json.audio, json.subtitle);
+        this.ilv = new ILV(ilvJSON.title, ilvJSON.course, ilvJSON.chapter, ilvJSON.author, ilvJSON.semester, ilvJSON.audio, ilvJSON.subtitle);
         this.buildSubtitles();
         this.buildFonts();
         this.buildSlides();
@@ -37,7 +36,7 @@ class ILVGenerator {
         return this.ilv;
     }
 
-    buildAnimations(): void {
+    integrateAnimationArray(): void {
         for (let slide of this.getILV().getSlides()) {
             for (let animation of slide.getAnimations()) {
                 this.ilv.pushAnimation(animation);
@@ -46,18 +45,18 @@ class ILVGenerator {
     }
 
     buildSlides(): void {
-        for (let slide of json.slides) {
+        for (let slide of ilvJSON.slides) {
             let slideObject = new Slide(slide.sid, slide.page, slide.name, slide.startTime, slide.duration);
             this.buildSlideTexts(slide, slideObject);
             this.buildSlideImages(slide, slideObject);
             this.buildSlideVideos(slide, slideObject);
             this.buildSlideQuizzes(slide, slideObject);
-            this.buildSlideCustomes(slide, slideObject);
+            this.buildSlideCustoms(slide, slideObject);
             this.buildSlideGraphics(slide, slideObject);
-            this.buildSlideAnimation(slide, slideObject);
+            this.buildCursorAnimation(slide, slideObject);
             this.ilv.pushSlide(slideObject);
         }
-        this.buildAnimations();
+        this.integrateAnimationArray();
     }
 
     buildSlideTexts(slideJSON: any, slideObject: Slide): void {
@@ -69,7 +68,7 @@ class ILVGenerator {
                 slideObject.pushElement(textObject);
             }
         }
-        let titleObject = new Text(slideJSON.page + 9e2, `**${slideJSON.name}**`, slideJSON.startTime, slideJSON.duration, 90, 85, 48, "#000", "Arial", 1);
+        let titleObject = new Text(slideJSON.page + 9e2, `<strong>${slideJSON.name}</strong>`, slideJSON.startTime, slideJSON.duration, 90, 85, 48, "#000", "Arial", 1);
         slideObject.animations.push(new FadeAnimation(1e3 + titleObject.tid, AnimationEnum.Fade, titleObject.startTime, titleObject.duration, titleObject));
         slideObject.pushElement(titleObject);
     }
@@ -78,7 +77,7 @@ class ILVGenerator {
         if (slideJSON.images.length > 0) {
             for (let image of slideJSON.images) {
                 let imageObject = new Image(image.iid, image.startTime, image.duration, image.position.x, image.position.y, image.width, image.height, image.path, image.isOnline, image.zIndex);
-                slideObject.animations.push(new FadeAnimation(1e3 + image.iid, AnimationEnum.Fade, image.startTime, image.duration, imageObject));
+                slideObject.animations.push(new FadeAnimation(AnimationEnum.Fade + image.iid, AnimationEnum.Fade, image.startTime, image.duration, imageObject));
                 this.buildElementTransformation(image, imageObject, slideObject.animations);
                 slideObject.pushElement(imageObject);
             }
@@ -107,7 +106,7 @@ class ILVGenerator {
         }
     }
 
-    buildSlideCustomes(slideJSON: any, slideObject: Slide): void {
+    buildSlideCustoms(slideJSON: any, slideObject: Slide): void {
         if (slideJSON.customes.length > 0) {
             for (let custom of slideJSON.customes) {
                 let customObject = new Custom(custom.qid, custom.path, custom.htmlContent, custom.startTime, custom.duration, custom.position.x, custom.position.y, custom.zIndex);
@@ -130,7 +129,7 @@ class ILVGenerator {
     }
 
 
-    buildSlideAnimation(slideJSON: any, slideObject: Slide): void {
+    buildCursorAnimation(slideJSON: any, slideObject: Slide): void {
         if (slideJSON.animations.length > 0) {
             for (let cursor of slideJSON.animations) {
                 slideObject.pushAnimation(new CursorAnimation(2e3, AnimationEnum.Cursor, cursor.startTime, cursor.duration, new Position(cursor.moveTo.x, cursor.moveTo.y)));
@@ -155,13 +154,13 @@ class ILVGenerator {
     }
 
     buildFonts(): void {
-        for (let font of json.fonts) {
-            this.ilv.pushFont(new Font(font.fid, font.path, font.isOnline, font.type));
+        for (let font of ilvJSON.fonts) {
+            this.ilv.pushFont(new Font(font.fid, font.path, font.isOnline));
         }
     }
 
     buildSubtitles(): void {
-        if(json.subtitle.length > 0) {
+        if(ilvJSON.subtitle.length > 0) {
             axios.get(`assets/subtitle/${this.getILV().subtitle}`).then(res => {
                 for (let item of webvtt.parse(res.data).cues) {
                     this.ilv.pushCue(new Cue(item.identifier, item.start, item.end, item.text));

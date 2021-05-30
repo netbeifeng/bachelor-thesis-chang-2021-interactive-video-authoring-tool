@@ -5,19 +5,11 @@ import './Subtitle.scss';
 
 
 class Subtitle extends Component {
-  state = {
-    cues: [],
-    currentString: " * (Kein Untertitel verfügbar) * ",
-    seek: 0,
-    // howler: undefined,
-    // display: false
-  }
-
-  // cp = new CaptionLoader();
-
   constructor(props) {
     super(props);
-    // this.ee = ee;
+    this.state = {
+      currentString: " * (Kein Untertitel verfügbar) * "
+    }
   }
 
   renderStyle() {
@@ -29,7 +21,6 @@ class Subtitle extends Component {
       style.opacity = 0;
       style.zIndex = '-1';
     }
-
     return style;
   }
 
@@ -40,31 +31,27 @@ class Subtitle extends Component {
   }
 
   componentDidMount() {
-    let cues = this.props.ILV.ILVObject.getCues();
-    this.setState({
-      cues: cues == undefined ? [] : cues,
-    })
-
-    setInterval(() => {
-      if (this.props.ILV.ILVTimeline.howlerTimeline && this.props.ILV.ILVTimeline.howlerTimeline.state() == 'loaded') {
-        let seek = this.props.ILV.ILVTimeline.howlerTimeline.seek();
-        if (this.state.cues.length > 0) {
-          for (let cue of this.state.cues) {
-            if (cue.getStart() <= seek && cue.getEnd() >= seek) {
-              this.setState({
-                currentString: cue.getText()
-              })
-            }
+    function refresh(_that) {
+      if (_that.props.ILV.ILVTimeline.howlerTimeline && _that.props.ILV.ILVTimeline.howlerTimeline.state() == 'loaded') {
+        let seek = _that.props.ILV.ILVPlayer.currentTiming;
+        
+          if(_that.props.ILV.ILVObject.getCues().length > 0) {
+            for (let cue of _that.props.ILV.ILVObject.getCues()) {
+          if (cue.getStart() <= seek && cue.getEnd() >= seek) {
+            _that.setState({
+              currentString: cue.getText()
+            })
           }
-        } else {
-          this.setState({
-            currentString: " * (Kein Untertitel verfügbar) * "
-          })
         }
+      } else {
+        _that.setState({
+          currentString: " * (Kein Untertitel verfügbar) * "
+        })
       }
-    }, 500);
-
+    }
   }
+  setInterval(refresh, 500, this);
+}
 }
 
 export default Subtitle;

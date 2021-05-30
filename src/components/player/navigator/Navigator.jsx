@@ -22,7 +22,7 @@ class Navigator extends Component {
 
     render() {
         return (
-            <div>
+            <div id='player-navigator'>
                 <strong>Contents</strong><br />
                 {this.contents}
             </div>

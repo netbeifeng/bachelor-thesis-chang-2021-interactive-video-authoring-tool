@@ -1,5 +1,0 @@
-[
-    { "id": 1, "imgPath": "bg1", "description": "Konv", "startTime": 0, "endTime": 111 },
-    { "id": 2, "imgPath": "bg2", "description": "Frage 1 =2", "startTime": 66, "endTime": 200 },
-    { "id": 3, "imgPath": "bg3", "description": "Frage 2-4", "startTime": 158, "endTime": 333 }
-]

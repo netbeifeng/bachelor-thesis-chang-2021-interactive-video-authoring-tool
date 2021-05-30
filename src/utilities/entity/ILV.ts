@@ -1,5 +1,5 @@
 import Animation from "./Animation/Animation";
-import Font from "./Element/Font";
+import Font from "./Font";
 import Slide from "./Slide";
 import Cue from "./Cue";
 
@@ -11,7 +11,6 @@ class ILV {
     date: string;
     author: string;
     semester: string;
-
     audio: string;
     subtitle: string;
 

@@ -1,5 +1,4 @@
 import Element from "./Element";
-
 class Quiz extends Element {
     qid: number;
     // type: string;
@@ -69,24 +68,6 @@ class Quiz extends Element {
             isCorrect: true,
             content: correctAnswer
         });
-        // } else if (this.type == "TF") {
-        //     let correctAnswer = this.correctAnswer;
-        //     answers.push({
-        //         isCorrect: true,
-        //         content: correctAnswer
-        //     });
-        //     if (correctAnswer.toLocaleLowerCase() == 'true') {
-        //         answers.push({
-        //             isCorrect: false,
-        //             content: 'False'
-        //         });
-        //     } else {
-        //         answers.push({
-        //             isCorrect: false,
-        //             content: 'Ture'
-        //         });
-        //     }
-        // }
 
         const shuffleArray = (array) => {
             for (var i = array.length - 1; i > 0; i--) {
@@ -131,13 +112,6 @@ class Quiz extends Element {
         quizDivElement.appendChild(questionRow);
         quizDivElement.style.opacity = '0';
         quizDivElement.style.visibility = 'hidden';
-        // let quizScript = document.createElement('script');
-        // quizScript.innerText = `
-        //     // $('.questionOption').click(()=>{
-        //     //     console.log('AAA');
-        //     // });
-        // `;
-        // quizDivElement.appendChild(quizScript);
 
         return quizDivElement;
     }
