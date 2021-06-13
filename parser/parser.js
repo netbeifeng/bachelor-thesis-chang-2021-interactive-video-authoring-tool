@@ -13,7 +13,7 @@ const mdRender = require('markdown-it')({ html: true })
     // .use(require('markdown-it-prism'))
     .use(require('@traptitech/markdown-it-katex'))
     .use(require('markdown-it-task-lists'))
-    .use(require('markdown-it-color'), { inline: true });
+    .use(require('markdown-it-color').colorPlugin, { inline: true });
 
 
 const Validator = require("../validator/validator");
