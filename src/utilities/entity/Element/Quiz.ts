@@ -1,7 +1,7 @@
 import Element from "./Element";
+import { gsap } from 'gsap';
 class Quiz extends Element {
     qid: number;
-    // type: string;
     width: number;
     height: number;
     questionContent: string;
@@ -11,22 +11,11 @@ class Quiz extends Element {
 
 
     constructor(qid: number, questionContent: string, correctAnswer: string, wrongAnswers: Array<string>, tip: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, zIndex: number) {
-        // constructor(qid: number, type: string, questionContent: string, correctAnswer: string, wrongAnswers: Array<string>, tip: string, startTime: number, duration: number, positionX: number, positionY: number, width: number, height: number, zIndex: number) {
         super(startTime, duration, positionX, positionY, zIndex);
         this.qid = qid;
-        // this.type = type;
-        // if (type == "MC") {
         this.wrongAnswers = wrongAnswers;
-        // } else {
-        //     if (correctAnswer.toLocaleLowerCase() == 'true') {
-        //         this.wrongAnswers.push('False');
-        //     } else {
-        //         this.wrongAnswers.push('True');
-        //     }
-        // }
         this.questionContent = questionContent;
         this.correctAnswer = correctAnswer;
-        // this.wrongAnswers = wrongAnswers;
         this.tip = tip;
         this.width = width;
         this.height = height;
@@ -37,8 +26,10 @@ class Quiz extends Element {
     }
 
     getHTMLElement(): HTMLElement {
-        let quizDivElement = document.createElement('div');
+        var quizDivElement = document.createElement('div');
+
         quizDivElement.className = "quizComponent";
+        quizDivElement.dataset.isSelected = "false";
         if (this.width && this.height) {
             quizDivElement.setAttribute('style', `left: ${this.position.x}px; top: ${this.position.y}px; width: ${this.width}px; height: ${this.height}px; z-index: ${this.zIndex};`);
         } else {
@@ -55,7 +46,6 @@ class Quiz extends Element {
         let questionOptionBlock = document.createElement('div');
         questionOptionBlock.className = 'questionOptionBlock';
         let answers = [];
-        // if (this.type == "MC") {
         for (let answer of this.wrongAnswers) {
             answers.push({
                 isCorrect: false,
@@ -79,24 +69,14 @@ class Quiz extends Element {
         }
 
         shuffleArray(answers);
-
-        for (let [index, item] of answers.entries()) {
-            questionOptionBlock.innerHTML += `<div class='questionOption' data-correct=${item.isCorrect} id='QID_${this.qid}_Option_${index}'>
-                <div class='optionContainer'>
-                    <span class='optionNo'>${String.fromCharCode(index + 65)}.&nbsp;</span>
-                    <span class='optionContent'>${item.content}</span>
-                </div>
-            </div>`;
-        }
-
-        let questionFeedback = document.createElement('div');
+        var questionFeedback = document.createElement('div');
         questionFeedback.style.visibility = 'hidden';
         questionFeedback.style.opacity = '0';
         questionFeedback.className = 'questionFeedback';
         questionFeedback.innerHTML = `<img class='feedbackIcon' src='public_imgs/cross_mark.png' />
         <label class='feedbackContent'>Falsch :( </label>`;
 
-        let questionTip = document.createElement('div');
+        var questionTip = document.createElement('div');
         questionTip.className = 'questionTip';
         questionTip.style.visibility = 'hidden';
         questionTip.style.opacity = '0';
@@ -104,6 +84,60 @@ class Quiz extends Element {
             <img class='quizIcon' src='public_imgs/info.png' />
         </span>
         <span class='questionTipContent'>${this.tip}</span>`;
+
+        for (let [index, item] of answers.entries()) {
+            let questionOption = document.createElement('div');
+            questionOption.className = "questionOption";
+            questionOption.id = `QID_${this.qid}_Option_${index}`;
+            questionOption.dataset.correct = `${item.isCorrect}`;
+
+            let optionContainer = document.createElement('div');
+            optionContainer.className = "optionContainer";
+
+            let optionNo = document.createElement('span');
+            optionNo.className = "optionNo";
+            optionNo.innerHTML = `${String.fromCharCode(index + 65)}.&nbsp;`;
+
+            let optionContent = document.createElement('span');
+            optionContent.className = "optionContent";
+            optionContent.innerHTML = `${item.content}`;
+
+            optionContainer.appendChild(optionNo);
+            optionContainer.appendChild(optionContent);
+            questionOption.appendChild(optionContainer);
+            questionOption.onclick = () => {
+                // console.log(questionOption);
+                if (questionOption.dataset.correct == 'true') {
+                    questionOption.className = "questionOption_right";
+                    questionFeedback.innerHTML = `<img class='feedbackIcon' src='public_imgs/check_mark.png' />
+                        <label class='feedbackContent'>Richtig :) </label>`;
+                    questionFeedback.style.color = "forestgreen";
+                } else {
+                    questionOption.className = "questionOption_wrong";
+                    questionFeedback.innerHTML = `<img class='feedbackIcon' src='public_imgs/cross_mark.png' />
+                        <label class='feedbackContent'>Falsch :( </label>`;
+                    questionFeedback.style.color = "firebrick";
+                }
+                if (quizDivElement.dataset.isSelected == "false") {
+                    gsap.to(quizDivElement, {
+                        height: quizDivElement.clientHeight * 1.6, duration: 2, onComplete: () => {
+                            gsap.to(questionTip, { opacity: 1, visibility: 'visible', duration: 1 });
+                            gsap.to(questionFeedback, { opacity: 1, visibility: 'visible', duration: 1 });
+                        }
+                    });
+                }
+                quizDivElement.dataset.isSelected = "true";
+            }
+            questionOptionBlock.appendChild(questionOption);
+            // questionOptionBlock.innerHTML += `<div class='questionOption' data-correct=${item.isCorrect} id='QID_${this.qid}_Option_${index}'>
+            //     <div class='optionContainer'>
+            //         <span class='optionNo'>${String.fromCharCode(index + 65)}.&nbsp;</span>
+            //         <span class='optionContent'>${item.content}</span>
+            //     </div>
+            // </div>`;
+        }
+
+
 
         questionRow.appendChild(questionOptionBlock);
         questionRow.appendChild(questionFeedback);
@@ -114,6 +148,41 @@ class Quiz extends Element {
         quizDivElement.style.visibility = 'hidden';
 
         return quizDivElement;
+    }
+
+    setUpQuizListner() {
+        if (document.getElementById(`QID_${this.qid}`)) {
+            let quizComponent = document.getElementById(`QID_${this.qid}`);
+            for (let option of quizComponent.getElementsByClassName('questionOption')) {
+                console.log(option);
+
+                // option.addEventListener('click', () => {
+                //     let quizComponent = option.parentElement.parentElement.parentElement;
+                //     let questionFeedback = <HTMLDivElement> option.parentElement.parentElement.getElementsByClassName('questionFeedback')[0];
+                //     let questionTip = option.parentElement.parentElement.getElementsByClassName('questionTip')[0];
+                //     if (option.dataset.correct == 'true') {
+                //         option.className = "questionOption_right";
+                //         questionFeedback.innerHTML = `<img class='feedbackIcon' src='public_imgs/check_mark.png' />
+                //         <label class='feedbackContent'>Richtig :) </label>`;
+                //         questionFeedback.style.color = "forestgreen";
+                //     } else {
+                //         option.className = "questionOption_wrong";
+                //         questionFeedback.innerHTML = `<img class='feedbackIcon' src='public_imgs/cross_mark.png' />
+                //         <label class='feedbackContent'>Falsch :( </label>`;
+                //         questionFeedback.style.color = "firebrick";
+                //     }
+                //     if (!quizComponent.dataset.isSelected) {
+                //         gsap.to(quizComponent, {
+                //             height: quizComponent.clientHeight * 1.6, duration: 2, onComplete: () => {
+                //                 gsap.to(questionTip, { opacity: 1, visibility: 'visible', duration: 1 });
+                //                 gsap.to(questionFeedback, { opacity: 1, visibility: 'visible', duration: 1 });
+                //             }
+                //         });
+                //     }
+                //     quizComponent.dataset.isSelected = true;
+                // });
+            }
+        }
     }
 }
 

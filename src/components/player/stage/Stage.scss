@@ -1,5 +1,22 @@
 $mainColor: #DD3A04;
-
+.seek_sign {
+    color: white;
+    font-size: 60px;
+    font-family: 'Bahnschrift';
+    z-index: 5;
+    background-color: #dd3a04e5;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 350px;
+    border-radius: 25px;
+    text-align: center;
+    transition: all .3s ease-in-out;
+    user-select: none;
+}
 #htmlInteractionLayer {
     position: absolute;
     top: 0;
@@ -8,12 +25,22 @@ $mainColor: #DD3A04;
     height: 100%;
     font-family: Arial, Helvetica, sans-serif;
 
+
     .task-list-item-checkbox {
         width: 30px;
         height: 30px;
     }
 
-    li code, p code {
+    .customComponent {
+        font-size: 25px;
+        // padding: 25px;
+        background-color: rgba(230, 230, 230, .95);
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    li code,
+    p code {
         display: inline;
         border-radius: 5px;
         -moz-border-radius: 5px;
@@ -55,10 +82,10 @@ $mainColor: #DD3A04;
 
     .quizComponent {
         position: absolute;
-        background-color: rgba(119, 119, 119, .1);
+        background-color: rgba(230, 230, 230, .925);
         border-radius: 25px;
         max-width: 800px;
-        box-shadow: 5px 10px 18px rgba(119, 119, 119, .1);
+        box-shadow: 5px 10px 18px rgba(230, 230, 230, .9);
 
         .questionRow {
             display: inline-block;
@@ -245,8 +272,8 @@ $mainColor: #DD3A04;
         .slideTextSquare {
             display: inline-block;
             position: absolute;
-            top: 15px;
-            left: -25px;
+            top: 25px;
+            left: -35px;
             width: 15px;
             height: 15px;
             background-color: $mainColor;
@@ -280,6 +307,13 @@ $mainColor: #DD3A04;
         left: 2.5%;
         width: 95%;
 
+
+        #backgroundLogo {
+            position: absolute;
+            right: 0;
+            bottom: calc(100% + 20px);
+        }
+
         #backgroundLine {
             height: 8px;
             background-color: $mainColor;
@@ -295,22 +329,22 @@ $mainColor: #DD3A04;
             }
 
             #backgroundCourseInfo1 {
-                margin-left: 5%;
+                margin-left: 2.5%;
                 font-style: italic;
             }
 
             #backgroundCourseInfo2 {
-                margin-left: 5%;
+                margin-left: 2.5%;
                 font-style: italic;
             }
 
             #backgroundLecturer {
-                margin-left: 5%;
+                margin-left: 2.5%;
                 font-style: italic;
             }
 
             #backgroundPage {
-                margin-left: 8%;
+                margin-left: 9%;
             }
         }
     }

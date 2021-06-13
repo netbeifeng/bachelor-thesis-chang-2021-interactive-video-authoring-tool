@@ -15,6 +15,9 @@ class App extends Component {
   render() {
     return (
       <div>
+        <div id="head_container">
+          {/* <h1>ILV Player Demo</h1> */}
+        </div>
         <Head ILVObject={this.state.ILVObject} />
         <Player ILVObject={this.state.ILVObject} />
       </div>

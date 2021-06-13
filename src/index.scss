@@ -10,6 +10,10 @@ html {
   caret-color: transparent;
 }
 
+p {
+  width: fit-content;
+  line-height: 2em;
+}
 
 div.signature {
   z-index: -2;

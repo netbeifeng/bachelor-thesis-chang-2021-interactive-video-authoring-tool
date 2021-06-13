@@ -37,13 +37,14 @@ class Text extends Element {
 
         let tempSpan = document.createElement('span');
         tempSpan.setAttribute('style', `font-size: ${this.fontSize}px; color: ${this.fontColor}; font-family: ${this.fontFamily};`);
-        tempSpan.innerHTML = this.content;
+        tempSpan.innerHTML = this.content.replace("REF:","");
+        
         // highlight: function (code, lang) {
         //     return hljs.highlightAuto(code).value;
         // }});
 
         slideTextContent.appendChild(tempSpan);
-        if (this.tid < 9e2) {
+        if (this.tid < 9e2 && this.content.indexOf('<pre>') == -1 && this.content.indexOf('katex-block') == -1 && this.content.indexOf('REF:') == -1) {
             slideTextSquare.className = 'slideTextSquare';
             slideTextElement.appendChild(slideTextSquare);
         }

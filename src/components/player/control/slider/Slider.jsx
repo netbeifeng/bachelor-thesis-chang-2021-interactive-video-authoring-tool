@@ -1,6 +1,7 @@
 import Draggable from 'react-draggable';
 import React, { Component } from 'react';
 import './Slider.scss';
+import { gsap } from 'gsap';
 
 class Slider extends Component {
 
@@ -13,6 +14,7 @@ class Slider extends Component {
             progress_text: "-  📼  -",
             progress_width: "0px"
         }
+
 
         this.dragging = false;
 
@@ -47,10 +49,26 @@ class Slider extends Component {
     }
 
     componentDidMount() {
-
+        let forward = document.getElementById('forward');
+        let backward = document.getElementById('backward');
+        let pausing = document.getElementById('pausing');
         let _that = this;
+
+
         // listener for howler audio load
         this.props.ILV.ILVTimeline.howlerTimeline.on('load', function () {
+            window.addEventListener('keydown', (ev) => {
+                if (ev.code == "Space") {
+                    if (_that.props.ILV.ILVPlayer.playing) {
+                        pausing.style.visibility = 'visible';
+                        pausing.style.opacity = 1;
+                    } else {
+                        pausing.style.visibility = 'hidden';
+                        pausing.style.opacity = 0;
+                    }
+                    document.getElementById("player_switch").click();
+                }
+            })
             _that.setState({
                 progress_text: "0:00 / " + _that.fmtMSS(~~_that.props.ILV.ILVTimeline.howlerTimeline.duration())
             });
@@ -65,6 +83,47 @@ class Slider extends Component {
 
         // listener for howler play
         this.props.ILV.ILVTimeline.howlerTimeline.on('play', function () {
+            window.addEventListener('keydown', (ev) => {
+                switch (ev.code) {
+                    case "ArrowRight": {
+                        _that.props.ILV.ILVTimeline.timelineSeek(parseInt(_that.props.ILV.ILVPlayer.currentTiming) + 2);
+                        forward.style.visibility = 'visible';
+                        forward.style.opacity = 1;
+                        setTimeout(() => {
+                            forward.style.visibility = 'hidden';
+                            forward.style.opacity = 0;
+                        }, 300);
+                        break;
+                    }
+
+                    case "ArrowLeft": {
+                        _that.props.ILV.ILVTimeline.timelineSeek(parseInt(_that.props.ILV.ILVPlayer.currentTiming) - 2);
+                        backward.style.visibility = 'visible';
+                        backward.style.opacity = 1;
+                        setTimeout(() => {
+                            backward.style.visibility = 'hidden';
+                            backward.style.opacity = 0;
+                        }, 300);
+                        break;
+                    }
+
+                    case "ArrowUp": {
+                        console.log(_that.props.ILV.ILVPlayer.volume);
+                        if (_that.props.ILV.ILVPlayer.volume < 0.95) {
+                            _that.props.ILV.ILVTimeline.howlerVolume(parseFloat(parseFloat(_that.props.ILV.ILVPlayer.volume + 0.05).toFixed(2)));
+                        }
+                        break;
+                    }
+
+                    case "ArrowDown": {
+                        if (_that.props.ILV.ILVPlayer.volume > 0.05) {
+                            _that.props.ILV.ILVTimeline.howlerVolume(parseFloat(parseFloat(_that.props.ILV.ILVPlayer.volume - 0.05).toFixed(2)));
+                        }
+                        break;
+                    }
+                    default: { break; }
+                }
+            });
             window.requestAnimationFrame(step);
             function step() {
                 let seek = _that.props.ILV.ILVTimeline.howlerTimeline.seek();
@@ -94,17 +153,25 @@ class Slider extends Component {
 
     setUpProgressListners() {
         this.handle_mouse_move = (e) => {
-            if (e.target.id == 'progress-transparent') {
+            if (e.target.id == 'progress-transparent' && (e.screenX - e.target.offsetLeft) < 2e3 ) {
                 let tip = this.fmtMSS(((e.screenX - e.target.offsetLeft) / (e.target.offsetWidth) * this.props.ILV.ILVPlayer.duration).toFixed(0));
                 if (document.getElementById('progress_time_tip')) {
                     let progress_time_tip = document.getElementById('progress_time_tip');
                     progress_time_tip.innerHTML = tip;
                     progress_time_tip.style.left = (e.screenX - e.target.offsetLeft) - 25 + 'px';
+                    // if (e.screenX > 1e3) {
+                    //     progress_time_tip = 0 + 'px';
+                    // }
                 } else {
                     let progress_time_tip = document.createElement('span');
                     progress_time_tip.id = 'progress_time_tip';
                     progress_time_tip.innerHTML = tip;
                     progress_time_tip.style.left = (e.screenX - e.target.offsetLeft) - 25 + 'px';
+                    // console.log((e.screenX - e.target.offsetLeft));
+
+                    // if((e.screenX - e.target.offsetLeft) > e.screenX) {
+                    //     progress_time_tip = e.screenX / 10 + 'px';
+                    // }
                     e.target.append(progress_time_tip);
                 }
             }
@@ -112,7 +179,9 @@ class Slider extends Component {
 
         this.handle_mouse_leave = (e) => {
             if (e.target.id == 'progress-transparent') {
-                e.target.removeChild(document.getElementById('progress_time_tip'));
+                let tip = document.getElementById('progress_time_tip');
+                if (tip)
+                    e.target.removeChild(tip);
             }
         }
 

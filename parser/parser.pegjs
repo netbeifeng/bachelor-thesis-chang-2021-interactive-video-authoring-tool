@@ -14,12 +14,13 @@ BlockProperty =  BLOCKPREFIX _ key:Key _ EqualSign _ block:Block _ { return { ke
 Key = ( BlockKey / InlineKey ) { return text(); }
 
 BlockKey =  "custom" / "quiz" / "text" / "animation" / "image" / "video" / "transformation" / "cursor" / "graphics" { return text(); }
-InlineKey = QuestionKey / TextKey / AnimationKey / GraphicsKey / RootKey / "path" / "type" / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" / "inPage" { return text(); }
+InlineKey = QuizKey / TextKey / AnimationKey / GraphicsKey / RootKey / CustomKey / "path" / "type" / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" / "inPage" / "zIndex" { return text(); }
 RootKey = "title" / "course" / "audio" / "font" / "author" / "slide" / "subtitle" / "semester" / "chapter" { return text(); }
 GraphicsKey = "strokeColor" / "strokeWidth" { return text(); }
 TextKey = "page" / "content" / "fontSize" / "fontColor" / "fontFamily" { return text(); }
-QuestionKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" { return text(); }
+QuizKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" { return text(); }
 AnimationKey = "elementType" / "elementId" / "toScale" / "toPosition" / "emphasisTime" / "moveTo" { return text(); }
+CustomKey = "script" / "style" { return text(); }
 
 Value = value:(BasicDataType / Coordinate / Interval / Array) { return value; }
 

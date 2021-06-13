@@ -107,9 +107,12 @@ class ILVGenerator {
     }
 
     buildSlideCustoms(slideJSON: any, slideObject: Slide): void {
-        if (slideJSON.customes.length > 0) {
-            for (let custom of slideJSON.customes) {
-                let customObject = new Custom(custom.qid, custom.path, custom.htmlContent, custom.startTime, custom.duration, custom.position.x, custom.position.y, custom.zIndex);
+        if (slideJSON.customs.length > 0) {
+            for (let custom of slideJSON.customs) {
+                // console.log(custom);
+
+                // let customObject = new Custom(custom.cid, custom.path, custom.htmlContent, custom.scriptContent, custom.styleContent, custom.startTime, custom.duration, custom.width, custom.height, custom.position.x, custom.position.y, custom.zIndex);
+                let customObject = new Custom(custom.cid, custom.path, custom.htmlContent, custom.scriptContent, custom.styleContent, custom.startTime, custom.duration, custom.position.x, custom.position.y, custom.zIndex);
                 slideObject.animations.push(new FadeAnimation(1e3 + custom.cid, AnimationEnum.Fade, custom.startTime, custom.duration, customObject));
                 this.buildElementTransformation(custom, customObject, slideObject.animations);
                 slideObject.pushElement(customObject);
@@ -160,7 +163,7 @@ class ILVGenerator {
     }
 
     buildSubtitles(): void {
-        if(ilvJSON.subtitle.length > 0) {
+        if (ilvJSON.subtitle.length > 0) {
             axios.get(`assets/subtitle/${this.getILV().subtitle}`).then(res => {
                 for (let item of webvtt.parse(res.data).cues) {
                     this.ilv.pushCue(new Cue(item.identifier, item.start, item.end, item.text));

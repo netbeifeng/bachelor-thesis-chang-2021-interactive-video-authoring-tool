@@ -7,11 +7,13 @@ if (platform === 'win32') {
     divider = '\\';
 }
 
-const mdRender = require('markdown-it')()
+const mdRender = require('markdown-it')({ html: true })
+    .use(require('markdown-it-link-target'))
     .use(require('markdown-it-highlightjs'), { inline: true })
     // .use(require('markdown-it-prism'))
-    .use(require('@iktakahiro/markdown-it-katex'))
-    .use(require('markdown-it-task-lists'));
+    .use(require('@traptitech/markdown-it-katex'))
+    .use(require('markdown-it-task-lists'))
+    .use(require('markdown-it-color'), { inline: true });
 
 
 const Validator = require("../validator/validator");
@@ -21,14 +23,16 @@ const args = process.argv.slice(2);
 
 const _dirname = `parser/${args[0]}/`;
 const _dirname_res = ``;
-// const _dirname_res = `parser/${args[0]}/ilv_resources/`;
-console.log("--- START PARSE ILV-DOCUMENT ---");
 
 const validator = new Validator();
 
 const PEG = require("pegjs");
 const PEGUtil = require("pegjs-util");
 const parser = PEG.generate(fs.readFileSync("parser/parser.pegjs", "utf8"));
+// const _dirname_res = `parser/${args[0]}/ilv_resources/`;
+console.log("--- START PARSE ILV-DOCUMENT ---");
+
+
 
 var result = PEGUtil.parse(parser, fs.readFileSync(_dirname + `${args[0]}.ilv`, "utf8"), {
     startRule: "start"
@@ -124,7 +128,7 @@ const rearrange = (json, slide) => {
                 animations: [],
                 images: [],
                 quizzes: [],
-                customes: [],
+                customs: [],
                 graphics: [],
                 texts: []
             };
@@ -134,20 +138,48 @@ const rearrange = (json, slide) => {
             let custom = {
                 transformations: []
             };
-            // custom.cid = outputJSON.customes.length + 1;
+            // custom.cid = outputJSON.customs.length + 1;
+            custom.path = findValueByKey('path', item.aug);
             custom.cid = findValueByKey('id', item.aug);
             custom.id = custom.cid;
             idArray.push(custom.id);
-            // custom.name = findValueByKey('name', item.aug);
+            // if (custom.path.indexOf('.js') == -1) {
+            custom.script = findValueByKey('script', item.aug);
+            // console.log(custom.script);
+            if (custom.script) {
+                custom.scriptContent = fs.readFileSync(_dirname_res + custom.script, "utf-8");
+            }
+            // console.log(custom.style);
+            custom.style = findValueByKey('style', item.aug);
+            if (custom.style) {
+                custom.styleContent = fs.readFileSync(_dirname_res + custom.style, "utf-8");
+            }
+
+            // custom.height = findValueByKey('height', item.aug);
+            // custom.width = findValueByKey('width', item.aug);
+
+            // custom.type = "HTML";
             custom.startTime = getStartAndDuration(item.aug, slide).startTime;
             custom.duration = getStartAndDuration(item.aug, slide).duration;
-            // custom.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
-            custom.path = findValueByKey('path', item.aug);
             custom.position = findValueByKey('position', item.aug);
             custom.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);
             custom.htmlContent = "<div class='customComponent'>" + minify(fs.readFileSync(_dirname_res + custom.path, "utf-8")) + "</div>";
             findTransformationInElement('custom', custom.cid, item.aug, custom);
-            slide.customes.push(custom);
+            // } else {
+            // custom.type = "JS";
+            // custom.startTime = getStartAndDuration(item.aug, slide).startTime;
+            // custom.duration = getStartAndDuration(item.aug, slide).duration;
+            // custom.position = {x: 0, y: 0};
+            // custom.htmlContent = "";
+            // custom.scriptContent = fs.readFileSync(_dirname_res + custom.path, "utf-8");
+            // }
+            // console.log(custom.id);
+            // custom.name = findValueByKey('name', item.aug);
+
+            // custom.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
+
+            // console.log(custom.zIndex);
+            slide.customs.push(custom);
         } else if (item.key == 'quiz') {
             let quiz = {
                 transformations: []
@@ -182,14 +214,14 @@ const rearrange = (json, slide) => {
             // console.log(item.aug);
             text.startTime = getStartAndDuration(item.aug, slide).startTime;
             text.duration = getStartAndDuration(item.aug, slide).duration;
-            text.content = findValueByKey('content', item.aug).replace(/(\r\n)/gm, '\n').replace(/[^(\S|\n)][^(\S|\n)]{4,11}/gm, '');
+            text.content = findValueByKey('content', item.aug).replace(/(\r\n)/gm, '\n').replace(/[^(\S|\n)][^(\S|\n)]{9,15}/gm, '');
             text.content = mdRender.render(text.content);
             // console.log(text.content);
             // /\s\s+/g
             // console.log(text.content.charAt(20));
             text.position = findValueByKey('position', item.aug);
             // text.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
-            text.fontSize = findValueByKey('fontSize', item.aug) == undefined ? 26 : findValueByKey('fontSize', item.aug);
+            text.fontSize = findValueByKey('fontSize', item.aug) == undefined ? 32 : findValueByKey('fontSize', item.aug);
             text.fontColor = findValueByKey('fontColor', item.aug) == undefined ? '#000000' : findValueByKey('fontColor', item.aug);
             text.fontFamily = findValueByKey('fontFamily', item.aug) == undefined ? 'Arial, Helvetica, sans-serif' : findValueByKey('fontFamily', item.aug);
             text.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);
@@ -243,7 +275,7 @@ const rearrange = (json, slide) => {
             image.startTime = getStartAndDuration(item.aug, slide).startTime;
             image.duration = getStartAndDuration(item.aug, slide).duration;
             image.path = findValueByKey('path', item.aug);
-            if (image.path.includes('http')) {
+            if (image.path.includes('http') || image.path.includes('base64')) {
                 image.isOnline = true;
             } else {
                 image.isOnline = false;
@@ -251,8 +283,8 @@ const rearrange = (json, slide) => {
                 image.path = getFileNameFromPath(image.path);
             }
             image.position = findValueByKey('position', item.aug);
-            image.height = findValueByKey('height', item.aug);
-            image.width = findValueByKey('width', item.aug);
+            image.height = findValueByKey('height', item.aug) == undefined ? 0 : findValueByKey('height', item.aug);
+            image.width = findValueByKey('width', item.aug) == undefined ? 0 : findValueByKey('width', item.aug);
             image.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);
             findTransformationInElement('image', image.iid, item.aug, image);
             slide.images.push(image);
@@ -343,7 +375,7 @@ if (result.error !== null) {
 
     console.log("--- START VALIDATE ILV-JSON ---");
 
-    console.log(ilvJSON);
+    // console.log(ilvJSON);
     if (!validator.validate(ilvJSON)) {
         console.log("--- VALIDATE FAILED ---");
         throw validator.getErrors();

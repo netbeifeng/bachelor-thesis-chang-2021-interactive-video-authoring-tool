@@ -7,7 +7,6 @@ class MoveAnimation extends Animation {
     toPosition: Position;
     elementId: number;
     elementType: string;
-    target: any;
 
     constructor(aid: number, type: AnimationEnum, startTime: number, duration: number, elementId: number, elementType: string, toPosition: Position) {
         super(aid, type, startTime, duration);

@@ -15,7 +15,7 @@ class Player extends Component {
         this.timelineSeek = this.timelineSeek.bind(this);
         this.timelinePlay = this.timelinePlay.bind(this);
         this.timelinePause = this.timelinePause.bind(this);
-        this.timelineRate = this.timelineSpeed.bind(this);
+        this.timelineSpeed = this.timelineSpeed.bind(this);
         this.howlerVolume = this.howlerVolume.bind(this);
         this.updatePlayerCurrentTiming = this.updatePlayerCurrentTiming.bind(this);
 
@@ -31,7 +31,7 @@ class Player extends Component {
                     timelineSeek: this.timelineSeek,
                     timelinePlay: this.timelinePlay,
                     timelinePause: this.timelinePause,
-                    timelineRate: this.timelineSpeed,
+                    timelineSpeed: this.timelineSpeed,
                     howlerVolume: this.howlerVolume
                 },
                 ILVPlayer: {
@@ -104,6 +104,9 @@ class Player extends Component {
         this.setState({
             ILV: ILV
         });
+        let pausing = document.getElementById('pausing');
+        pausing.style.visibility = 'hidden';
+        pausing.style.opacity = 0;
         this.state.ILV.ILVTimeline.howlerTimeline.play();
         this.state.ILV.ILVTimeline.gsapTimeline.resume();
     }
@@ -114,11 +117,15 @@ class Player extends Component {
         this.setState({
             ILV: ILV
         });
+        let pausing = document.getElementById('pausing');
+        pausing.style.visibility = 'visible';
+        pausing.style.opacity = 1;
         this.state.ILV.ILVTimeline.howlerTimeline.pause();
         this.state.ILV.ILVTimeline.gsapTimeline.pause();
     }
 
     timelineSpeed(rate) {
+        console.log(this);
         let ILV = this.state.ILV;
         ILV.ILVPlayer.playSpeed = rate;
         this.setState({

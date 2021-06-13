@@ -21,12 +21,14 @@ $subThemeColor: #dc3c05;
     display: block;
     position: absolute;
     bottom: 23%;
-    font-size: 26px;
+    font-size: 22px;
     right: 2%;
     background-color: white;
     border: 3px #DD3A04 solid;
-    width: 14%;
-    padding: 5px 10px;
+    width: 15%;
+    // padding: 5px 10px;
+    padding-right: 10px;
+    padding-left: 10px;
     height: fit-content;
     border-radius: 15px;
     font-family: 'Consolas';
@@ -35,6 +37,7 @@ $subThemeColor: #dc3c05;
     .content_item {
       font-size: 20px;
       cursor: pointer;
+      font-family: 'Bahnschrift';
       &:hover {
         color: #DD3A04;
         border-bottom: 3px #DD3A04 solid;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import logo from '../../../../assets/public_imgs/logo.png';
 
 class BackgroundLayer extends Component {
 
@@ -12,6 +12,7 @@ class BackgroundLayer extends Component {
         return (
             <div id='htmlBackgroundLayer' style={{ zIndex: 0 }}>
                 <div id='backgroundBottom'>
+                    <img id='backgroundLogo' src={logo}/>
                     <div id='backgroundLine' />
                     <div id='backgroundInfo'>
                         <span id='backgroundInstitution'>{this.footer.intitution}</span>

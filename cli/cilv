@@ -48,7 +48,7 @@ program
             // do something here
             let date = new Date();
             let template =
-                `{
+`{
     /* This ILV is created by cilv tool */
     $title = ""
     $course = ""
@@ -108,6 +108,7 @@ program
                             "@testing-library/jest-dom": "^5.11.9",
                             "@testing-library/react": "^11.2.5",
                             "@testing-library/user-event": "^12.6.3",
+                            "@traptitech/markdown-it-katex": "^3.4.3",
                             "@types/three": "^0.125.3",
                             "@typescript-eslint/eslint-plugin": "^4.5.0",
                             "@typescript-eslint/parser": "^4.5.0",
@@ -156,6 +157,7 @@ program
                             "jquery": "^3.5.1",
                             "js-beautify": "^1.13.5",
                             "markdown-it": "^12.0.6",
+                            "markdown-it-color": "^2.1.1",
                             "markdown-it-highlightjs": "^3.4.0",
                             "markdown-it-katex": "^2.0.3",
                             "markdown-it-task-lists": "^2.1.1",
@@ -205,7 +207,9 @@ program
                             "workbox-webpack-plugin": "5.1.4"
                         },
                         "scripts": {
-                            "start": "node parser/parser.js " + answers.fileName + " && node scripts/start.js",
+                            "start": "concurrently \"npm run deploy\" \"npm run listen\"",
+                            "deploy": "node parser/parser.js projektion && node scripts/start.js",
+                            "listen": "node parser/listener.js projektion",
                             "build": "node scripts/build.js",
                             "test": "node scripts/test.js"
                         },

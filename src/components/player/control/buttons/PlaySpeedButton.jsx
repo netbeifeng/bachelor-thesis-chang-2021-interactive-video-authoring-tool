@@ -43,7 +43,7 @@ class PlaySpeedButton extends Component {
         this.setState({
             playSpeed: `${rate}`
         });
-        this.props.ILV.ILVTimeline.timelineRate(rate);
+        this.props.ILV.ILVTimeline.timelineSpeed(rate);
         // howler.rate(rate);
         // timeline.timeScale(rate);
         console.log('%c ---- TIMELINE RATE ADJUSTED TO:' + rate +' ----', 'color: #009fd4e3;');
