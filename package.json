@@ -114,7 +114,7 @@
         "workbox-webpack-plugin": "5.1.4"
     },
     "scripts": {
-        "start": "concurrently \"npm run deploy\" \"npm run listen\"",
+        "start": "node scripts/start.js",
         "deploy": "node parser/parser.js projektion && node scripts/start.js",
         "listen": "node parser/listener.js projektion",
         "build": "node scripts/build.js",
