@@ -9,7 +9,7 @@ class InteractionLayer extends Component {
     render() {
         return (
             <div id='htmlInteractionLayer' style={{ zIndex: 1 }}>
-                <div id='cursor' />
+                <div id='cursor' style={{ zIndex: 9 }}/>
             </div>
         );
     }
@@ -34,6 +34,7 @@ class InteractionLayer extends Component {
 
     buildTimeline() {
         this.props.ILV.ILVTimeline.gsapTimeline.addLabel("start", 0);
+        // console.log(this.props.ILV.ILVObject.getAnimations());
         for (let animation of this.props.ILV.ILVObject.getAnimations()) {
             animation.animate(this.props.ILV.ILVTimeline.gsapTimeline);
         }

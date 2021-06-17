@@ -29,7 +29,11 @@ class Text extends Element {
     getHTMLElement(): HTMLElement {
         let slideTextElement = document.createElement('span');
         slideTextElement.className = 'slideText';
-        slideTextElement.setAttribute('style', `left: ${this.position.x}px; top: ${this.position.y}px; z-index: ${this.zIndex};`);
+        if (~~this.position.x == this.position.x && ~~this.position.y == this.position.y) {
+            slideTextElement.setAttribute('style', `left: ${this.position.x}px; top: ${this.position.y}px; z-index: ${this.zIndex};`);
+        } else {
+            slideTextElement.setAttribute('style', `left: ${this.position.x * 100}%; top: ${this.position.y * 100}%; z-index: ${this.zIndex};`);
+        }
         let slideTextSquare = document.createElement('span');
 
         let slideTextContent = document.createElement('span');

@@ -20,9 +20,21 @@
   html {
     zoom: 0.75;
   }
+
+  #progress-transparent {
+    zoom: 1.32;
+  }
+
+  #progress-bg {
+    zoom: 1.32;
+  }
+
+  #progress {
+    zoom: 1.32;
+  }
 }
 
-.katex-display > .katex > .katex-html > .tag {
+.katex-display>.katex>.katex-html>.tag {
   position: absolute;
   right: -8% !important;
 }

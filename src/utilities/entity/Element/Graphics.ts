@@ -28,12 +28,24 @@ class Graphics extends Element {
         graphicsElement.className = 'slideGraphics';
         graphicsElement.id = `GID_${this.gid}`;
         graphicsElement.style.zIndex = `${this.zIndex}`;
-        graphicsElement.style.left = this.position.x + 'px';
-        graphicsElement.style.top = this.position.y + 'px';
-        graphicsElement.style.width = this.width + 'px';
-        graphicsElement.style.height = this.height + 'px';
+        if (~~this.position.x == this.position.x && ~~this.position.y == this.position.y && (this.position.x > 1 && this.position.y > 1)) {
+            graphicsElement.style.left = this.position.x + 'px';
+            graphicsElement.style.top = this.position.y + 'px';
+        } else {
+            graphicsElement.style.left = this.position.x * 100 + '%';
+            graphicsElement.style.top = this.position.y * 100 + '%';
+        }
+        
+        if (~~this.width == this.width && ~~this.height == this.height && (this.width > 1 && this.height > 1)) {
+            graphicsElement.style.width = this.width + 'px';
+            graphicsElement.style.height = this.height + 'px';
+        } else {
+            graphicsElement.style.width = this.width * 100 + '%';
+            graphicsElement.style.height = this.height * 100 + '%';
+        }
+
         graphicsElement.style.border = `${this.strokeWidth}px ${this.strokeColor} solid`;
-        if(this.type == 'circle') {
+        if (this.type == 'circle') {
             graphicsElement.style.borderRadius = `${this.width / 2}px / ${this.height / 2}px`;
         }
         graphicsElement.style.opacity = '0';

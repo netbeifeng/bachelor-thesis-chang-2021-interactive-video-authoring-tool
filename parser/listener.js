@@ -1,10 +1,11 @@
 const shell = require('shelljs');
 const chokidar = require("chokidar");
-
+const path = require('path');
 const args = process.argv.slice(2);
-const _dirname = `parser/${args[0]}/`;
+const fs = require('fs');
 
-chokidar.watch(_dirname + `${args[0]}.ilv`).on('change', (event, path) => {
+chokidar.watch(args[0]).on('change', (event, _path) => {
     shell.echo('Regenerate ilvJSON');
-    shell.exec('node --version && node parser/parser.js ' + args[0]);
+    // fs.writeFileSync(path.resolve(process.cwd() + `/parser/${args[1]}.ilv`), fs.readFileSync(args[0], 'utf-8'));
+    shell.echo(shell.exec('node --version && node parser/parser.js ' + args[1] + ' ' + args[0].replace(`${args[1]}.ilv`, '')));
 });

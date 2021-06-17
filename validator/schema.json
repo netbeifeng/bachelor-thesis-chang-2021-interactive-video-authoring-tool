@@ -37,7 +37,10 @@
                         "type": "number",
                         "minimum": 1
                     },
-                    "isOnline": {
+                    "isLocal": {
+                        "type": "boolean"
+                    },
+                    "isGoogle": {
                         "type": "boolean"
                     },
                     "path": {
@@ -47,7 +50,8 @@
                 },
                 "required": [
                     "fid",
-                    "isOnline",
+                    "isLocal",
+                    "isGoogle",
                     "path"
                 ]
             },
@@ -362,9 +366,6 @@
                                 "tip",
                                 "correctAnswer",
                                 "questionContent",
-                                "height",
-                                "width",
-                                "zIndex",
                                 "startTime",
                                 "position",
                                 "duration"

@@ -18,11 +18,12 @@ class FadeAnimation extends Animation {
     animate(timeline: gsap.core.Timeline): void {
         timeline.to(`#${this.target.getID()}`, {
             visibility: 'visible', opacity: 1, duration: 2, onComplete: () => {
-                if (this.target instanceof Video) {
-                    document.getElementById("player_switch").click();
-                    let player = <HTMLVideoElement>document.getElementById(this.target.getID());
-                    player.play();
-                } else if (this.target instanceof Custom) {
+                // if (this.target instanceof Video) {
+                //     document.getElementById("player_switch").click();
+                //     let player = <HTMLVideoElement>document.getElementById(this.target.getID());
+                //     player.play();
+                // } else 
+                if (this.target instanceof Custom) {
                     if(this.target.styleContent) {
                         document.head.append(this.target.getStyleTagHTMLOfCSS());
                     }

@@ -75,8 +75,6 @@
         "optimize-css-assets-webpack-plugin": "5.0.4",
         "pegjs": "^0.10.0",
         "pegjs-util": "^1.4.21",
-        "pixi.js": "^5.3.7",
-        "pm2": "^4.5.6",
         "pnp-webpack-plugin": "1.6.4",
         "postcss-flexbugs-fixes": "4.2.1",
         "postcss-loader": "3.0.0",
@@ -114,9 +112,11 @@
         "workbox-webpack-plugin": "5.1.4"
     },
     "scripts": {
-        "start": "node scripts/start.js",
-        "deploy": "node parser/parser.js projektion && node scripts/start.js",
-        "listen": "node parser/listener.js projektion",
+        "start": "npm run launch",
+        "deploy": "npm run parse && npm run launch",
+        "launch": "node scripts/start.js",
+        "parse": "node parser/parser.js testing C:\\Users\\Chang\\Desktop\\example\\testing",
+        "listen": "node parser/listener.js testing",
         "build": "node scripts/build.js",
         "test": "node scripts/test.js"
     },

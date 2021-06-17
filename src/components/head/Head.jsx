@@ -8,15 +8,24 @@ class Head extends Component {
   constructor(props) {
     super(props);
     this.fonts = this.props.ILVObject.getFonts().map((font) => {
-      if (font.isOnline) {
+      if (font.isGoogle) {
         return <style key={font.fid}>{`@import url('${font.path}');`}</style>
-      } else { 
-        return <style key={font.fid}>
-                  {`@font-face{
-                    font-family: '${font.path.replace('.','')}'; 
-                    src: url('./assets/fonts/${font.path}');
-                  }`}
-               </style>; 
+      } else {
+        if (font.isLocal) {
+          return <style key={font.fid}>
+            {`@font-face{
+            font-family: '${font.path.replace('.','-')}'; 
+            src: url('./assets/fonts/${font.path}');
+          }`}
+          </style>;
+        } else {
+          return <style key={font.fid}>
+            {`@font-face{
+            font-family: '${font.path.substr(font.path.lastIndexOf('/') + 1).replace('.','-')}'; 
+            src: url('${font.path}');
+          }`}
+          </style>;
+        }
       }
     });
   }

@@ -1,0 +1,25 @@
+{
+    /* This ILV is created by cilv tool */
+    $title = ""
+    $course = ""
+    $chapter = ""
+    $author = "USERPLACEHOLDER"
+    $semester = ""
+
+    $audio = "file.mp3"
+    $subtitle = "file.vtt" /* optimal */
+    $font = "file.ttf"     /* optimal */
+
+    ^slide = {
+        $page = 1           /* the page of this slide */
+        $name = "Title1"    /* the title of this slide */
+        $last = (0-30)      /* the first parameter is startTime, the second is the endTime*/
+        /* Here for adding Block Properties */
+    }
+
+    ^slide = {
+        $page = 2
+        $name = "Title2"
+        $last = (30-60)
+    }
+}

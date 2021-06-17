@@ -13,19 +13,18 @@ class Navigator extends Component {
             }
         };
         this.contents = this.props.ILV.ILVObject.getSlides().map((slide) => {
-            console.log(slide.startTime, slide.startTime + slide.duration);
+            console.log({ page: slide.page, name: slide.name, startTime: slide.startTime, endTime: slide.startTime + slide.duration });
             return (<span key={slide.sid}>{slide.page}.
                 <span className="content_item" id={`NID_${slide.sid}`} data-start-time={slide.startTime} onClick={() => { this.props.ILV.ILVTimeline.timelineSeek(slide.startTime) }}>{slide.name}</span>
-           &nbsp;({secondFormatter(slide.startTime)} - {secondFormatter(slide.startTime + slide.duration)})<br />
+                &nbsp;({secondFormatter(slide.startTime)} - {secondFormatter(slide.startTime + slide.duration)})<br />
             </span>);
-        }
-        );
+        });
     }
 
     render() {
         return (
             <div id='player-navigator'>
-                <strong>Contents</strong><br />
+                <strong>Navigator</strong><br />
                 {this.contents}
             </div>
         )

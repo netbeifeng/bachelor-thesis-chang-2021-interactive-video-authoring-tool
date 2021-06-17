@@ -1,11 +1,11 @@
 const fs = require("fs");
-const os = require('os');
-
-const platform = os.platform();
-var divider = '/';
-if (platform === 'win32') {
-    divider = '\\';
-}
+// const os = require('os');
+const path = require("path");
+// const platform = os.platform();
+// var divider = '/';
+// if (platform === 'win32') {
+//     divider = '\\';
+// }
 
 const mdRender = require('markdown-it')({ html: true })
     .use(require('markdown-it-link-target'))
@@ -21,8 +21,9 @@ const minify = require('html-minifier').minify;
 
 const args = process.argv.slice(2);
 
-const _dirname = `parser/${args[0]}/`;
-const _dirname_res = ``;
+// const _dirname = `parser/`;
+// const _dirname = `parser/${args[0]}/`;
+const _dirname_res = `${args[1]}`;
 
 const validator = new Validator();
 
@@ -32,9 +33,7 @@ const parser = PEG.generate(fs.readFileSync("parser/parser.pegjs", "utf8"));
 // const _dirname_res = `parser/${args[0]}/ilv_resources/`;
 console.log("--- START PARSE ILV-DOCUMENT ---");
 
-
-
-var result = PEGUtil.parse(parser, fs.readFileSync(_dirname + `${args[0]}.ilv`, "utf8"), {
+var result = PEGUtil.parse(parser, fs.readFileSync(path.resolve(_dirname_res, `./${args[0]}.ilv`), "utf8"), {
     startRule: "start"
 });
 
@@ -44,7 +43,6 @@ var ilvJSON = {
 };
 
 var idArray = [];
-
 
 const findValueByKey = (key, json) => {
     for (let i = 0; i < json.length; i++) {
@@ -61,10 +59,11 @@ const findTransformationInElement = (type, id, json, parent) => {
         if ('transformation' == json[i].key) {
             transformation.elementType = type;
             transformation.startTime = findValueByKey('startTime', json[i].aug);
-            transformation.duration = findValueByKey('duration', json[i].aug) == undefined ? 3 : findValueByKey('duration', json[i].aug);
+            transformation.duration = 1;
+            // transformation.duration = findValueByKey('duration', json[i].aug) == undefined ? 3 : findValueByKey('duration', json[i].aug);
             transformation.elementId = id;
             transformation.type = findValueByKey('type', json[i].aug);
-            if (transformation.type.toLowerCase() == 'slide') {
+            if (transformation.type.toLowerCase() == 'move') {
                 transformation.toPosition = findValueByKey('toPosition', json[i].aug);
                 transformation.toScale = null;
             } else {
@@ -77,6 +76,12 @@ const findTransformationInElement = (type, id, json, parent) => {
 }
 
 const getFileNameFromPath = (path) => {
+    let divider = '';
+    if (path.includes('/')) {
+        divider = '/';
+    } else {
+        divider = '\\';
+    }
     return path.substr(path.lastIndexOf(divider) + 1);
 }
 
@@ -147,12 +152,21 @@ const rearrange = (json, slide) => {
             custom.script = findValueByKey('script', item.aug);
             // console.log(custom.script);
             if (custom.script) {
-                custom.scriptContent = fs.readFileSync(_dirname_res + custom.script, "utf-8");
+                if (path.isAbsolute(custom.script)) {
+                    custom.scriptContent = fs.readFileSync(custom.script, "utf-8");
+                } else {
+                    custom.scriptContent = fs.readFileSync(path.resolve(_dirname_res, custom.script), "utf-8");
+                }
             }
             // console.log(custom.style);
             custom.style = findValueByKey('style', item.aug);
             if (custom.style) {
-                custom.styleContent = fs.readFileSync(_dirname_res + custom.style, "utf-8");
+                if (path.isAbsolute(custom.style)) {
+                    custom.styleContent = fs.readFileSync(custom.style, "utf-8");
+                } else {
+                    custom.styleContent = fs.readFileSync(path.resolve(_dirname_res, custom.style), "utf-8");
+                }
+                // custom.styleContent = fs.readFileSync(_dirname_res + custom.style, "utf-8");
             }
 
             // custom.height = findValueByKey('height', item.aug);
@@ -163,7 +177,11 @@ const rearrange = (json, slide) => {
             custom.duration = getStartAndDuration(item.aug, slide).duration;
             custom.position = findValueByKey('position', item.aug);
             custom.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);
-            custom.htmlContent = "<div class='customComponent'>" + minify(fs.readFileSync(_dirname_res + custom.path, "utf-8")) + "</div>";
+            if (path.isAbsolute(custom.path)) {
+                custom.htmlContent = "<div class='customComponent'>" + minify(fs.readFileSync(custom.path, "utf-8")) + "</div>";
+            } else {
+                custom.htmlContent = "<div class='customComponent'>" + minify(fs.readFileSync(path.resolve(_dirname_res, custom.path), "utf-8")) + "</div>";
+            }
             findTransformationInElement('custom', custom.cid, item.aug, custom);
             // } else {
             // custom.type = "JS";
@@ -248,7 +266,11 @@ const rearrange = (json, slide) => {
                     video.isOnline = true;
                 } else {
                     video.isOnline = false;
-                    fs.createReadStream(_dirname_res + video.path).pipe(fs.createWriteStream(`public/assets/video/${getFileNameFromPath(video.path)}`));
+                    if (path.isAbsolute(video.path)) {
+                        fs.createReadStream(video.path).pipe(fs.createWriteStream(`public/assets/video/${getFileNameFromPath(video.path)}`));
+                    } else {
+                        fs.createReadStream(path.resolve(_dirname_res, video.path)).pipe(fs.createWriteStream(`public/assets/video/${getFileNameFromPath(video.path)}`));
+                    }
                     video.path = getFileNameFromPath(video.path);
                 }
             }
@@ -261,8 +283,10 @@ const rearrange = (json, slide) => {
         } else if (item.key == 'cursor') {
             let cursorAnimation = {};
             cursorAnimation.type = 'cursor';
-            cursorAnimation.startTime = getStartAndDuration(item.aug, slide).startTime;
-            cursorAnimation.duration = getStartAndDuration(item.aug, slide).duration == undefined ? 3 : getStartAndDuration(item.aug, slide).duration;
+            cursorAnimation.startTime = findValueByKey('startTime', item.aug);
+            // cursorAnimation.startTime = getStartAndDuration(item.aug, slide).startTime;
+            // cursorAnimation.duration = getStartAndDuration(item.aug, slide).duration == undefined ? 3 : getStartAndDuration(item.aug, slide).duration;
+            cursorAnimation.duration = 1;
             cursorAnimation.moveTo = findValueByKey('moveTo', item.aug);
             slide.animations.push(cursorAnimation);
         } else if (item.key == 'image') {
@@ -279,7 +303,11 @@ const rearrange = (json, slide) => {
                 image.isOnline = true;
             } else {
                 image.isOnline = false;
-                fs.createReadStream(_dirname_res + image.path).pipe(fs.createWriteStream(`public/assets/image/${getFileNameFromPath(image.path)}`));
+                if (path.isAbsolute(image.path)) {
+                    fs.createReadStream(image.path).pipe(fs.createWriteStream(`public/assets/image/${getFileNameFromPath(image.path)}`));
+                } else {
+                    fs.createReadStream(path.resolve(_dirname_res, image.path)).pipe(fs.createWriteStream(`public/assets/image/${getFileNameFromPath(image.path)}`));
+                }
                 image.path = getFileNameFromPath(image.path);
             }
             image.position = findValueByKey('position', item.aug);
@@ -315,30 +343,52 @@ const rearrange = (json, slide) => {
             slide.graphics.push(graphics);
         } else {
             if (item.key == 'audio' || item.key == 'subtitle') {
-                fs.createReadStream(_dirname_res + item.value).pipe(fs.createWriteStream(`public/assets/${item.key}/${getFileNameFromPath(item.value)}`));
-                ilvJSON[item.key] = item.value != undefined ? getFileNameFromPath(item.value) : "ERROR";
-            } else if (item.key == 'font') {
-                if (item.value.includes('http')) {
-                    ilvJSON.fonts.push({
-                        fid: ilvJSON.fonts.length + 1,
-                        isOnline: true,
-                        path: item.value
-                    });
+                if (item.value) {
+                    if (item.value.includes('http')) {
+                        ilvJSON[item.key] = item.value;
+                    } else {
+                        if (path.isAbsolute(item.value)) {
+                            fs.createReadStream(item.value).pipe(fs.createWriteStream(`public/assets/${item.key}/${getFileNameFromPath(item.value)}`));
+                        } else {
+                            fs.createReadStream(path.resolve(_dirname_res, item.value)).pipe(fs.createWriteStream(`public/assets/${item.key}/${getFileNameFromPath(item.value)}`));
+                        }
+                        ilvJSON[item.key] = getFileNameFromPath(item.value);
+                    }
                 } else {
-                    // localFontString += 
-                    // `@font-face{
-                    //     font-family: 'font${ilvJSON.fonts.length + 1}'; 
-                    //     src: url('../fonts/${getFileNameFromPath(item.value)}');
-                    // }\n`;
+                    ilvJSON[item.key] = "ERROR";
+                }
 
-                    fs.createReadStream(_dirname_res + item.value).pipe(fs.createWriteStream(`./public/assets/${item.key}s/${getFileNameFromPath(item.value)}`));
-
-                    ilvJSON.fonts.push({
-                        fid: ilvJSON.fonts.length + 1,
-                        isOnline: false,
-                        path: getFileNameFromPath(item.value)
-                    });
-
+            } else if (item.key == 'font') {
+                for (let fontItem of item.value) {
+                    if (fontItem.includes('fonts.googleapis')) {
+                        ilvJSON.fonts.push({
+                            fid: ilvJSON.fonts.length + 1,
+                            isGoogle: true,
+                            isLocal: false,
+                            path: fontItem
+                        });
+                    } else {
+                        if (fontItem.includes('http')) {
+                            ilvJSON.fonts.push({
+                                fid: ilvJSON.fonts.length + 1,
+                                isGoogle: false,
+                                isLocal: false,
+                                path: fontItem
+                            });
+                        } else {
+                            if (path.isAbsolute(fontItem)) {
+                                fs.createReadStream(fontItem).pipe(fs.createWriteStream(`./public/assets/${item.key}s/${getFileNameFromPath(fontItem)}`));
+                            } else {
+                                fs.createReadStream(path.resolve(_dirname_res, fontItem)).pipe(fs.createWriteStream(`./public/assets/${item.key}s/${getFileNameFromPath(fontItem)}`));
+                            }
+                            ilvJSON.fonts.push({
+                                fid: ilvJSON.fonts.length + 1,
+                                isGoogle: false,
+                                isLocal: true,
+                                path: getFileNameFromPath(fontItem)
+                            });
+                        }
+                    }
                 }
             } else if (normalKey.indexOf(item.key) == -1) {
                 ilvJSON[item.key] = item.value != null ? item.value : "ERROR";
@@ -382,12 +432,12 @@ if (result.error !== null) {
     } else {
         console.log("--- VALIDATE PASS ---");
 
-        fs.writeFile(`./parser/${args[0]}/build.json`, JSON.stringify(ilvJSON), 'utf8', function (error) {
+        fs.writeFile(_dirname_res + `/build_${args[0]}.json`, JSON.stringify(ilvJSON), 'utf8', function (error) {
             if (error) {
                 console.log(error);
                 return false;
             }
-            fs.createReadStream(`parser/${args[0]}/build.json`).pipe(fs.createWriteStream(`src/assets/build.json`));
+            fs.createReadStream(_dirname_res + `/build_${args[0]}.json`).pipe(fs.createWriteStream(`src/assets/build.json`));
             console.log('--- ILV-JSON EXPORTED ---');
         });
     }

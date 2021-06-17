@@ -1,0 +1,167 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+<script src="http://mdaines.github.io/viz.js/bower_components/viz.js/viz.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/izuzak/noam/lib/browser/noam.min.js"></script>
+
+<style>
+    #container {
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        /* position: absolute; */
+        border: 1px black solid;
+        padding: 25px;
+        /* left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%); */
+        border-radius: 15px;
+    }
+
+    #input {
+        width: 250px;
+        height: 400px;
+        font-size: 19px;
+        border-radius: 5px;
+    }
+
+    #text {
+        font-size: 18px;
+        border-radius: 5px;
+        margin-top: 15px;
+        margin-right: 15px;
+    }
+
+    button {
+        margin-top: 15px;
+        font-size: 18px;
+
+    }
+
+    #right {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<div id="container">
+    <div id="left">
+        <p>Automaton: </p>
+        <textarea id="input">
+#states
+s0
+s1
+s2
+s3
+#initial
+s0
+#accepting
+s3
+#alphabet
+a
+b
+c
+d
+#transitions
+s0:a>s1
+s1:b>s2
+s2:c>s3
+        </textarea>
+        <br />
+        <button onclick="draw()">Draw</button>
+    </div>
+    <div id="right">
+        <div id="automatonGraph">
+        </div>
+        <div style="display: flex; flex-direction: row; align-content: space-between;">
+            <input id="text" placeholder="abc" />
+            <button onclick="check()">Check</button>
+        </div>
+        <span id="result"></span>
+    </div>
+</div>
+<script>
+    setTimeout(() => { draw() }, 3000);
+    var automaton = null;
+    var currentStates = null;
+
+    function getElementsOfStates(states) {
+        var retVal = [];
+
+        for (var i = 0; i < states.length; i++) {
+            $("title:contains('" + states[i].toString() + "')").each(function (index, element) {
+                if ($(this).text() === states[i].toString()) {
+                    retVal.push($(this).parent());
+                }
+            });
+        }
+
+        return retVal;
+    }
+
+    function draw() {
+        try {
+            automaton = noam.fsm.parseFsmFromString($("#input").val());
+        } catch (e) {
+            console.error("ERROR BY PARSING AUTOMATON STRING: " + e);
+        }
+
+        var stateElements = getElementsOfStates(automaton.acceptingStates);
+
+        for (var i = 0; i < stateElements.length; i++) {
+            var e1 = $(stateElements[i].children("ellipse")[0]);
+            var e2 = $(stateElements[i].children("ellipse")[1]);
+            e1.insertAfter(e2);
+        }
+
+        currentStates = noam.fsm.computeEpsilonClosure(automaton, [automaton.initialState]);
+        // console.log(automaton);
+        var dotString = noam.fsm.printDotFormat(automaton);
+        var gvizXml = Viz(dotString, "svg");
+        $("#automatonGraph").html(gvizXml);
+        // reorderCirclesInAcceptingStates(automaton.acceptingStates);
+        $("#automatonGraph svg").width($("#automatonGraph").width());
+    }
+
+    function check() {
+        let flag = true;
+        currentStates = noam.fsm.computeEpsilonClosure(automaton, [automaton.initialState]);
+        let text = $("#text").val();
+        let textArray = text.split('');
+        // console.log(textArray);
+        for (let [index, character] of textArray.entries()) {
+            if (automaton.alphabet.includes(character)) {
+                let beforeStates = currentStates;
+                // console.log(beforeStates);
+                currentStates = noam.fsm.makeTransition(automaton, currentStates, character);
+                // console.log(currentStates);
+                if (currentStates.length == 0) {
+                    console.error("Rejected in Pos " + (index + 1) + " with char " + character + " NOT ALLOWED FROM " + beforeStates);
+                    $("#result").html("Rejected in Pos " + (index + 1) + " with char " + character + " NOT ALLOWED FROM " + beforeStates);
+                    $("#result").attr("style", "color: firebrick");
+                    flag = false;
+                    break;
+                }
+            } else {
+                console.error("Rejected Illegal Character " + character);
+                $("#result").html("Rejected Illegal Character " + character);
+                $("#result").attr("style", "color: firebrick");
+                flag = false;
+            }
+        }
+        if (flag) {
+            let intersection = currentStates.filter(v => automaton.acceptingStates.includes(v));
+            if (intersection.length == 0) {
+                console.error("Rejected do not reach the acceptingStates, stop at " + currentStates);
+                $("#result").html("Rejected do not reach the acceptingStates, stop at " + currentStates);
+                $("#result").attr("style", "color: firebrick");
+            } else {
+                console.log("Congurationlations! PASSED!");
+                $("#result").html("Congurationlations! PASSED!");
+                $("#result").attr("style", "color: forestgreen");
+            }
+        }
+    }
+</script>

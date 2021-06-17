@@ -143,12 +143,12 @@ class ILVGenerator {
     buildElementTransformation(elementJSON: any, elementObject: Element, animationArray: Array<Animation>): void {
         if (elementJSON.transformations.length > 0) {
             for (let transformation of elementJSON.transformations) {
-                if (transformation.type == "slide") {
+                if (transformation.type == "move") {
                     let slideAnimation = new MoveAnimation(3e3, AnimationEnum.Move, transformation.startTime, transformation.duration, transformation.elementId, transformation.elementType, new Position(transformation.toPosition.x, transformation.toPosition.y));
                     elementObject.pushTransformation(slideAnimation);
                     animationArray.push(slideAnimation);
                 } else if (transformation.type == "scale") {
-                    let scaleAnimation = new ScaleAnimation(4e3, AnimationEnum.Scale, transformation.startTime, transformation.duration, transformation.elementId, transformation.elementType, new Position(transformation.toScale.x, transformation.toScale.y));
+                    let scaleAnimation = new ScaleAnimation(4e3, AnimationEnum.Scale, transformation.startTime, transformation.duration, transformation.elementId, transformation.elementType, transformation.toScale);
                     elementObject.pushTransformation(scaleAnimation);
                     animationArray.push(scaleAnimation);
                 }
@@ -158,7 +158,7 @@ class ILVGenerator {
 
     buildFonts(): void {
         for (let font of ilvJSON.fonts) {
-            this.ilv.pushFont(new Font(font.fid, font.path, font.isOnline));
+            this.ilv.pushFont(new Font(font.fid, font.path, font.isGoogle, font.isLocal));
         }
     }
 

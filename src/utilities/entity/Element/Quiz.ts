@@ -31,9 +31,18 @@ class Quiz extends Element {
         quizDivElement.className = "quizComponent";
         quizDivElement.dataset.isSelected = "false";
         if (this.width && this.height) {
-            quizDivElement.setAttribute('style', `left: ${this.position.x}px; top: ${this.position.y}px; width: ${this.width}px; height: ${this.height}px; z-index: ${this.zIndex};`);
-        } else {
+            if (~~this.width == this.width && ~~this.height == this.height && (this.width > 1 && this.height > 1)) {
+                quizDivElement.style.width = this.width + 'px';
+                quizDivElement.style.height = this.height + 'px';
+            } else {
+                quizDivElement.style.width = this.width * 100 + '%';
+                quizDivElement.style.height = this.height * 100 + '%';
+            }
+        } 
+        if (~~this.position.x == this.position.x && ~~this.position.y == this.position.y && (this.position.x > 1 && this.position.y > 1)) {
             quizDivElement.setAttribute('style', `left: ${this.position.x}px; top: ${this.position.y}px; z-index: ${this.zIndex};`);
+        } else {
+            quizDivElement.setAttribute('style', `left: ${this.position.x * 100}%; top: ${this.position.y * 100}%; z-index: ${this.zIndex};`);
         }
         quizDivElement.id = `QID_${this.qid}`;
 
@@ -70,7 +79,8 @@ class Quiz extends Element {
 
         shuffleArray(answers);
         var questionFeedback = document.createElement('div');
-        questionFeedback.style.visibility = 'hidden';
+        // questionFeedback.style.visibility = 'hidden';
+        questionFeedback.style.display = 'none';
         questionFeedback.style.opacity = '0';
         questionFeedback.className = 'questionFeedback';
         questionFeedback.innerHTML = `<img class='feedbackIcon' src='public_imgs/cross_mark.png' />
@@ -78,7 +88,8 @@ class Quiz extends Element {
 
         var questionTip = document.createElement('div');
         questionTip.className = 'questionTip';
-        questionTip.style.visibility = 'hidden';
+        questionTip.style.display = 'none';
+        // questionTip.style.visibility = 'hidden';
         questionTip.style.opacity = '0';
         questionTip.innerHTML = `<span>
             <img class='quizIcon' src='public_imgs/info.png' />
@@ -119,11 +130,10 @@ class Quiz extends Element {
                     questionFeedback.style.color = "firebrick";
                 }
                 if (quizDivElement.dataset.isSelected == "false") {
+                    gsap.to(questionTip, { opacity: 1, display: 'block', duration: 1 });
+                    gsap.to(questionFeedback, { opacity: 1, display: 'block', duration: 1 });
                     gsap.to(quizDivElement, {
-                        height: quizDivElement.clientHeight * 1.6, duration: 2, onComplete: () => {
-                            gsap.to(questionTip, { opacity: 1, visibility: 'visible', duration: 1 });
-                            gsap.to(questionFeedback, { opacity: 1, visibility: 'visible', duration: 1 });
-                        }
+                        height: questionRow.style.height, duration: 2, delay: 1
                     });
                 }
                 quizDivElement.dataset.isSelected = "true";

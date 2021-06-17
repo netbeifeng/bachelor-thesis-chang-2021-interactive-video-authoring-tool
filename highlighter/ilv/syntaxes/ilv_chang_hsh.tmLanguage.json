@@ -28,7 +28,7 @@
 		"SubKey": {
 			"patterns": [{
 				"name": "keyword.declaration.ilv_chang_hsh",
-				"match": "\\$\\s*(date|title|subtitle|audio|author|semester|chapter|course|width|height|startTime|duration|position|questionContent|content|correctAnswer|wrongAnswers|tip|id|page|name|inPage|fontSize|fontFamily|type|path|last|moveTo|elementType|elementId|toPosition|toScale|emphasisTime|strokeColor|strokeWidth|font)"
+				"match": "\\$\\s*(date|title|subtitle|audio|author|semester|chapter|course|width|height|startTime|duration|position|questionContent|content|correctAnswer|wrongAnswers|tip|id|page|name|inPage|fontSize|fontFamily|type|path|last|moveTo|elementType|elementId|toPosition|toScale|emphasisTime|strokeColor|strokeWidth|font|script|style|zIndex)"
 			}]
 		},
 		"MainKey": {

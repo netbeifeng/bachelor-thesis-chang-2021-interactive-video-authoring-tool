@@ -4,11 +4,11 @@ import AnimationEnum from "./AnimationEnum";
 
 
 class ScaleAnimation extends Animation {
-    toScale: Position;
+    toScale: number;
     elementId: number;
     elementType: string;
 
-    constructor(aid: number, type: AnimationEnum, startTime: number, duration: number, elementId: number, elementType: string, toScale: Position) {
+    constructor(aid: number, type: AnimationEnum, startTime: number, duration: number, elementId: number, elementType: string, toScale: number) {
         super(aid, type, startTime, duration);
         this.toScale = toScale;
         this.elementId = elementId;
@@ -16,7 +16,7 @@ class ScaleAnimation extends Animation {
     }
 
     animate(timeline: gsap.core.Timeline): void {
-        timeline.to(document.getElementById(`${this.elementType.charAt(0).toUpperCase()}ID_${this.elementId}`), { scaleX: this.toScale.x, scaleY: this.toScale.y, duration: this.duration }, `start+=${this.startTime}`);
+        timeline.to(document.getElementById(`${this.elementType.charAt(0).toUpperCase()}ID_${this.elementId}`), { scaleX: this.toScale, scaleY: this.toScale, duration: this.duration }, `start+=${this.startTime}`);
     }
 }
 

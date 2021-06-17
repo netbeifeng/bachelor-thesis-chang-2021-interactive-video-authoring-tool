@@ -31,27 +31,54 @@ class Subtitle extends Component {
   }
 
   componentDidMount() {
+    var _that = this;
+    var cues = [];
+    var lastCue = null;
+    // var pastCues = [];
+    var index = 0;
+    var currentCue = null;
+    this.props.ILV.ILVTimeline.howlerTimeline.on('load', function () {
+      cues = _that.props.ILV.ILVObject.getCues();
+      // console.log(cues.length);
+      if (cues.length > 0) {
+        currentCue = cues[index];
+        _that.setState({
+          currentString: currentCue.getText()
+        });
+        setInterval(refresh, 500, _that);
+      }
+    });
+
     function refresh(_that) {
-      if (_that.props.ILV.ILVTimeline.howlerTimeline && _that.props.ILV.ILVTimeline.howlerTimeline.state() == 'loaded') {
-        let seek = _that.props.ILV.ILVPlayer.currentTiming;
-        
-          if(_that.props.ILV.ILVObject.getCues().length > 0) {
-            for (let cue of _that.props.ILV.ILVObject.getCues()) {
-          if (cue.getStart() <= seek && cue.getEnd() >= seek) {
-            _that.setState({
-              currentString: cue.getText()
-            })
+      let seek = parseFloat(_that.props.ILV.ILVPlayer.currentTiming);
+      // console.log(seek);
+      if (_that.props.ILV.ILVPlayer.playing && seek > 0) {
+        if (seek >= currentCue.getEnd()) {
+          while (seek >= currentCue.getEnd() && (index + 1 <= cues.length)) {
+            index++;
+            // console.log(index);
+            lastCue = cues[index - 1];
+            currentCue = cues[index];
+          }
+        } else if ((currentCue && lastCue) && seek < currentCue.getStart() && seek < lastCue.getEnd()) {
+          while (seek <= currentCue.getStart()) {
+            index--;
+            // console.log(index);
+            lastCue = cues[index - 1];
+            currentCue = cues[index];
           }
         }
-      } else {
-        _that.setState({
-          currentString: " * (Kein Untertitel verfügbar) * "
-        })
+
+        let currentCueText = currentCue.getText();
+        if(currentCueText != _that.state.currentString) {
+          console.log("Switching Cue: " + currentCueText);
+          _that.setState({
+            currentString: currentCueText
+          });
+        }
       }
     }
   }
-  setInterval(refresh, 500, this);
-}
 }
 
 export default Subtitle;

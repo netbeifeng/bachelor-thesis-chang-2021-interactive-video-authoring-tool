@@ -24,16 +24,22 @@ class Video extends Element {
 
     getHTMLElement(): HTMLElement {
         let objectElement: any;
-
         if (this.isYouTube) {
             objectElement = document.createElement('object');
             objectElement.data = this.path;
             objectElement.id = `VID_${this.vid}`;
-            objectElement.width = `${this.width}px`;
-            objectElement.height = `${this.height}px`;
+            // objectElement.style.width = `${this.width}px`;
+            // objectElement.style.height = `${this.height}px`;
+            // if (~~this.width == this.width && ~~this.height == this.height && (this.width > 1 && this.height > 1)) {
+            //     objectElement.style.height = this.height;
+            //     objectElement.style.height = this.width;
+            // } else {
+            //     objectElement.style.height = this.height * 100 + '%';
+            //     objectElement.style.width = this.width * 100 + '%';
+            // }
         } else {
             objectElement = document.createElement('video');
-            if(this.isOnline) {
+            if (this.isOnline) {
                 objectElement.src = this.path;
             } else {
                 objectElement.src = "assets/video/" + this.path;
@@ -41,24 +47,29 @@ class Video extends Element {
             objectElement.controls = 'controls';
             objectElement.autoplay = false;
             objectElement.id = `VID_${this.vid}`;
-            objectElement.width = this.width;
-            objectElement.height = this.height;
+            // if (~~this.width == this.width && ~~this.height == this.height && (this.width > 1 && this.height > 1)) {
+            //     objectElement.style.height = this.height;
+            //     objectElement.style.height = this.width;
+            // } else {
+            //     objectElement.style.height = this.height * 100 + '%';
+            //     objectElement.style.width = this.width * 100 + '%';
+            // }
         }
-        objectElement.setAttribute('style', `left: ${this.position.x}px; top: ${this.position.y}px; z-index: ${this.zIndex};`);
+        if (~~this.position.x == this.position.x && ~~this.position.y == this.position.y && (this.position.x > 1 && this.position.y > 1)) {
+            objectElement.setAttribute('style', `left: ${this.position.x}px; top: ${this.position.y}px; z-index: ${this.zIndex};`);
+        } else {
+            objectElement.setAttribute('style', `left: ${this.position.x * 100}%; top: ${this.position.y * 100}%; z-index: ${this.zIndex};`);
+        }
 
+        if (~~this.width == this.width && ~~this.height == this.height && (this.width > 1 && this.height > 1)) {
+            objectElement.style.height = this.height + 'px';
+            objectElement.style.width = this.width + 'px';
+        } else {
+            objectElement.style.height = this.height * 100 + '%';
+            objectElement.style.width = this.width * 100 + '%';
+        }
         objectElement.style.opacity = '0';
         objectElement.style.visibility = 'hidden';
-
-        // objectElement.dataset.vid = `${video.vid}`;
-        // objectElement.dataset.duration = `${video.duration}`;
-        // objectElement.dataset.height = `${video.height}`;
-        // objectElement.dataset.path = `${video.path}`;
-        // objectElement.dataset.isOnline = `${video.isOnline}`;
-        // objectElement.dataset.x = `${video.position.x}`;
-        // objectElement.dataset.y = `${video.position.y}`;
-        // objectElement.dataset.startTime = `${video.startTime}`;
-        // objectElement.dataset.width = `${video.width}`;
-
         return objectElement;
     }
 }

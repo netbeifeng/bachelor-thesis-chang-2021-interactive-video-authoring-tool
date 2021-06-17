@@ -82,8 +82,11 @@ class Custom extends Element {
             this.styleText.push(sy.innerHTML);
             customElement.removeChild(sy);
         }
-
-        customElement.setAttribute('style', `left: ${this.position.x}px; top: ${this.position.y}px;`);
+        if (~~this.position.x == this.position.x && ~~this.position.y == this.position.y && (this.position.x > 1 && this.position.y > 1)) {
+            customElement.setAttribute('style', `left: ${this.position.x}px; top: ${this.position.y}px;`);
+        } else {
+            customElement.setAttribute('style', `left: ${this.position.x * 100}%; top: ${this.position.y * 100}%;`);
+        }
         customElement.id = `CID_${this.cid}`;
         customElement.style.opacity = '0';
         customElement.style.visibility = 'hidden';
@@ -101,7 +104,6 @@ class Custom extends Element {
 
     getScriptTagHTML(): HTMLElement[] {
         let scriptCollection = [];
-        // console.log(this.scriptText);
         for (let sc of this.scriptSrc) {
             let newScript = document.createElement('script');
             if (sc.type == 'module') {
@@ -113,7 +115,6 @@ class Custom extends Element {
             newScript.dataset.belongTo = `CID_${this.cid}`;
             scriptCollection.push(newScript);
         }
-
 
         for (let sc of this.scriptText) {
             let newScript = document.createElement('script');

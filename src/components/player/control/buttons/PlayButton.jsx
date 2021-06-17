@@ -33,6 +33,9 @@ class PlayButton extends Component {
                 text: "Play",
             })
         } else {
+            if (parseInt(this.props.ILV.ILVPlayer.currentTiming) == 0) {
+                this.props.ILV.ILVTimeline.timelineSeek(0);
+            }
             this.props.ILV.ILVTimeline.timelinePlay();
 
             console.log('%c ---- TIMELINE PLAY ----', 'color: darkorange;');
@@ -42,6 +45,7 @@ class PlayButton extends Component {
                 text: "Pause",
             })
         }
+
     }
 
 

@@ -72,12 +72,9 @@ class Slider extends Component {
             _that.setState({
                 progress_text: "0:00 / " + _that.fmtMSS(~~_that.props.ILV.ILVTimeline.howlerTimeline.duration())
             });
-            setInterval(() => {
-                if (_that.props.ILV.ILVPlayer.playing) {
-                    console.log(`%c CurrentTiming Update: ${_that.props.ILV.ILVPlayer.currentTiming}`, 'color: #5865F2;');
-                    _that.props.ILV.ILVPlayer.updatePlayerCurrentTiming(_that.props.ILV.ILVTimeline.howlerTimeline.seek().toFixed(0));
-                }
-            }, 1000);
+            // setInterval(() => {
+
+            // }, 1000);
             _that.generatePointTag();
         });
 
@@ -128,9 +125,10 @@ class Slider extends Component {
             function step() {
                 let seek = _that.props.ILV.ILVTimeline.howlerTimeline.seek();
                 let duration = _that.props.ILV.ILVPlayer.duration;
-
                 if (_that.props.ILV.ILVPlayer.playing) {
                     window.requestAnimationFrame(step);
+                    // console.log(`%c CurrentTiming Update: ${_that.props.ILV.ILVPlayer.currentTiming}`, 'color: #5865F2;');
+                    _that.props.ILV.ILVPlayer.updatePlayerCurrentTiming(seek);
                     _that.setState({
                         progress_text: (_that.fmtMSS(~~seek) + " / " + _that.fmtMSS(~~duration))
                     })
@@ -212,7 +210,10 @@ class Slider extends Component {
 
         this.handle_progress_click = (e) => {
             if (e.target.id === "progress-transparent" && this.props.ILV.ILVPlayer.playing) {
-                let seek = Math.round(e.nativeEvent.offsetX / Math.round(e.target.getBoundingClientRect().width) * this.props.ILV.ILVPlayer.duration);
+                // console.log(e.nativeEvent.offsetX);
+                // console.log(e.target.getBoundingClientRect().width);
+                // console.log(e.target);
+                let seek = Math.round((e.nativeEvent.offsetX / Math.round(e.target.clientWidth)) * this.props.ILV.ILVPlayer.duration);
                 this.props.ILV.ILVTimeline.timelineSeek(seek);
             }
         };

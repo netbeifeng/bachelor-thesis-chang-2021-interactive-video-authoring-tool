@@ -1,12 +1,14 @@
 class Font {
     fid: number;
     path: string;
-    isOnline: boolean;
+    isGoogle: boolean;
+    isLocal: boolean;
 
-    constructor(fid: number, path: string, isOnline: boolean) {
+    constructor(fid: number, path: string, isGoogle: boolean, isLocal: boolean) {
         this.fid = fid;
         this.path = path;
-        this.isOnline = isOnline;
+        this.isGoogle = isGoogle;
+        this.isLocal = isLocal;
     }
 }
 

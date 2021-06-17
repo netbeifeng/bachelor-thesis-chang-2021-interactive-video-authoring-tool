@@ -7,15 +7,15 @@ Property = prop:InlineProperty _ SEMICOLON? _ { return prop; }
 		 / prop:BlockProperty _ SEMICOLON? _ { return prop; }
          / com:COMMENT { return {key: 'comment' , value: com.join('').split(',').join('')}; }
 
-InlineProperty = INLINEPREFIX _ key:Key _ EqualSign _ value:Value _  {  return { key: key, value: value}; } 
+InlineProperty = INLINEPREFIX _ key:InlineKey _ EqualSign _ value:Value _  {  return { key: key, value: value}; } 
 
-BlockProperty =  BLOCKPREFIX _ key:Key _ EqualSign _ block:Block _ { return { key: key, aug: block};}
+BlockProperty =  BLOCKPREFIX _ key:BlockKey _ EqualSign _ block:Block _ { return { key: key, aug: block};}
 
-Key = ( BlockKey / InlineKey ) { return text(); }
+// Key = ( BlockKey / InlineKey ) { return text(); }
 
-BlockKey =  "custom" / "quiz" / "text" / "animation" / "image" / "video" / "transformation" / "cursor" / "graphics" { return text(); }
+BlockKey = "slide" / "custom" / "quiz" / "text" / "animation" / "image" / "video" / "transformation" / "cursor" / "graphics" { return text(); }
 InlineKey = QuizKey / TextKey / AnimationKey / GraphicsKey / RootKey / CustomKey / "path" / "type" / "position" / "height" / "width" / "duration" / "startTime" / "name" / "id" / "last" / "inPage" / "zIndex" { return text(); }
-RootKey = "title" / "course" / "audio" / "font" / "author" / "slide" / "subtitle" / "semester" / "chapter" { return text(); }
+RootKey = "title" / "course" / "audio" / "font" / "author" / "subtitle" / "semester" / "chapter" { return text(); }
 GraphicsKey = "strokeColor" / "strokeWidth" { return text(); }
 TextKey = "page" / "content" / "fontSize" / "fontColor" / "fontFamily" { return text(); }
 QuizKey = "questionContent" / "correctAnswer" / "wrongAnswers" / "tip" { return text(); }
@@ -29,7 +29,7 @@ _ "whitespace" = [ \t\r\n]*
 Coordinate = "(" _ x:Number _ "," _ y:Number _ ")" { return {x: x, y: y};}
 Interval = "(" _ s:Number _ "-" _ e:Number _ ")" { return {startTime:s, endTime:e} }
 
-Array = "[" _ "]" { return []; } / "[" head:(_ BasicDataType _ ",")* tail:(_ BasicDataType _) "]" { return head.concat([tail]) .map((element) => element[1]); }
+Array = "[" _ "]" { return []; } / "[" head:(_ BasicDataType _ "," _ (COMMENT)* _ )*  tail:(_ BasicDataType _ (COMMENT)* _ ) "]" { return head.concat([tail]) .map((element) => element[1]); }
 
 BasicDataType = data:(String / Number) { return data; }
 

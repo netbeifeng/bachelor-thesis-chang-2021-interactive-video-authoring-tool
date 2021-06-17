@@ -11,6 +11,7 @@ import Navigator from './navigator/Navigator';
 class Player extends Component {
     constructor(props) {
         super(props);
+        this.audioPath = this.props.ILVObject.audio;
         this.changeCaptionDisplayState = this.changeCaptionDisplayState.bind(this);
         this.timelineSeek = this.timelineSeek.bind(this);
         this.timelinePlay = this.timelinePlay.bind(this);
@@ -18,13 +19,14 @@ class Player extends Component {
         this.timelineSpeed = this.timelineSpeed.bind(this);
         this.howlerVolume = this.howlerVolume.bind(this);
         this.updatePlayerCurrentTiming = this.updatePlayerCurrentTiming.bind(this);
-
+        if(!this.audioPath.includes('http')) { this.audioPath = "assets/audio/" + this.audioPath; }
+        // assets/audio/
         this.state = {
             ILV: {
                 ILVObject: this.props.ILVObject,
                 ILVTimeline: {
                     howlerTimeline: new Howl({
-                        src: [`assets/audio/${this.props.ILVObject.audio}`],
+                        src: [`${this.audioPath}`],
                         volume: 0.5
                     }),
                     gsapTimeline: gsap.timeline(),
