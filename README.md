@@ -18,13 +18,13 @@ The webserver is hosted by React. Concurrently, a listener will be added to the 
 the parsing will restart and project will be re-deployed to the webserver, so that the author can see the changes immediately.
 
 ## Structure
-[cli](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/cli) -> Source code of CILV cli tool
-[highlighter](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/highlighter/ilv) -> Source code of vscode highlighter
-[parser](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/parser) -> Source code of ilv parser
-[validator](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/validator) -> Source code of json validator
-[components](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/src/components) -> React components 
-[utilities](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/src/utilities) -> ILV Object TypeScript defintion
-[testing](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/testing) -> Testing.ilv document
+- [cli](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/cli) -> Source code of CILV cli tool
+- [highlighter](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/highlighter/ilv) -> Source code of vscode highlighter
+- [parser](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/parser) -> Source code of ilv parser
+- [validator](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/validator) -> Source code of json validator
+- [components](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/src/components) -> React components 
+- [utilities](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/src/utilities) -> ILV Object TypeScript defintion
+- [testing](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/tree/main/testing) -> Testing.ilv document
 
 ## ILV Markup Language
 Here is an examplar of ILV document.
