@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
-import highlightCSS from '../../../node_modules/highlight.js/scss/default.scss';
-import markdownCSS from '../../../node_modules/github-markdown-css/github-markdown.css';
-import katexCSS from '../../../node_modules/@traptitech/markdown-it-katex/node_modules/katex/dist/katex.css';
+import highlightCSS from '../../utilities/css/highlight.scss';
+import markdownCSS from '../../utilities/css/markdown.css';
+import katexCSS from '../../utilities/css/katex.css';
 
 class Head extends Component {
   constructor(props) {

@@ -7,17 +7,25 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const shell = require("shelljs");
+const fse = require('fs-extra');
+const openExplorer = require('open-file-explorer');
 
 var initPath = "";
 
 program
-    .command('version')
-    .alias('v')
-    .description('fetch the current version')
+    .command('check')
+    .alias('c')
+    .description('check the current version')
     .action(option => {
-        console.log(chalk.default.bold('cilv v0.0.1'));
-        console.log('Pre-installing...');
-        console.log(shell.exec('npm install concurrently -g').stdout);
+        console.log(printItalicBold('cilv v0.1.7'));
+        if (shell.exec('concurrently -v').code == 1) {
+            console.log('Missing global dependency detected... ❌');
+            console.log('Pre-installing...');
+            console.log(chalk.default.bold('Fetching `Concurrently` library from npm...📦'));
+            console.log(shell.exec('npm install concurrently -g').stdout);
+        } else {
+            console.log('No Missing Dependency. ✅');
+        }
     });
 
 program
@@ -28,7 +36,7 @@ program
         let config = {
             fileName: null
         };
-        console.log(chalk.default.bold('cilv v0.0.1'));
+        // console.log(chalk.default.bold('cilv v0.0.1'));
 
         if (process.argv[3]) {
             prepareILV(process.argv[3]);
@@ -76,7 +84,7 @@ program
         let config = {
             fileName: null
         };
-        console.log(chalk.default.bold('cilv v0.0.1'));
+        // console.log(chalk.default.bold('cilv v0.0.1'));
 
         if (process.argv[3]) {
             parseILV(process.argv[3]).then((res) => {
@@ -113,6 +121,55 @@ program
             });
         }
     });
+
+program
+    .command('build')
+    .alias('b')
+    .description('build ilv')
+    .action(option => {
+        let config = {
+            fileName: null
+        };
+        // console.log(chalk.default.bold('cilv v0.0.1'));
+
+        if (process.argv[3]) {
+            parseILV(process.argv[3]).then((res) => {
+                if (res) {
+                    // startILV(process.argv[3]);
+                    buildILV();
+                }
+            });
+        } else {
+            let promps = [];
+            if (config.fileName === null) {
+                promps.push({
+                    type: 'input',
+                    name: 'fileName',
+                    message: 'Please input the ilv file name',
+                    validate: input => {
+                        if (!input) {
+                            return 'The file name can\'t be empty';
+                        }
+                        config.fileName = input;
+                        return true;
+                    }
+                });
+            }
+
+            inquirer.prompt(promps).then(async (answers) => {
+                console.log(answers);
+                if (answers.fileName) {
+                    parseILV(answers.fileName).then((res) => {
+                        if (res) {
+                            // startILV(answers.fileName);
+                            buildILV();
+                        }
+                    });
+                }
+            });
+        }
+    });
+
 program.parse(process.argv);
 
 function parseILV(fileName) {
@@ -127,7 +184,7 @@ function parseILV(fileName) {
                 // fs.writeFileSync(path.resolve(__dirname, '../parser/' + `${fileName}.ilv`), fs.readFileSync(`${process.cwd()}\\${fileName}.ilv`));
                 let package = {
                     "name": "@netbeifeng/ilv-interactive-video-authoring-tool",
-                    "version": "0.1.1",
+                    "version": "0.1.7",
                     "private": false,
                     "bin": {
                         "cilv": "./cli/cilv"
@@ -319,10 +376,10 @@ function parseILV(fileName) {
                         reject(false);
                     }
                 });
-                console.log("Parsing...");
+                console.log(printItalicBold("Parsing..."));
                 shell.cd(path.resolve(__dirname, '../'));
                 console.log(shell.exec('npm run parse').stdout);
-                console.log(chalk.blue(`${fileName}.ilv is sucessful parsed.`));
+                console.log(chalk.default.blueBright(`${fileName}.ilv is sucessful parsed.`));
                 // return Promise()
                 resolve(true);
             } else {
@@ -333,14 +390,34 @@ function parseILV(fileName) {
     });
 }
 
-function deployILV() {
-    console.log("Deploying...");
+function buildILV() {
+    const srcDir = path.resolve(__dirname, '../build');
+    const destDir = path.resolve(initPath, './build');
+    console.log(printItalicBold("Building..."));
     shell.cd(path.resolve(__dirname, '../'));
-    console.log(shell.exec('npm run launch').stdout);
+
+    if (shell.exec('npm run build').code == 0) {
+        console.log(chalk.default.greenBright("Build Success!"));
+        console.log(printItalicBold("Copying..."));
+        console.log(chalk.default.redBright('From: '), srcDir, chalk.default.redBright('To: '), destDir);
+        fse.copySync(srcDir, destDir, { overwrite: true }, function (err) {
+            if (err) {
+                console.error(err);
+            }
+        });
+
+        openExplorer(destDir);
+    } else {
+        console.log(chalk.default.redBright("Build Fail!"));
+    }
 }
 
 function startILV(fileName) {
-    console.log("Starting...");
+    console.log(printItalicBold("Starting..."));
     shell.cd(path.resolve(__dirname, '../'));
     console.log(shell.exec(`concurrently \"npm run launch\" \"node parser/listener.js ${path.resolve(initPath + '/' + fileName + '.ilv')} ${fileName}\"`).stdout);
+}
+
+function printItalicBold(str) {
+    return chalk.default.italic(chalk.default.bold(str));
 }

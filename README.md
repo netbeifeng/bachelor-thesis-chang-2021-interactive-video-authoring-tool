@@ -13,12 +13,15 @@ npm install @netbeifeng/ilv-interactive-video-authoring-tool -g
 Please execute the `cilv version` command to test whether the tool is correctly installed, and this command will help you to install the necessary dependency `concurrently` globally.
 
 ### Template
-You can execute the command `cilv init <project_name>` to initialize an ILV document by using the template.
+You can execute the command `cilv init <document_name>` to initialize an ILV document by using the template.
 
 ### Deploy and Debugging
-The command `cilv deploy <project_name>` is employed to parse the given ilv document and deploy it to the localhost webserver.
+The command `cilv deploy <document_name>` is employed to parse the given ilv document and deploy it to the localhost webserver.
 The webserver is hosted by React. Concurrently, a listener will be added to the given ilv file, if something triggers a content change,
 the parsing will restart and project will be re-deployed to the webserver, so that the author can see the changes immediately.
+
+### Build
+The command `cilv build <document_name>` is used to build the static web page.
 
 ## Highlighter
 Since ILV markup language is a custom language, I developed a syntax highlighter for it to enhance the coding experience and code readability,
