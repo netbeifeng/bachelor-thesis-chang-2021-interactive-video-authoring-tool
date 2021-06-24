@@ -1,3 +1,12 @@
+---
+theme: seriph
+layout: cover
+background: 'https://source.unsplash.com/1600x900/?nature,water'
+---
+
+# Slidev
+
+This is the cover page.
 # ILV - Interactive Learning Video Authoring Tool 
 This project is developed based on my thesis which introduces the use of markup language to edit interactive learning videos instead of the traditional WYSIWYG editing.
 
@@ -62,3 +71,4 @@ The following `InlineProperty` must be defined within the `RootProperty`.
 |type|String|String|String|String|String|String|String|Array|
 
 An entire example of ILV document, please refer to the [testing.ilv](https://github.com/netbeifeng/bachelor-thesis-chang-2021-interactive-video-authoring-tool/blob/main/testing/testing.ilv) document in the testing directory.
+

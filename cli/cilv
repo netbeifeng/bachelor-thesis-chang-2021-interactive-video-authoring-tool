@@ -17,7 +17,7 @@ program
     .alias('c')
     .description('check the current version')
     .action(option => {
-        console.log(printItalicBold('cilv v0.1.7'));
+        console.log(printItalicBold('cilv v0.2.0'));
         if (shell.exec('concurrently -v').code == 1) {
             console.log('Missing global dependency detected... ❌');
             console.log('Pre-installing...');
@@ -184,7 +184,7 @@ function parseILV(fileName) {
                 // fs.writeFileSync(path.resolve(__dirname, '../parser/' + `${fileName}.ilv`), fs.readFileSync(`${process.cwd()}\\${fileName}.ilv`));
                 let package = {
                     "name": "@netbeifeng/ilv-interactive-video-authoring-tool",
-                    "version": "0.1.7",
+                    "version": "0.2.0",
                     "private": false,
                     "bin": {
                         "cilv": "./cli/cilv"
@@ -249,6 +249,7 @@ function parseILV(fileName) {
                         "node-sass": "^5.0.0",
                         "node-webvtt": "^1.9.3",
                         "npm": "^7.11.1",
+                        "open-file-explorer": "^1.0.2",
                         "optimize-css-assets-webpack-plugin": "5.0.4",
                         "pegjs": "^0.10.0",
                         "pegjs-util": "^1.4.21",

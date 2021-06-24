@@ -32,9 +32,9 @@ yarn-error.log*
 /highlighter
 
 # media
-/public/assets/audio/*
-/public/assets/fonts/*
-/public/assets/image/*
-/public/assets/subtitle/*
-/public/assets/video/*
+# /public/assets/audio/*
+# /public/assets/fonts/*
+# /public/assets/image/*
+# /public/assets/subtitle/*
+# /public/assets/video/*
 
