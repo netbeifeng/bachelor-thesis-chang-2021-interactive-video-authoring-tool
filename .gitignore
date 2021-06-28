@@ -29,3 +29,5 @@ yarn-error.log*
 /public/assets/image/*
 /public/assets/subtitle/*
 /public/assets/video/*
+
+build.json*

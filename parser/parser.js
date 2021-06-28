@@ -1,6 +1,7 @@
 const fs = require("fs");
 // const os = require('os');
 const path = require("path");
+const webvtt = require("node-webvtt");
 // const platform = os.platform();
 // var divider = '/';
 // if (platform === 'win32') {
@@ -326,23 +327,16 @@ const rearrange = (json, slide) => {
             idArray.push(graphics.id);
             graphics.startTime = getStartAndDuration(item.aug, slide).startTime;
             graphics.duration = getStartAndDuration(item.aug, slide).duration;
-            // graphics.emphasisTime = findValueByKey('emphasisTime', item.aug) == undefined ? -1 : findValueByKey('emphasisTime', item.aug);
             graphics.position = findValueByKey('position', item.aug);
-            // if(graphics.type == 'circle') {
-            //     // graphics.radius = findValueByKey('radius', item.aug);
-            //     graphics.height = findValueByKey('radius', item.aug) * 2;
-            //     graphics.width = findValueByKey('radius', item.aug) * 2;
-            // } else {
             graphics.height = findValueByKey('height', item.aug);
             graphics.width = findValueByKey('width', item.aug);
-            // }
             graphics.strokeColor = findValueByKey('strokeColor', item.aug) == undefined ? 'firebrick' : findValueByKey('strokeColor', item.aug);
             graphics.strokeWidth = findValueByKey('strokeWidth', item.aug) == undefined ? 4 : findValueByKey('strokeWidth', item.aug);
             graphics.zIndex = findValueByKey('zIndex', item.aug) == undefined ? 1 : findValueByKey('zIndex', item.aug);
             findTransformationInElement('graphics', graphics.gid, item.aug, graphics);
             slide.graphics.push(graphics);
         } else {
-            if (item.key == 'audio' || item.key == 'subtitle') {
+            if (item.key == 'audio') {
                 if (item.value) {
                     if (item.value.includes('http')) {
                         ilvJSON[item.key] = item.value;
@@ -357,7 +351,6 @@ const rearrange = (json, slide) => {
                 } else {
                     ilvJSON[item.key] = "ERROR";
                 }
-
             } else if (item.key == 'font') {
                 for (let fontItem of item.value) {
                     if (fontItem.includes('fonts.googleapis')) {
@@ -390,20 +383,30 @@ const rearrange = (json, slide) => {
                         }
                     }
                 }
+            } else if (item.key == 'subtitle') {
+                if(item.value) {
+                    let subtitle = '';
+                    if (path.isAbsolute(item.value)) {
+                        subtitle = fs.readFileSync(item.value, "utf-8");
+                    } else {
+                        subtitle = fs.readFileSync(path.resolve(_dirname_res, item.value), "utf-8");
+                    }
+                    ilvJSON['cues'] = webvtt.parse(subtitle).cues;
+                } else {
+                    ilvJSON['cues'] = [];
+                }
             } else if (normalKey.indexOf(item.key) == -1) {
                 ilvJSON[item.key] = item.value != null ? item.value : "ERROR";
             }
         }
     }
-
-    // fs.writeFile('./src/assets/fontCSS/font.scss', localFontString, 'utf8', (error) => { console.log(error); });
 }
 
 const isRepeat = (arr) => {
     var hash = {};
     for (var i in arr) {
         if (hash[arr[i]]) {
-            throw 'ERROR: ID = ' + arr[i] + ' Collation dected!';
+            throw 'ERROR: ID = ' + arr[i] + ' Collation detected!';
         }
         hash[arr[i]] = true;
     }
@@ -414,18 +417,12 @@ if (result.error !== null) {
 } else {
     console.log("--- PARSE PASS ---");
     rearrange(result.ast);
-    if (!ilvJSON.subtitle) {
-        ilvJSON.subtitle = "";
-    }
-    console.log("--- ID COLLATION DETCTING ---");
+    console.log("--- ID COLLATION DETECTING ---");
     isRepeat(idArray);
-
     console.log("--- NO ID COLLATION ---");
     console.log("--- ILV-JSON PREPARED ---");
+    console.log("--- ILV-JSON VALIDATING ---");
 
-    console.log("--- START VALIDATE ILV-JSON ---");
-
-    // console.log(ilvJSON);
     if (!validator.validate(ilvJSON)) {
         console.log("--- VALIDATE FAILED ---");
         throw validator.getErrors();

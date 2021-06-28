@@ -9,7 +9,7 @@ ReactDOM.render(
   <div>
     <App />
     <div className={'signature'}>
-      ILV-Player
+      {/* ILV-Player */}
     </div>
   </div>,
   document.getElementById('root'),

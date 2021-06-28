@@ -12,21 +12,19 @@ class ILV {
     author: string;
     semester: string;
     audio: string;
-    subtitle: string;
 
     slides: Array<Slide> = new Array<Slide>();
     animations: Array<Animation> = new Array<Animation>();
     fonts: Array<Font> = new Array<Font>();
     cues: Array<Cue> = new Array<Cue>();
 
-    constructor(title: string, course: string, chapter: string, author: string, semester: string, audio: string, subtitle?: string) {
+    constructor(title: string, course: string, chapter: string, author: string, semester: string, audio: string) {
         this.title = title;
         this.chapter = chapter;
         this.course = course;
         this.audio = audio;
         this.author = author;
         this.semester = semester;
-        this.subtitle = subtitle;
     }
 
     getSlides(): Array<Slide> {

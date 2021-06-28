@@ -1,7 +1,7 @@
 import ilvJSON from '../assets/build.json';
 
-import axios from 'axios';
-import webvtt from 'node-webvtt';
+// import axios from 'axios';
+// import webvtt from 'node-webvtt';
 
 import ILV from './entity/ILV';
 import Slide from './entity/Slide';
@@ -26,7 +26,7 @@ class ILVGenerator {
     ilv: ILV;
 
     constructor() {
-        this.ilv = new ILV(ilvJSON.title, ilvJSON.course, ilvJSON.chapter, ilvJSON.author, ilvJSON.semester, ilvJSON.audio, ilvJSON.subtitle);
+        this.ilv = new ILV(ilvJSON.title, ilvJSON.course, ilvJSON.chapter, ilvJSON.author, ilvJSON.semester, ilvJSON.audio);
         this.buildSubtitles();
         this.buildFonts();
         this.buildSlides();
@@ -163,12 +163,12 @@ class ILVGenerator {
     }
 
     buildSubtitles(): void {
-        if (ilvJSON.subtitle.length > 0) {
-            axios.get(`assets/subtitle/${this.getILV().subtitle}`).then(res => {
-                for (let item of webvtt.parse(res.data).cues) {
-                    this.ilv.pushCue(new Cue(item.identifier, item.start, item.end, item.text));
-                }
-            });
+        if (ilvJSON.cues.length > 0) {
+            // axios.get(`assets/subtitle/${this.getILV().subtitle}`).then(res => {
+            for (let item of ilvJSON.cues) {
+                this.ilv.pushCue(new Cue(item.identifier, item.start, item.end, item.text));
+            }
+            // });
         }
     }
 }
