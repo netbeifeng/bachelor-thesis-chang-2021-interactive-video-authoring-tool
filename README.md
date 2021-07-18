@@ -1,12 +1,3 @@
----
-theme: seriph
-layout: cover
-background: 'https://source.unsplash.com/1600x900/?nature,water'
----
-
-# Slidev
-
-This is the cover page.
 # ILV - Interactive Learning Video Authoring Tool 
 This project is developed based on my thesis which introduces the use of markup language to edit interactive learning videos instead of the traditional WYSIWYG editing.
 
